@@ -39,4 +39,5 @@ jobs:
       with:
         arguments: test
         gradle-version: 7.4
+        build-root-directory: NumberClassifier
 
