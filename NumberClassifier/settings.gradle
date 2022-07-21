@@ -1,2 +1,2 @@
 rootProject.name = 'NumberClassifier'
-
+include('src')
