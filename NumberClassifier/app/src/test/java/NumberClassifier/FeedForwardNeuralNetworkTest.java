@@ -3,14 +3,14 @@ package NumberClassifier;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MultilayerPerceptronTest {
+public class FeedForwardNeuralNetworkTest {
 
     /**
      * Test a simple network that calculates XOR operation.
      */
     @Test void evaluatesXOR() throws Exception {
         // Setup ---
-        MultilayerPerceptron ffn = new MultilayerPerceptron( new int[] { 2, 3, 1 } );
+        FeedForwardNeuralNetwork ffn = new FeedForwardNeuralNetwork( new int[] { 2, 3, 1 } );
         ffn.setWeights( 
             0, new double[] { 
             1.0, 1.0, 0.0, 
@@ -45,7 +45,7 @@ public class MultilayerPerceptronTest {
     
 
     @Test void setInputDoesntAcceptInvalidInput() {
-        MultilayerPerceptron ffn = new MultilayerPerceptron( new int[] { 2, 3, 1 } );
+        FeedForwardNeuralNetwork ffn = new FeedForwardNeuralNetwork( new int[] { 2, 3, 1 } );
 
         // Too little inputs
         try {
@@ -65,7 +65,7 @@ public class MultilayerPerceptronTest {
     }
 
     @Test void setWeightsDoesntAcceptInvalidInput() {
-        MultilayerPerceptron ffn = new MultilayerPerceptron( new int[] { 2, 3, 1 } );
+        FeedForwardNeuralNetwork ffn = new FeedForwardNeuralNetwork( new int[] { 2, 3, 1 } );
 
         // Layer id out of bounds
         try {
@@ -101,7 +101,7 @@ public class MultilayerPerceptronTest {
     }
     
     @Test void setBiasesDoesntAcceptInvalidInput() {
-        MultilayerPerceptron ffn = new MultilayerPerceptron( new int[] { 2, 3, 1 } );
+        FeedForwardNeuralNetwork ffn = new FeedForwardNeuralNetwork( new int[] { 2, 3, 1 } );
 
         // Layer id out of bounds
         try {

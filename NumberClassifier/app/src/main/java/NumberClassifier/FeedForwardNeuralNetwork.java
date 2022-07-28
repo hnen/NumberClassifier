@@ -3,9 +3,9 @@ package NumberClassifier;
 /**
  * Basic feed forward neural network.
  */
-public class MultilayerPerceptron {
+public class FeedForwardNeuralNetwork {
     
-    public MultilayerPerceptron( int[] layers ) {
+    public FeedForwardNeuralNetwork( int[] layers ) {
         this.layers = layers;
         this.weights = new double[layers.length - 1][];
         this.biases = new double[layers.length - 1][];
