@@ -9,7 +9,7 @@ public class MultilayerPerceptron {
         this.layers = layers;
         this.weights = new double[layers.length - 1][];
         this.biases = new double[layers.length - 1][];
-        this.outputs = new double[layers.length][];
+        this.activations = new double[layers.length][];
 
         for( int i = 0; i < layers.length - 1; i++ ) {
             weights[i] = new double[layers[i] * layers[i + 1]];
@@ -17,15 +17,15 @@ public class MultilayerPerceptron {
         }
 
         for( int i = 0; i < layers.length; i++ ) {
-            outputs[i] = new double[layers[i]];
+            activations[i] = new double[layers[i]];
         }
     }
 
     public void setInput( double[] input ) throws Exception {
-        if( input.length != outputs[0].length ) {
+        if( input.length != activations[0].length ) {
             throw new Exception( "Invalid number of inputs." );
         }
-        outputs[0] = input.clone();
+        activations[0] = input.clone();
     }
 
     public void setWeights( int layer, double[] weights ) throws Exception {
@@ -43,7 +43,7 @@ public class MultilayerPerceptron {
     }
 
     public double[] getOutput() {
-        return this.outputs[this.outputs.length - 1].clone();
+        return this.activations[this.activations.length - 1].clone();
     }
     
     public void calculateOutputs() {
@@ -57,10 +57,10 @@ public class MultilayerPerceptron {
     private void calculateSum( int layer, int neuron ) {
         double sum = 0;
         for ( int i = 0; i < layers[layer - 1]; i++ ) {
-            sum += outputs[layer - 1][i] * weights[layer - 1][i * layers[layer] + neuron];
+            sum += activations[layer - 1][i] * weights[layer - 1][i * layers[layer] + neuron];
         }
         sum += biases[layer - 1][neuron];
-        outputs[layer][neuron] = activationFunction( sum );
+        activations[layer][neuron] = activationFunction( sum );
     }
 
     public static double activationFunction( double sum ) {
@@ -73,6 +73,6 @@ public class MultilayerPerceptron {
 
     private double [][] biases;
     private double [][] weights;
-    private double [][] outputs;
+    private double [][] activations;
 
 }
