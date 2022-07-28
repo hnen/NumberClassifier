@@ -52,7 +52,7 @@ jobs:
         generate-branches-badge: true
         jacoco-csv-file: NumberClassifier/app/build/reports/jacoco/test/jacocoTestReport.csv
     - name: Commit JaCoCo Badge
-      uses: EndBug/add-and-commit@v7
+      uses: EndBug/add-and-commit@v9
       with:
         default_author: github_actions
         message: 'commit badge'
