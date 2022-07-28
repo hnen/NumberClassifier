@@ -26,13 +26,17 @@ public class MultilayerPerceptron {
         outputs[0] = input.clone();
     }
 
-    public void setWeights( int layer, double[] weights ) {
-        assert( weights.length == this.weights[layer].length );
+    public void setWeights( int layer, double[] weights ) throws Exception {
+        if ( weights.length != this.weights[layer].length ) {
+            throw new Exception( "Invalid number of weights." );
+        }
         this.weights[layer] = weights.clone();
     }
 
-    public void setBiases( int layer, double[] biases ) {
-        assert( biases.length == this.layers[layer] );
+    public void setBiases( int layer, double[] biases ) throws Exception {
+        if ( biases.length != this.layers[layer] )  {
+            throw new Exception( "Invalid number of biases." );
+        }
         this.biases[layer - 1] = biases.clone();
     }
 
