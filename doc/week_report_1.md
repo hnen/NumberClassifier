@@ -1,6 +1,6 @@
 # Week Report 1
 
-Total: 4,5 hours
+Total: 5,5 hours
 
 ## Mon 19.7.2022 - 2 hours
  - Read through the course material and project suggestions. Number recognition immediately catches my attention.
