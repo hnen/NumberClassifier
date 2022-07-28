@@ -50,4 +50,4 @@ jobs:
       uses: cicirello/jacoco-badge-generator@v2
       with:
         generate-branches-badge: true
-        jacoco-csv-file: build/reports/jacoco/test/jacocoTestReport.csv
+        jacoco-csv-file: NumberClassifier/app/build/reports/jacoco/test/jacocoTestReport.csv
