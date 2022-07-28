@@ -21,8 +21,10 @@ public class MultilayerPerceptron {
         }
     }
 
-    public void setInput( double[] input ) {
-        assert( input.length == outputs[0].length );
+    public void setInput( double[] input ) throws Exception {
+        if( input.length != outputs[0].length ) {
+            throw new Exception( "Invalid number of inputs." );
+        }
         outputs[0] = input.clone();
     }
 
