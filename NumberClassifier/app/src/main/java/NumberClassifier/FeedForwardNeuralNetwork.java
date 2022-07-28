@@ -1,24 +1,32 @@
 package NumberClassifier;
 
+import java.beans.FeatureDescriptor;
+
 /**
  * Basic feed forward neural network.
  */
 public class FeedForwardNeuralNetwork {
     
-    public FeedForwardNeuralNetwork( int[] layers ) {
-        this.layers = layers;
-        this.weights = new double[layers.length - 1][];
-        this.biases = new double[layers.length - 1][];
-        this.activations = new double[layers.length][];
-
-        for( int i = 0; i < layers.length - 1; i++ ) {
-            weights[i] = new double[layers[i] * layers[i + 1]];
-            biases[i] = new double[layers[i + 1]];
+    public FeedForwardNeuralNetwork( int[] layers ) throws Exception {
+        if ( layers.length < 2 ) {
+            throw new Exception( "There has to be at least 2 layers" );
         }
 
+        this.layers = layers;
+        this.params = new FeedForwardNeuralNetworkParameters(layers);
+
+        this.activations = new double[layers.length][];
         for( int i = 0; i < layers.length; i++ ) {
             activations[i] = new double[layers[i]];
         }
+    }
+
+    public int getNumInputs() {
+        return layers[0];
+    }
+
+    public int getNumOutputs() {
+        return layers[layers.length - 1];
     }
 
     public void setInput( double[] input ) throws Exception {
@@ -29,17 +37,17 @@ public class FeedForwardNeuralNetwork {
     }
 
     public void setWeights( int layer, double[] weights ) throws Exception {
-        if ( weights.length != this.weights[layer].length ) {
+        if ( weights.length != params.weights[layer].length ) {
             throw new Exception( "Invalid number of weights." );
         }
-        this.weights[layer] = weights.clone();
+        params.weights[layer] = weights.clone();
     }
 
     public void setBiases( int layer, double[] biases ) throws Exception {
-        if ( biases.length != this.layers[layer] )  {
+        if ( biases.length != layers[layer] )  {
             throw new Exception( "Invalid number of biases." );
         }
-        this.biases[layer - 1] = biases.clone();
+        params.biases[layer - 1] = biases.clone();
     }
 
     public double[] getOutput() {
@@ -57,9 +65,9 @@ public class FeedForwardNeuralNetwork {
     private void calculateSum( int layer, int neuron ) {
         double sum = 0;
         for ( int i = 0; i < layers[layer - 1]; i++ ) {
-            sum += activations[layer - 1][i] * weights[layer - 1][i * layers[layer] + neuron];
+            sum += activations[layer - 1][i] * params.weights[layer - 1][i * layers[layer] + neuron];
         }
-        sum += biases[layer - 1][neuron];
+        sum += params.biases[layer - 1][neuron];
         activations[layer][neuron] = activationFunction( sum );
     }
 
@@ -68,11 +76,30 @@ public class FeedForwardNeuralNetwork {
         //return sum <= 0.0 ? 0.0 : 1.0;
         //return 1.0 / ( 1.0 + Math.exp(-sum) );
     }
+    
+    FeedForwardNeuralNetworkParameters calculateCostGradient( TrainingExample example ) throws Exception {
+        // TODO: Implement
+
+        return null;
+    }
+
+    void trainEpoch( TrainingExample[] examples ) throws Exception {
+        FeedForwardNeuralNetworkParameters paramsAcc = new FeedForwardNeuralNetworkParameters(layers);
+
+        for ( TrainingExample example : examples ) {
+            FeedForwardNeuralNetworkParameters params = calculateCostGradient(example);
+            paramsAcc.add( params );
+        }
+        paramsAcc.multiply( 1.0 / examples.length );
+
+        params.add( paramsAcc );
+    }
 
     private int[] layers;
 
-    private double [][] biases;
-    private double [][] weights;
+    //private double [][] biases;
+    //private double [][] weights;
+    private FeedForwardNeuralNetworkParameters params;
     private double [][] activations;
 
 }

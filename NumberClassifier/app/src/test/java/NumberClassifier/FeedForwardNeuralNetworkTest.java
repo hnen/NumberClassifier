@@ -44,7 +44,7 @@ public class FeedForwardNeuralNetworkTest {
     }
     
 
-    @Test void setInputDoesntAcceptInvalidInput() {
+    @Test void setInputDoesntAcceptInvalidInput() throws Exception {
         FeedForwardNeuralNetwork ffn = new FeedForwardNeuralNetwork( new int[] { 2, 3, 1 } );
 
         // Too little inputs
@@ -64,7 +64,7 @@ public class FeedForwardNeuralNetworkTest {
         }
     }
 
-    @Test void setWeightsDoesntAcceptInvalidInput() {
+    @Test void setWeightsDoesntAcceptInvalidInput() throws Exception {
         FeedForwardNeuralNetwork ffn = new FeedForwardNeuralNetwork( new int[] { 2, 3, 1 } );
 
         // Layer id out of bounds
@@ -100,7 +100,7 @@ public class FeedForwardNeuralNetworkTest {
         }
     }
     
-    @Test void setBiasesDoesntAcceptInvalidInput() {
+    @Test void setBiasesDoesntAcceptInvalidInput() throws Exception {
         FeedForwardNeuralNetwork ffn = new FeedForwardNeuralNetwork( new int[] { 2, 3, 1 } );
 
         // Layer id out of bounds
