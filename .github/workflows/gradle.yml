@@ -56,5 +56,9 @@ jobs:
       with:
         commit_message: Auto-generated code coverage badge.
         file_pattern: '*.svg'
-
+    - name: Upload JaCoCo coverage report
+      uses: actions/upload-artifact@v2
+      with:
+        name: jacoco-report
+        path: NumberClassifier/app/build/reports/tests/test
 
