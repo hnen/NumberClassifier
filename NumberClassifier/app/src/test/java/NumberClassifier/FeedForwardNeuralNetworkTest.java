@@ -23,22 +23,22 @@ public class FeedForwardNeuralNetworkTest {
         double output;
 
         ffn.setInput( new double[] { 1.0, 0.0 } );
-        ffn.calculateOutputs();
+        ffn.feedForward();
         output = ffn.getOutput()[0];
         assertTrue( output > 0.5, "1 XOR 0 should be 1" );
 
         ffn.setInput( new double[] { 0.0, 1.0 } );
-        ffn.calculateOutputs();
+        ffn.feedForward();
         output = ffn.getOutput()[0];
         assertTrue( output > 0.5, "0 XOR 1 should be 1" );
 
         ffn.setInput( new double[] { 1.0, 1.0 } );
-        ffn.calculateOutputs();
+        ffn.feedForward();
         output = ffn.getOutput()[0];
         assertTrue( output < 0.5, "1 XOR 1 should be 0" );
 
         ffn.setInput( new double[] { 0.0, 0.0 } );
-        ffn.calculateOutputs();
+        ffn.feedForward();
         output = ffn.getOutput()[0];
         assertTrue( output < 0.5, "0 XOR 0 should be 0" );
     }

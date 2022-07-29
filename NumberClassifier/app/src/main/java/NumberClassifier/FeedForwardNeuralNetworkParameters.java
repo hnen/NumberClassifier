@@ -29,19 +29,34 @@ public class FeedForwardNeuralNetworkParameters {
                 throw new Exception( "Parameters have different number of neuron weights on a layer." );
             }
     
+            for ( int j = 0; j < weights[i].length; j++ ) {
+                weights[i][j] += another.weights[i][j];
+            }
+        }
+        
+        for ( int i = 0; i < biases.length; i++ ) {   
             if ( another.biases[i].length != biases[i].length ) {
                 throw new Exception( "Parameters have different number of neuron biases on a layer." );
             }
-    
-            for ( int j = 0; j < weights[i].length; j++ ) {
-                weights[i][j] += another.weights[i][j];
+
+            for ( int j = 0; j < biases[i].length; j++ ) {
                 biases[i][j] += another.biases[i][j];
             }
-        }
+        }        
     }
 
     public void multiply( double x ) {
-        // TODO
+        for ( int i = 0; i < weights.length; i++ ) {   
+            for ( int j = 0; j < weights[i].length; j++ ) {
+                weights[i][j] *= x;
+            }
+        }
+        
+        for ( int i = 0; i < biases.length; i++ ) {   
+            for ( int j = 0; j < biases[i].length; j++ ) {
+                biases[i][j] *= x;
+            }
+        }  
     }
 
 }

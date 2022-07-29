@@ -1,7 +1,5 @@
 package NumberClassifier;
 
-import java.beans.FeatureDescriptor;
-
 /**
  * Basic feed forward neural network.
  */
@@ -54,7 +52,7 @@ public class FeedForwardNeuralNetwork {
         return this.activations[this.activations.length - 1].clone();
     }
     
-    public void calculateOutputs() {
+    public void feedForward() {
         for ( int i = 1; i < layers.length; i++ ) {
             for ( int j = 0; j < layers[i]; j++ ) {
                 calculateSum( i, j );
@@ -97,8 +95,6 @@ public class FeedForwardNeuralNetwork {
 
     private int[] layers;
 
-    //private double [][] biases;
-    //private double [][] weights;
     private FeedForwardNeuralNetworkParameters params;
     private double [][] activations;
 
