@@ -8,10 +8,20 @@ package NumberClassifier;
  */
 public class SigmoidActivationFunction implements IActivationFunction {
     
+    /**
+     * Calculate value of the activation function.
+     * @param x Activation function parameter.
+     * @return Value of the activation function at {@code x}.
+     */
     public double value( double x ) {
         return 1.0 / ( 1.0 + Math.exp(-x) );
     }
     
+    /**
+     * Calculate derivative of the activation function.
+     * @param x Activation function parameter.
+     * @return Derivative of the activation funcation at {@code x}.
+     */
     public double derivative( double x ) {
         return value(x) * (1 - value(x));
     }

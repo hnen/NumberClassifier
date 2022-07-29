@@ -11,10 +11,23 @@ import java.util.Random;
 public class FeedForwardNeuralNetworkParameters {
 
     private int[] layers;
+
+    /**
+     * Biases of each neuron. Array's first index maps to layer index, and second index maps to neuron index.
+     */
     public double [][] biases;
+
+    /**
+     * Weights of each neuron connection. Array's first index maps to layer index, and connection weights are for the outgoing connections. 
+     * For second index, index for connection from {@code i = neuron on layer} to {@code j = neuron on layer + 1} is {@code N * i + j}, where N is number of neurons on layer {@code layer}.
+     */
     public double [][] weights;    
 
-    public  FeedForwardNeuralNetworkParameters( int[] layers ) {
+    /**
+     * Initialize empty parameteres for feedforward neural network with architecture defined by the parameter.
+     * @param layers Number of neurons on each layer. The size of the array defines the number of layers. First element defines number of input neurons, and last element defines number of output neurons.
+     */
+    public FeedForwardNeuralNetworkParameters( int[] layers ) {
         this.layers = layers;
         this.weights = new double[layers.length - 1][];
         this.biases = new double[layers.length - 1][];
@@ -25,6 +38,11 @@ public class FeedForwardNeuralNetworkParameters {
         }
     }
 
+    /**
+     * Set each weight in the network to a uniformly distributed random number.
+     * @param min Minimum value for the weight.
+     * @param max Maximum value for the weight.
+     */
     public void randomizeWeights( double min, double max ) {
         Random rnd = new Random();
         for( int i = 0; i < layers.length - 1; i++ ) {
@@ -34,6 +52,10 @@ public class FeedForwardNeuralNetworkParameters {
         }        
     }
 
+    /**
+     * Set each bias in the network to a specified value.
+     * @param value The value where bias should be set to.
+     */
     public void setBiases( double value ) {
         for( int i = 0; i < layers.length - 1; i++ ) {
             for ( int j = 0; j < biases[i].length; j++ ) {
@@ -42,6 +64,12 @@ public class FeedForwardNeuralNetworkParameters {
         }
     }
 
+    /**
+     * Set weights for outgoing connections, from {@code layer} to {@code layer + 1}. 
+     * @param layer Layer index.
+     * @param weights Array of conection weights. Index of connection from {@code i = neuron} on layer to {@code j = neuron on layer + 1} is {@code N * i + j}, where N is number of neurons on layer {@code layer}.
+     * @throws Exception
+     */
     public void setWeights( int layer, double[] weights ) throws Exception {
         if ( weights.length != this.weights[layer].length ) {
             throw new Exception( "Invalid number of weights." );
@@ -50,6 +78,11 @@ public class FeedForwardNeuralNetworkParameters {
         this.weights[layer] = weights.clone();
     }
 
+    /**
+     * Generate a matrix for connections from layer {@code L} to layer {@code L + 1}, so that first index represents outgoing node and second index incoming node.
+     * @param L Outgoing layer index for connections
+     * @return 2-dimensional double array representing the matrix.
+     */
     public double[][] weightMatrix( int L ) {
         double[][] ret = new double[layers[L]][];
         for ( int i = 0; i < layers[L]; i++) {
@@ -62,6 +95,11 @@ public class FeedForwardNeuralNetworkParameters {
         return ret;
     }
 
+    /**
+     * Add weights and biases of another network parameters to weights and biases of this.
+     * @param another Network to add the parameters with. The network must have exactly same layer architecture as this has.
+     * @throws Exception
+     */
     public void add( FeedForwardNeuralNetworkParameters another ) throws Exception {
         if ( another.weights.length != weights.length ) {
             throw new Exception( "Parameters have different number of weight layers." );
