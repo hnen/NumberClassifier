@@ -14,8 +14,10 @@ public class FeedForwardNeuralNetwork {
         this.params = new FeedForwardNeuralNetworkParameters(layers);
 
         this.activations = new double[layers.length][];
+        this.sums = new double[layers.length][];
         for( int i = 0; i < layers.length; i++ ) {
             activations[i] = new double[layers[i]];
+            sums[i] = new double[layers[i]];
         }
     }
 
@@ -35,10 +37,7 @@ public class FeedForwardNeuralNetwork {
     }
 
     public void setWeights( int layer, double[] weights ) throws Exception {
-        if ( weights.length != params.weights[layer].length ) {
-            throw new Exception( "Invalid number of weights." );
-        }
-        params.weights[layer] = weights.clone();
+        params.setWeights( layer, weights );
     }
 
     public void setBiases( int layer, double[] biases ) throws Exception {
@@ -66,6 +65,7 @@ public class FeedForwardNeuralNetwork {
             sum += activations[layer - 1][i] * params.weights[layer - 1][i * layers[layer] + neuron];
         }
         sum += params.biases[layer - 1][neuron];
+        sums[layer][neuron] = sum;
         activations[layer][neuron] = activationFunction( sum );
     }
 
@@ -75,10 +75,64 @@ public class FeedForwardNeuralNetwork {
         //return 1.0 / ( 1.0 + Math.exp(-sum) );
     }
     
+    public static double activationDerivative( double sum ) {
+        return sum <= 0 ? 0.0 : 1.0;
+    }
+    
+    /**
+     * Cost function is quadratic sum.
+     * @param example
+     * @return
+     * @throws Exception
+     */
     FeedForwardNeuralNetworkParameters calculateCostGradient( TrainingExample example ) throws Exception {
-        // TODO: Implement
+        setInput( example.input );
+        feedForward();
 
-        return null;
+        double[][] errors = calculateErrors(example);
+
+        FeedForwardNeuralNetworkParameters gradient = new FeedForwardNeuralNetworkParameters(layers);
+        for ( int i = 1; i < layers.length; i++ ) {
+            for ( int j = 0; j < layers[i]; j++) {
+                gradient.biases[i][j] = errors[i][j];
+            }
+
+            for ( int j = 0; j < layers[i]; j++) {
+                for ( int k = 0; k < layers[i - 1]; k++) {
+                    gradient.weights[i - 1][k * layers[i] + j] = errors[i][j] * activations[i - 1][k];                    
+                }
+            }
+        }
+
+        return gradient;
+    }
+
+    double[][] calculateErrors(TrainingExample example) throws Exception {
+        double[][] errors = new double[layers.length][];
+        errors[layers.length - 1] = calculateOutputError(example.output);
+
+        for ( int L = layers.length - 2; L >= 0; L-- ) {
+            double[][] w = params.weightMatrix(L);
+            errors[L] = new double[layers[L]];
+            for ( int i = 0; i < layers[L]; i++ ) {
+                for ( int j = 0; j < layers[L+1]; j++) {
+                    errors[L][i] += errors[L+1][j] * w[i][j];
+                }
+                errors[L][i] *= activationDerivative( sums[L][i] );
+            }
+        }
+
+        return errors;
+    }
+
+    double[] calculateOutputError(double[] targetOutput) {
+        double[] currentOutput = getOutput();
+        double[] currentSum = sums[layers[layers.length-1]];
+        double[] ret = new double[currentOutput.length];
+        for ( int i = 0; i < currentOutput.length; i++ ) {
+            ret[i] = (currentOutput[i] - targetOutput[i]) * activationDerivative(currentSum[i]);
+        }
+        return ret;
     }
 
     void trainEpoch( TrainingExample[] examples ) throws Exception {
@@ -97,5 +151,6 @@ public class FeedForwardNeuralNetwork {
 
     private FeedForwardNeuralNetworkParameters params;
     private double [][] activations;
+    private double [][] sums;
 
 }

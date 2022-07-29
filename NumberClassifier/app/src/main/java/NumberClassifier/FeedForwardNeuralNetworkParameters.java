@@ -2,7 +2,12 @@ package NumberClassifier;
 
 public class FeedForwardNeuralNetworkParameters {
 
+    private int[] layers;
+    public double [][] biases;
+    public double [][] weights;    
+
     public  FeedForwardNeuralNetworkParameters( int[] layers ) {
+        this.layers = layers;
         this.weights = new double[layers.length - 1][];
         this.biases = new double[layers.length - 1][];
         
@@ -12,8 +17,25 @@ public class FeedForwardNeuralNetworkParameters {
         }
     }
 
-    public double [][] biases;
-    public double [][] weights;    
+    public void setWeights( int layer, double[] weights ) throws Exception {
+        if ( weights.length != this.weights[layer].length ) {
+            throw new Exception( "Invalid number of weights." );
+        }
+
+        this.weights[layer] = weights.clone();
+    }
+
+    public double[][] weightMatrix( int L ) {
+        double[][] ret = new double[layers[L]][];
+        for ( int i = 0; i < layers[L]; i++) {
+            ret[i] = new double[layers[L+1]];
+
+            for ( int j = 0; j < layers[L+1]; j++) {
+                ret[i][j] = weights[L][layers[L + 1] * i + j];
+            }
+        }
+        return ret;
+    }
 
     public void add( FeedForwardNeuralNetworkParameters another ) throws Exception {
         if ( another.weights.length != weights.length ) {
