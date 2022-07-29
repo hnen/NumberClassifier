@@ -5,11 +5,12 @@ package NumberClassifier;
  */
 public class FeedForwardNeuralNetwork {
     
-    public FeedForwardNeuralNetwork( int[] layers ) throws Exception {
+    public FeedForwardNeuralNetwork( IActivationFunction activationFunction, int[] layers ) throws Exception {
         if ( layers.length < 2 ) {
             throw new Exception( "There has to be at least 2 layers" );
         }
 
+        this.activationFunction = activationFunction;
         this.layers = layers;
         this.params = new FeedForwardNeuralNetworkParameters(layers);
 
@@ -21,12 +22,20 @@ public class FeedForwardNeuralNetwork {
         }
     }
 
+    public void randomizeWeights() {
+        params.randomizeWeights();
+    }
+
     public int getNumInputs() {
         return layers[0];
     }
 
     public int getNumOutputs() {
         return layers[layers.length - 1];
+    }
+
+    public double[] getActivations(int layer) {
+        return activations[layer];
     }
 
     public void setInput( double[] input ) throws Exception {
@@ -66,19 +75,9 @@ public class FeedForwardNeuralNetwork {
         }
         sum += params.biases[layer - 1][neuron];
         sums[layer][neuron] = sum;
-        activations[layer][neuron] = activationFunction( sum );
+        activations[layer][neuron] = activationFunction.value( sum );
     }
 
-    public static double activationFunction( double sum ) {
-        return sum < 0 ? 0.0 : sum;
-        //return sum <= 0.0 ? 0.0 : 1.0;
-        //return 1.0 / ( 1.0 + Math.exp(-sum) );
-    }
-    
-    public static double activationDerivative( double sum ) {
-        return sum <= 0 ? 0.0 : 1.0;
-    }
-    
     /**
      * Cost function is quadratic sum.
      * @param example
@@ -118,19 +117,19 @@ public class FeedForwardNeuralNetwork {
                 for ( int j = 0; j < layers[L+1]; j++) {
                     errors[L][i] += errors[L+1][j] * w[i][j];
                 }
-                errors[L][i] *= activationDerivative( sums[L][i] );
+                errors[L][i] *= activationFunction.derivative( sums[L][i] );
             }
         }
 
         return errors;
     }
 
-    double[] calculateOutputError(double[] targetOutput) {
+    public double[] calculateOutputError(double[] targetOutput) {
         double[] currentOutput = getOutput();
         double[] currentSum = sums[layers[layers.length-1]];
         double[] ret = new double[currentOutput.length];
         for ( int i = 0; i < currentOutput.length; i++ ) {
-            ret[i] = (currentOutput[i] - targetOutput[i]) * activationDerivative(currentSum[i]);
+            ret[i] = (currentOutput[i] - targetOutput[i]) * activationFunction.derivative(currentSum[i]);
         }
         return ret;
     }
@@ -147,6 +146,7 @@ public class FeedForwardNeuralNetwork {
         params.add( paramsAcc );
     }
 
+    private IActivationFunction activationFunction;
     private int[] layers;
 
     private FeedForwardNeuralNetworkParameters params;

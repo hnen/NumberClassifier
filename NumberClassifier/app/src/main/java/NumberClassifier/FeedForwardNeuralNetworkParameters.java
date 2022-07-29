@@ -1,5 +1,7 @@
 package NumberClassifier;
 
+import java.util.Random;
+
 public class FeedForwardNeuralNetworkParameters {
 
     private int[] layers;
@@ -15,6 +17,15 @@ public class FeedForwardNeuralNetworkParameters {
             weights[i] = new double[layers[i] * layers[i + 1]];
             biases[i] = new double[layers[i + 1]];
         }
+    }
+
+    public void randomizeWeights() {
+        Random rnd = new Random();
+        for( int i = 0; i < layers.length - 1; i++ ) {
+            for ( int j = 0; j < weights.length; j++ ) {
+                weights[i][j] = (rnd.nextDouble() - 0.5) * 2.0;
+            }
+        }        
     }
 
     public void setWeights( int layer, double[] weights ) throws Exception {
