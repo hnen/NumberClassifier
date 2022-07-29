@@ -1,9 +1,70 @@
 package NumberClassifier;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestReporter;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FeedForwardNeuralNetworkTest {
+
+    @Test void testCalculateCostGradient() throws Exception {
+        FeedForwardNeuralNetwork ffn0 = new FeedForwardNeuralNetwork( new ReLUActivationFunction(), new int[] { 2, 3, 1 } );
+
+        for ( int i = 0; i < 100; i++) {
+            ffn0.randomizeWeights(0.0, 1.0);
+            ffn0.setBiases(0.1);
+            testCalculateCostGradient(ffn0, new double[] { 0.0, 0.0 }, new double[] { 0.0 });
+            testCalculateCostGradient(ffn0, new double[] { 1.0, 0.0 }, new double[] { 1.0 });
+            testCalculateCostGradient(ffn0, new double[] { 0.0, 1.0 }, new double[] { 1.0 });
+            testCalculateCostGradient(ffn0, new double[] { 1.0, 1.0 }, new double[] { 0.0 });
+        }
+
+        FeedForwardNeuralNetwork ffn1 = new FeedForwardNeuralNetwork( new SigmoidActivationFunction(), new int[] { 2, 3, 1 } );
+        for ( int i = 0; i < 100; i++) {
+            ffn1.randomizeWeights(-1.0, 1.0);
+            ffn1.setBiases(0.0);
+            testCalculateCostGradient(ffn1, new double[] { 0.0, 0.0 }, new double[] { 0.0 });
+            testCalculateCostGradient(ffn1, new double[] { 1.0, 0.0 }, new double[] { 1.0 });
+            testCalculateCostGradient(ffn1, new double[] { 0.0, 1.0 }, new double[] { 1.0 });
+            testCalculateCostGradient(ffn1, new double[] { 1.0, 1.0 }, new double[] { 0.0 });
+        }
+
+    }
+
+    void testCalculateCostGradient( FeedForwardNeuralNetwork ffn, double[] input, double[] expectedOutput ) throws Exception {
+        TrainingExample ex = new TrainingExample();
+        ex.input = input;
+        ex.output = expectedOutput;
+        
+        ffn.setInput(ex.input);
+        ffn.feedForward();
+        FeedForwardNeuralNetworkParameters grad = ffn.calculateCostGradient(ex);
+        double C0 = ffn.calculateCost( expectedOutput );
+
+        for ( int i = 0; i < ffn.getNumLayers() - 1; i++) {
+            double[] weights = ffn.getWeights(i);
+            for ( int j = 0; j < weights.length; j++ ) {
+                double gradient = grad.weights[i][j];
+                //weights[j] -= gradient * 0.0625;
+                //ffn.feedForward();
+                //double C1 = ffn.calculateCost( expectedOutput );
+                //assertTrue( grad.weights[i][j] == 0.0 || (C0 == 0.0 && C1 == 0.0) || C1 < C0 );
+                //C0 = C1;
+                weights[j] -= gradient * 0.25;
+            }         
+
+            double[] biases = ffn.getBiases(i + 1);
+            for ( int j = 0; j < biases.length; j++ ) {
+                double gradient = grad.biases[i][j];
+                biases[j] -= gradient * 0.25;
+            }         
+        }
+
+        ffn.feedForward();
+        double C1 = ffn.calculateCost( expectedOutput );
+        assertTrue( (C0 == 0.0 && C1 == 0.0) || C1 < C0 );
+
+    }    
 
     @Test void testCalculateOutputError() throws Exception {
         FeedForwardNeuralNetwork ffn0 = new FeedForwardNeuralNetwork( new ReLUActivationFunction(), new int[] { 2, 3, 1 } );

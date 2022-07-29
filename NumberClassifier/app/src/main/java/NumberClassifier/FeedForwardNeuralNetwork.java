@@ -67,6 +67,32 @@ public class FeedForwardNeuralNetwork {
     }
 
     /**
+     * Get number of layers in the neural network.
+     * @return Number of layers, including input and output layers.
+     */
+    public int getNumLayers() {
+        return layers.length;
+    }
+
+    /**
+     * Get weights for connections from layer {@code layer} to {@code layer + 1}.
+     * @param layer Layer index.
+     * @return Array of connection weights. Index of connection from {@code i = neuron} on layer to {@code j = neuron on layer + 1} is {@code N * i + j}, where N is number of neurons on layer {@code layer}.
+     */
+    public double[] getWeights( int layer ) {
+        return params.weights[layer];
+    }
+
+    /**
+     * Get biases for neurons for layer {@code layer}.
+     * @param layer Layer index. Note that input input layer ({@code layer = 0}) doesn't have biases.
+     * @return Array of biases for each neuron.
+     */
+    public double[] getBiases( int layer ) {
+        return params.biases[layer - 1];
+    }
+
+    /**
      * Get neuron activation values on a layer. The activation values will get filled when calling {@code feedforward()}
      * @param layer Layer number to get activations from. 0 is first layer (i.e. input layer) and layer count - 1 is the output layer.
      * @return Array of neuron activation values.
@@ -90,7 +116,7 @@ public class FeedForwardNeuralNetwork {
     /**
      * Set weights for outgoing connections, from {@code layer} to {@code layer + 1}. 
      * @param layer Layer index.
-     * @param weights Array of conection weights. Index of connection from {@code i = neuron} on layer to {@code j = neuron on layer + 1} is {@code N * i + j}, where N is number of neurons on layer {@code layer}.
+     * @param weights Array of connection weights. Index of connection from {@code i = neuron} on layer to {@code j = neuron on layer + 1} is {@code N * i + j}, where N is number of neurons on layer {@code layer}.
      * @throws Exception
      */
     public void setWeights( int layer, double[] weights ) throws Exception {
@@ -139,21 +165,60 @@ public class FeedForwardNeuralNetwork {
         activations[layer][neuron] = activationFunction.value( sum );
     }
 
-    FeedForwardNeuralNetworkParameters calculateCostGradient( TrainingExample example ) throws Exception {
+    /**
+     * Calculate value of the cost function. The cost function is mean squared error.
+     * @param targetOutput Target output values for output neuron activations.
+     * @return Value of the cost function.
+     */
+    public double calculateCost( double[] targetOutput ) {
+        double C = 0.0;
+        for ( int i = 0; i < layers[layers.length - 1]; i++ ) {
+            double delta = (activations[layers.length - 1][i] - targetOutput[i]);
+            C += delta * delta;
+        }
+        C /= layers[layers.length - 1];
+
+        return C;
+    }
+
+    void trainEpoch( TrainingExample[] examples ) throws Exception {
+        FeedForwardNeuralNetworkParameters paramsAcc = new FeedForwardNeuralNetworkParameters(layers);
+
+        for ( TrainingExample example : examples ) {
+            FeedForwardNeuralNetworkParameters params = calculateCostGradient(example);
+            paramsAcc.add( params );
+        }
+        paramsAcc.multiply( 1.0 / examples.length );
+
+        params.add( paramsAcc );
+    }
+
+
+    /**
+     * Calculate gradient of the cost function related to the neural network parameters. These values are used in backpropagation algorithm.
+     * @param example Training example to calculate the cost gradient against.
+     * @return Parameters containing the gradient.
+     * @throws Exception
+     */
+    public FeedForwardNeuralNetworkParameters calculateCostGradient( TrainingExample example ) throws Exception {
         setInput( example.input );
         feedForward();
 
-        double[][] errors = calculateErrors(example);
+        double[][] errors = calculateErrors(example.output);
 
         FeedForwardNeuralNetworkParameters gradient = new FeedForwardNeuralNetworkParameters(layers);
-        for ( int i = 1; i < layers.length; i++ ) {
-            for ( int j = 0; j < layers[i]; j++) {
-                gradient.biases[i][j] = errors[i][j];
+        for ( int i = 0; i < layers.length; i++ ) {
+            if ( i > 0 ) {
+                for ( int j = 0; j < layers[i]; j++) {
+                    gradient.biases[i - 1][j] = errors[i][j];
+                }
             }
 
-            for ( int j = 0; j < layers[i]; j++) {
-                for ( int k = 0; k < layers[i - 1]; k++) {
-                    gradient.weights[i - 1][k * layers[i] + j] = errors[i][j] * activations[i - 1][k];                    
+            if ( i < layers.length - 1 ) {
+                for ( int j = 0; j < layers[i]; j++) {
+                    for ( int k = 0; k < layers[i + 1]; k++) {
+                        gradient.weights[i][j * layers[i + 1] + k] = errors[i + 1][k] * activations[i][j];                    
+                    }
                 }
             }
         }
@@ -161,9 +226,15 @@ public class FeedForwardNeuralNetwork {
         return gradient;
     }
 
-    double[][] calculateErrors(TrainingExample example) throws Exception {
+    /**
+     * Calculate gradient of the cost function related to the weighted input for each of the hidden and output layer neurons. These values are used in backpropagation algorithm.
+     * @param targetOutput Target values for output neurons, where cost function minimum should be.
+     * @return Error as 2-dimensional array, where first index represents layer and second index a neuron on that layer.
+     * @throws Exception
+     */
+    double[][] calculateErrors(double[] targetOutput) throws Exception {
         double[][] errors = new double[layers.length][];
-        errors[layers.length - 1] = calculateOutputError(example.output);
+        errors[layers.length - 1] = calculateOutputError(targetOutput);
 
         for ( int L = layers.length - 2; L >= 0; L-- ) {
             double[][] w = params.weightMatrix(L);
@@ -180,8 +251,8 @@ public class FeedForwardNeuralNetwork {
     }
 
     /**
-     * Calculate gradient of the cost function related to the weighted input for each of the output neurons. These values are use in backpropagation algorithm.
-     * @param targetOutput Desired output values, where cost function minimum should be.
+     * Calculate gradient of the cost function related to the weighted input for each of the output neurons. These values are used in backpropagation algorithm.
+     * @param targetOutput Target values for output neurons, where cost function minimum should be.
      * @return Cost function gradients for each output neuron.
      */
     public double[] calculateOutputError(double[] targetOutput) {
@@ -194,17 +265,6 @@ public class FeedForwardNeuralNetwork {
         return ret;
     }
 
-    void trainEpoch( TrainingExample[] examples ) throws Exception {
-        FeedForwardNeuralNetworkParameters paramsAcc = new FeedForwardNeuralNetworkParameters(layers);
-
-        for ( TrainingExample example : examples ) {
-            FeedForwardNeuralNetworkParameters params = calculateCostGradient(example);
-            paramsAcc.add( params );
-        }
-        paramsAcc.multiply( 1.0 / examples.length );
-
-        params.add( paramsAcc );
-    }
 
     private IActivationFunction activationFunction;
     private int[] layers;
