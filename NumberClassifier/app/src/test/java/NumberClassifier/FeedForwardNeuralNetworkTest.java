@@ -6,14 +6,25 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FeedForwardNeuralNetworkTest {
 
     @Test void testCalculateOutputError() throws Exception {
-        FeedForwardNeuralNetwork ffn = new FeedForwardNeuralNetwork( new SigmoidActivationFunction(), new int[] { 2, 3, 1 } );
+        FeedForwardNeuralNetwork ffn0 = new FeedForwardNeuralNetwork( new ReLUActivationFunction(), new int[] { 2, 3, 1 } );
 
         for ( int i = 0; i < 100; i++) {
-            ffn.randomizeWeights();       
-            testCalculateOutputError(ffn, new double[] { 0.0, 0.0 }, new double[] { 0.0 });
-            testCalculateOutputError(ffn, new double[] { 1.0, 0.0 }, new double[] { 1.0 });
-            testCalculateOutputError(ffn, new double[] { 0.0, 1.0 }, new double[] { 1.0 });
-            testCalculateOutputError(ffn, new double[] { 1.0, 1.0 }, new double[] { 0.0 });
+            ffn0.randomizeWeights(0.0, 1.0);
+            ffn0.setBiases(0.1);
+            testCalculateOutputError(ffn0, new double[] { 0.0, 0.0 }, new double[] { 0.0 });
+            testCalculateOutputError(ffn0, new double[] { 1.0, 0.0 }, new double[] { 1.0 });
+            testCalculateOutputError(ffn0, new double[] { 0.0, 1.0 }, new double[] { 1.0 });
+            testCalculateOutputError(ffn0, new double[] { 1.0, 1.0 }, new double[] { 0.0 });
+        }
+
+        FeedForwardNeuralNetwork ffn1 = new FeedForwardNeuralNetwork( new SigmoidActivationFunction(), new int[] { 2, 3, 1 } );
+        for ( int i = 0; i < 100; i++) {
+            ffn1.randomizeWeights(-1.0, 1.0);
+            ffn1.setBiases(0.0);
+            testCalculateOutputError(ffn1, new double[] { 0.0, 0.0 }, new double[] { 0.0 });
+            testCalculateOutputError(ffn1, new double[] { 1.0, 0.0 }, new double[] { 1.0 });
+            testCalculateOutputError(ffn1, new double[] { 0.0, 1.0 }, new double[] { 1.0 });
+            testCalculateOutputError(ffn1, new double[] { 1.0, 1.0 }, new double[] { 0.0 });
         }
     }
 

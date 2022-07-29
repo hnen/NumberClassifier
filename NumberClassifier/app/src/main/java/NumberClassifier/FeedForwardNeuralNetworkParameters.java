@@ -19,13 +19,21 @@ public class FeedForwardNeuralNetworkParameters {
         }
     }
 
-    public void randomizeWeights() {
+    public void randomizeWeights( double min, double max ) {
         Random rnd = new Random();
         for( int i = 0; i < layers.length - 1; i++ ) {
-            for ( int j = 0; j < weights.length; j++ ) {
-                weights[i][j] = (rnd.nextDouble() - 0.5) * 2.0;
+            for ( int j = 0; j < weights[i].length; j++ ) {
+                weights[i][j] = rnd.nextDouble() * (max-min) + min;
             }
         }        
+    }
+
+    public void setBiases( double value ) {
+        for( int i = 0; i < layers.length - 1; i++ ) {
+            for ( int j = 0; j < biases[i].length; j++ ) {
+                biases[i][j] = value;
+            }
+        }
     }
 
     public void setWeights( int layer, double[] weights ) throws Exception {

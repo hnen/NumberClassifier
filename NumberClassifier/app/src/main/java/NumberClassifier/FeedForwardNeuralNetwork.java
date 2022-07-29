@@ -22,8 +22,12 @@ public class FeedForwardNeuralNetwork {
         }
     }
 
-    public void randomizeWeights() {
-        params.randomizeWeights();
+    public void randomizeWeights( double min, double max ) {
+        params.randomizeWeights( min, max );
+    }
+
+    public void setBiases( double value ) {
+        params.setBiases( value );
     }
 
     public int getNumInputs() {
