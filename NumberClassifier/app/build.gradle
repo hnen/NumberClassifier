@@ -42,8 +42,15 @@ jacocoTestReport {
         xml.enabled = true
         csv.enabled = true
         html.enabled = true
-        
+
     }
 }
 
 check.dependsOn jacocoTestReport
+
+apply plugin: 'java'
+
+javadoc {
+    source = sourceSets.main.allJava
+    classpath = configurations.runtimeClasspath
+}
