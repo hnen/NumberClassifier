@@ -61,4 +61,14 @@ jobs:
       with:
         name: codecov-report
         path: NumberClassifier/app/build/reports/jacoco/test/html
-
+    - name: Generate javadoc    
+      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+      with:
+        arguments: javadoc
+        gradle-version: 7.4
+        build-root-directory: NumberClassifier
+    - name: Upload Javadoc
+      uses: actions/upload-artifact@v2
+      with:
+        name: codecov-report
+        path: NumberClassifier/app/build/docs/javadoc
