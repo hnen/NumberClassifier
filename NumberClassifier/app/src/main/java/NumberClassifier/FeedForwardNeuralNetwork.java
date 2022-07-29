@@ -2,6 +2,10 @@ package NumberClassifier;
 
 /**
  * Basic feed forward neural network.
+ * <p>
+ * Represents a standard multilayer feed forward neural network. The activation function can be configured.
+ * Cost function is hard coded mean squared error.
+ * </p>
  */
 public class FeedForwardNeuralNetwork {
     

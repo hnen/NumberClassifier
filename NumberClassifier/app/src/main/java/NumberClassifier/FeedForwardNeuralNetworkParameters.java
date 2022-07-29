@@ -2,6 +2,12 @@ package NumberClassifier;
 
 import java.util.Random;
 
+/**
+ * Stores weights and biases for a Feed Forward Neural Network.
+ * <p>
+ * In addition to representing the neural network parameters, it can represent gradient of the parameters.
+ * </p>
+ */
 public class FeedForwardNeuralNetworkParameters {
 
     private int[] layers;

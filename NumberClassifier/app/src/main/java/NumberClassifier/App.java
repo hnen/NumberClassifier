@@ -3,7 +3,14 @@
  */
 package NumberClassifier;
 
+/**
+ * Entry point for the application.
+ * <p>
+ * This is a currently an automatically generated placeholder, waiting for implementation.
+ * </p>
+ */
 public class App {
+
     public String getGreeting() {
         return "Hello World!";
     }
