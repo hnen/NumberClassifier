@@ -10,7 +10,7 @@ public class FeedForwardNeuralNetworkTest {
     @Test void testCalculateCostGradient() throws Exception {
         FeedForwardNeuralNetwork ffn0 = new FeedForwardNeuralNetwork( new ReLUActivationFunction(), new int[] { 2, 3, 1 } );
 
-        for ( int i = 0; i < 100; i++) {
+        for ( int i = 0; i < 1000; i++) {
             ffn0.randomizeWeights(0.0, 1.0);
             ffn0.setBiases(0.1);
             testCalculateCostGradient(ffn0, new double[] { 0.0, 0.0 }, new double[] { 0.0 });
@@ -20,7 +20,7 @@ public class FeedForwardNeuralNetworkTest {
         }
 
         FeedForwardNeuralNetwork ffn1 = new FeedForwardNeuralNetwork( new SigmoidActivationFunction(), new int[] { 2, 3, 1 } );
-        for ( int i = 0; i < 100; i++) {
+        for ( int i = 0; i < 1000; i++) {
             ffn1.randomizeWeights(-1.0, 1.0);
             ffn1.setBiases(0.0);
             testCalculateCostGradient(ffn1, new double[] { 0.0, 0.0 }, new double[] { 0.0 });
@@ -28,7 +28,6 @@ public class FeedForwardNeuralNetworkTest {
             testCalculateCostGradient(ffn1, new double[] { 0.0, 1.0 }, new double[] { 1.0 });
             testCalculateCostGradient(ffn1, new double[] { 1.0, 1.0 }, new double[] { 0.0 });
         }
-
     }
 
     void testCalculateCostGradient( FeedForwardNeuralNetwork ffn, double[] input, double[] expectedOutput ) throws Exception {
@@ -50,13 +49,13 @@ public class FeedForwardNeuralNetworkTest {
                 //double C1 = ffn.calculateCost( expectedOutput );
                 //assertTrue( grad.weights[i][j] == 0.0 || (C0 == 0.0 && C1 == 0.0) || C1 < C0 );
                 //C0 = C1;
-                weights[j] -= gradient * 0.25;
+                weights[j] -= gradient * 0.125;
             }         
 
             double[] biases = ffn.getBiases(i + 1);
             for ( int j = 0; j < biases.length; j++ ) {
                 double gradient = grad.biases[i][j];
-                biases[j] -= gradient * 0.25;
+                biases[j] -= gradient * 0.125;
             }         
         }
 
