@@ -52,6 +52,27 @@ public class FeedForwardNeuralNetworkParametersTest {
         assertEquals(7.0, p1.weights[0][5]);
     }
 
+
+    @Test void testAddWithInvalidParams() throws Exception {
+        FeedForwardNeuralNetworkParameters p0 = new FeedForwardNeuralNetworkParameters( new int[] { 2, 3 } );
+        FeedForwardNeuralNetworkParameters p1 = new FeedForwardNeuralNetworkParameters( new int[] { 2, 4 } );
+        try {
+            p1.add(p0);
+            fail("Expected to throw exception.");
+        } catch (Exception e) {
+            assertNotNull(e);
+        }
+
+        FeedForwardNeuralNetworkParameters p2 = new FeedForwardNeuralNetworkParameters( new int[] { 2, 3 } );
+        FeedForwardNeuralNetworkParameters p3 = new FeedForwardNeuralNetworkParameters( new int[] { 2, 3, 1 } );
+        try {
+            p2.add(p3);
+            fail("Expected to throw exception.");
+        } catch (Exception e) {
+            assertNotNull(e);
+        }
+    }
+
     @Test void testMul() throws Exception {
         FeedForwardNeuralNetworkParameters p = new FeedForwardNeuralNetworkParameters( new int[] { 2, 3 } );
 

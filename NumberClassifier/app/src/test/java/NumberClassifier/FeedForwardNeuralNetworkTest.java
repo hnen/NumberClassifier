@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class FeedForwardNeuralNetworkTest {
 
+
+
     @Test void testTrainEpoch() throws Exception {
         for ( int i = 0; i < 1000; i++ ) {
             testTrainEpoch( 
@@ -187,6 +189,21 @@ public class FeedForwardNeuralNetworkTest {
         // Too many inputs
         try {
             ffn.setInput(new double[] {0.0, 0.0, 0.0});
+            fail("Expected to throw exception.");
+        } catch (Exception e) {
+            assertNotNull(e);
+        }
+    }
+
+    @Test void testNumInputsOutputs() throws Exception {
+        FeedForwardNeuralNetwork ffn = new FeedForwardNeuralNetwork( new SigmoidActivationFunction(), new int[] { 2, 3, 1 } );
+        assertEquals(2, ffn.getNumInputs());
+        assertEquals(1, ffn.getNumOutputs());
+    }
+
+    @Test void testInvalidLayerCount() throws Exception {
+        try {
+            FeedForwardNeuralNetwork ffn = new FeedForwardNeuralNetwork( new SigmoidActivationFunction(), new int[] { 2 } );
             fail("Expected to throw exception.");
         } catch (Exception e) {
             assertNotNull(e);

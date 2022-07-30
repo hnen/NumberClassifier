@@ -101,12 +101,8 @@ public class FeedForwardNeuralNetworkParameters {
      * @throws Exception
      */
     public void add( FeedForwardNeuralNetworkParameters another ) throws Exception {
-        if ( another.weights.length != weights.length ) {
-            throw new Exception( "Parameters have different number of weight layers." );
-        }
-
-        if ( another.biases.length != biases.length ) {
-            throw new Exception( "Parameters have different number of bias layers." );
+        if ( another.weights.length != weights.length || another.biases.length != biases.length) {
+            throw new Exception( "Parameters have different number of layers." );
         }
 
         for ( int i = 0; i < weights.length; i++ ) {   
@@ -120,10 +116,6 @@ public class FeedForwardNeuralNetworkParameters {
         }
         
         for ( int i = 0; i < biases.length; i++ ) {   
-            if ( another.biases[i].length != biases[i].length ) {
-                throw new Exception( "Parameters have different number of neuron biases on a layer." );
-            }
-
             for ( int j = 0; j < biases[i].length; j++ ) {
                 biases[i][j] += another.biases[i][j];
             }
