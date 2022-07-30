@@ -24,8 +24,6 @@ Current implementation may also be too inefficient for more complex networks, so
 
 I'm having issues configuring Java Checkstyle. I've tried with few XML conf for Checkstyle from internet and they keep giving "Unable to create Root Module" errors.
 
-Not sure how to test {@code toString()} methods. Is it even necessary? They hurt the code coverage metric a bit.
-
 ## Week notes
 
 ### Wed 27.7.2022 - 0,5 hours

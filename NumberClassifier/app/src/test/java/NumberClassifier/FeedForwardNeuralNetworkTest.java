@@ -210,6 +210,11 @@ public class FeedForwardNeuralNetworkTest {
         }
     }
 
+    @Test void testToString() throws Exception {
+        FeedForwardNeuralNetwork ffn = new FeedForwardNeuralNetwork( new SigmoidActivationFunction(), new int[] { 2, 3 } );
+        assertNotNull(ffn.toString());
+    }
+
     @Test void setWeightsDoesntAcceptInvalidInput() throws Exception {
         FeedForwardNeuralNetwork ffn = new FeedForwardNeuralNetwork( new SigmoidActivationFunction(), new int[] { 2, 3, 1 } );
 

@@ -91,5 +91,12 @@ public class FeedForwardNeuralNetworkParametersTest {
         assertEquals(10.0, p.weights[0][4]);
         assertEquals(12.0, p.weights[0][5]);
     }
+    
+    @Test void testToString() throws Exception {
+        FeedForwardNeuralNetworkParameters p0 = new FeedForwardNeuralNetworkParameters( new int[]{2, 3, 1});
+        assertNotNull(p0.toString());
+        FeedForwardNeuralNetworkParameters p1 = new FeedForwardNeuralNetworkParameters( new int[]{1});
+        assertNotNull(p1.toString());
+    }
 
 }
