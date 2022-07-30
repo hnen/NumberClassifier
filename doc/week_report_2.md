@@ -20,9 +20,11 @@ It seems like the backpropagation is working as intended, so I'm planning to mov
 
 Current implementation may also be too inefficient for more complex networks, so optimizing the data structures, using efficient linear algebra routines, etc., may be necessary.
 
-### Problems
+### Problems and questions
 
 I'm having issues configuring Java Checkstyle. I've tried with few XML conf for Checkstyle from internet and they keep giving "Unable to create Root Module" errors.
+
+Not sure how to test {@code toString()} methods. Is it even necessary? They hurt the code coverage metric a bit.
 
 ## Week notes
 

@@ -101,7 +101,7 @@ public class FeedForwardNeuralNetworkParameters {
      * @throws Exception
      */
     public void add( FeedForwardNeuralNetworkParameters another ) throws Exception {
-        if ( another.weights.length != weights.length || another.biases.length != biases.length) {
+        if ( layers.length != another.layers.length ) {
             throw new Exception( "Parameters have different number of layers." );
         }
 
