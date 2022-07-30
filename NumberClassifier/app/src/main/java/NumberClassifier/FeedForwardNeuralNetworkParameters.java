@@ -144,4 +144,32 @@ public class FeedForwardNeuralNetworkParameters {
         }  
     }
 
+
+    @Override 
+    public String toString() {
+        String ret = "";
+        for ( int i = 0; i < layers.length; i++ ) {
+            ret += "Layer " + i + " ------------------------------ \n";
+
+            if ( i < layers.length - 1) {
+                double[] w = weights[i];
+                int numL0 = layers[i];
+                int numL1 = layers[i + 1];
+                for ( int j = 0; j < numL0; j++) {
+                    for ( int k = 0; k < numL1; k++) {
+                        ret += "w " + j + " -> " + k + ": " + w[j * numL1 + k] + "\n";
+                    }
+                }
+            }
+
+            if ( i > 0 ) {
+                double[] b = biases[i - 1];
+                for ( int j = 0; j < b.length; j++ ) {
+                    ret += "b_" + j + " = " + b[j] + "\n";
+                }
+            }
+        }
+        return ret;
+    }
+
 }

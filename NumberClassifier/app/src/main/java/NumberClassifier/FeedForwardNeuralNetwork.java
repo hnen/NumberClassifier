@@ -166,7 +166,7 @@ public class FeedForwardNeuralNetwork {
     }
 
     /**
-     * Calculate value of the cost function. The cost function is mean squared error.
+     * Calculate value of the cost function. The method assumes that feedforward has been executed. The cost function is mean squared error.
      * @param targetOutput Target output values for output neuron activations.
      * @return Value of the cost function.
      */
@@ -181,16 +181,35 @@ public class FeedForwardNeuralNetwork {
         return C;
     }
 
-    void trainEpoch( TrainingExample[] examples ) throws Exception {
+    /**
+     * Calculate average for the cost function over training examples.
+     * @param examples Array oft training examples.
+     * @return Average of cost function.
+     * @throws Exception
+     */
+    public double calculateCost( TrainingExample[] examples ) throws Exception {
+        double C = 0.0;
+        for ( TrainingExample ex : examples ) {
+            setInput(ex.input);
+            feedForward();
+            C += calculateCost( ex.output );
+        }
+        return C / examples.length;
+    }
+
+    public FeedForwardNeuralNetworkParameters trainEpoch( TrainingExample[] examples, double multiplier ) throws Exception {
         FeedForwardNeuralNetworkParameters paramsAcc = new FeedForwardNeuralNetworkParameters(layers);
 
         for ( TrainingExample example : examples ) {
             FeedForwardNeuralNetworkParameters params = calculateCostGradient(example);
+            params.multiply( -1.0 * multiplier );
             paramsAcc.add( params );
         }
         paramsAcc.multiply( 1.0 / examples.length );
 
         params.add( paramsAcc );
+
+        return paramsAcc;
     }
 
 
@@ -265,6 +284,10 @@ public class FeedForwardNeuralNetwork {
         return ret;
     }
 
+    @Override 
+    public String toString() {
+        return params.toString();
+    }
 
     private IActivationFunction activationFunction;
     private int[] layers;
@@ -272,5 +295,7 @@ public class FeedForwardNeuralNetwork {
     private FeedForwardNeuralNetworkParameters params;
     private double [][] activations;
     private double [][] weightedInputs;
+
+    
 
 }

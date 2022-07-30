@@ -7,6 +7,39 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class FeedForwardNeuralNetworkTest {
 
+    @Test void testTrainEpoch() throws Exception {
+        for ( int i = 0; i < 10; i++ ) {
+            testTrainEpoch( 
+                new ReLUActivationFunction(), 1, 
+                0.125,
+                0.0, 1.0,
+                0.1 );
+        }
+    }
+
+    void testTrainEpoch( IActivationFunction activationFunction, int epochs, double gradMultiplier, double initWeightsMin, double initWeightsMax, double initBiases ) throws Exception {
+        FeedForwardNeuralNetwork ffn0 = new FeedForwardNeuralNetwork( activationFunction, new int[] { 2, 3, 1 } );
+        ffn0.randomizeWeights(initWeightsMin, initWeightsMax);
+        ffn0.setBiases(initBiases);
+
+        TrainingExample[] examples = new TrainingExample[] {
+            new TrainingExample( new double[]{0.0, 0.0}, new double[] { 0.0 } ),
+            new TrainingExample( new double[]{1.0, 0.0}, new double[] { 1.0 } ),
+            new TrainingExample( new double[]{0.0, 1.0}, new double[] { 1.0 } ),
+            new TrainingExample( new double[]{1.0, 1.0}, new double[] { 0.0 } ),
+        };
+
+        double C0 = ffn0.calculateCost( examples );
+
+        for ( int i = 0; i < epochs; i++ ) {  
+            ffn0.trainEpoch(examples, gradMultiplier);
+        }
+
+        double C1 = ffn0.calculateCost( examples );
+        
+        assertTrue( C1 < C0 );
+    }
+
     @Test void testCalculateCostGradient() throws Exception {
         FeedForwardNeuralNetwork ffn0 = new FeedForwardNeuralNetwork( new ReLUActivationFunction(), new int[] { 2, 3, 1 } );
 
@@ -111,7 +144,6 @@ public class FeedForwardNeuralNetworkTest {
     }
 
     @Test void testFeedForward() throws Exception {
-        // Setup ---
         FeedForwardNeuralNetwork ffn = new FeedForwardNeuralNetwork( new SigmoidActivationFunction(), new int[] { 2, 3, 1 } );
         ffn.setWeights( 
             0, new double[] { 
