@@ -2,7 +2,7 @@
 
 ## Week Summary
 
-Total hours worked: 9,5 hours
+Total hours worked: 10 hours
 
 ### Current status
 
