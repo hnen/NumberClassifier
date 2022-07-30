@@ -8,12 +8,17 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FeedForwardNeuralNetworkTest {
 
     @Test void testTrainEpoch() throws Exception {
-        for ( int i = 0; i < 10; i++ ) {
+        for ( int i = 0; i < 1000; i++ ) {
             testTrainEpoch( 
                 new ReLUActivationFunction(), 1, 
-                0.125,
+                0.25,
                 0.0, 1.0,
                 0.1 );
+            testTrainEpoch( 
+                new SigmoidActivationFunction(), 1, 
+                12.0,
+                -1.0, 1.0,
+                0.0 );
         }
     }
 
