@@ -1,13 +1,10 @@
 package NumberClassifier;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestReporter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FeedForwardNeuralNetworkTest {
-
-
 
     @Test void testTrainEpoch() throws Exception {
         for ( int i = 0; i < 1000; i++ ) {
