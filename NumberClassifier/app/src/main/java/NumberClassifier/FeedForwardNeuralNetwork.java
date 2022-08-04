@@ -197,12 +197,12 @@ public class FeedForwardNeuralNetwork {
         return C / examples.length;
     }
 
-    public FeedForwardNeuralNetworkParameters trainEpoch( TrainingExample[] examples, double multiplier ) throws Exception {
+    public FeedForwardNeuralNetworkParameters trainEpoch( TrainingExample[] examples, double learningRate ) throws Exception {
         FeedForwardNeuralNetworkParameters paramsAcc = new FeedForwardNeuralNetworkParameters(layers);
 
         for ( TrainingExample example : examples ) {
             FeedForwardNeuralNetworkParameters params = calculateCostGradient(example);
-            params.multiply( -1.0 * multiplier );
+            params.multiply( -1.0 * learningRate );
             paramsAcc.add( params );
         }
         paramsAcc.multiply( 1.0 / examples.length );

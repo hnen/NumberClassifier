@@ -21,7 +21,7 @@ public class FeedForwardNeuralNetworkTest {
         }
     }
 
-    void testTrainEpoch( IActivationFunction activationFunction, int epochs, double gradMultiplier, double initWeightsMin, double initWeightsMax, double initBiases ) throws Exception {
+    void testTrainEpoch( IActivationFunction activationFunction, int epochs, double learningRate, double initWeightsMin, double initWeightsMax, double initBiases ) throws Exception {
         FeedForwardNeuralNetwork ffn0 = new FeedForwardNeuralNetwork( activationFunction, new int[] { 2, 3, 1 } );
         ffn0.randomizeWeights(initWeightsMin, initWeightsMax);
         ffn0.setBiases(initBiases);
@@ -36,7 +36,7 @@ public class FeedForwardNeuralNetworkTest {
         double C0 = ffn0.calculateCost( examples );
 
         for ( int i = 0; i < epochs; i++ ) {  
-            ffn0.trainEpoch(examples, gradMultiplier);
+            ffn0.trainEpoch(examples, learningRate);
         }
 
         double C1 = ffn0.calculateCost( examples );
