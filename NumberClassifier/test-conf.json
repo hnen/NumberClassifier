@@ -11,6 +11,6 @@
     "initWeights": [-0.1, 0.1],
     "initBiases": 0.01,
 
-    "epochs": 20000,
-    "miniBatchSize": 10
+    "epochs": 50000,
+    "miniBatchSize": 5
 }

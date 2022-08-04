@@ -55,7 +55,7 @@ public class App {
 
                 nn.trainEpoch(examples, conf.learningRate);
 
-                if ( i % 10 == 0 )
+                if ( i % 100 == 0 )
                 {
                     double C1 = nn.calculateCost(examples);
                     System.out.println( "Epoch " + i + " after: " + C1 );
