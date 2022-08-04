@@ -31,8 +31,8 @@ public class NeuralNetworkTrainer {
             nn.trainEpoch(batch, trainConfig.learningRate);
 
             if ( i % 100 == 0 ) {
-                double C1 = nn.calculateCost(trainingExamples);
-                System.out.println( "Epoch " + i + " after: " + C1 );
+                //double C1 = nn.calculateCost(trainingExamples);
+                System.out.println( "Epoch " + i  );
             }
         }        
     }
