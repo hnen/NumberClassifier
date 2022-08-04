@@ -1,16 +1,16 @@
 {
-    "trainingData": "train-images-idx3-ubyte",
-    "trainingLabels": "train-labels-idx1-ubyte",
-    "testData": "t10k-images-idx3-ubyte",
-    "testLabels": "t10k-labels-idx1-ubyte",
+    "trainingData": "data/train-images.idx3-ubyte",
+    "trainingLabels": "data/train-labels.idx1-ubyte",
+    "testData": "data/t10k-images.idx3-ubyte",
+    "testLabels": "data/t10k-labels.idx1-ubyte",
 
-    "layers": [ 784, 16, 16, 10 ],
+    "layers": [ 784, 32, 32, 10 ],
     
     "activation": "relu",
-    "learningRate": 0.25,
-    "initWeights": [-1.0, 1.0],
-    "initBiases": [0.1, 0.1],
+    "learningRate": 0.05,
+    "initWeights": [-0.1, 0.1],
+    "initBiases": 0.01,
 
-    "epochs": 1000,
+    "epochs": 20000,
     "miniBatchSize": 10
 }

@@ -35,6 +35,10 @@ public class ImageSet {
         int numImages = readMSBInt(imageFile);
         int numLabels = readMSBInt(labelFile);
 
+        if ( numImages <= 0 || numLabels <= 0 ) {
+            throw new Exception("Invalid number of examples.");
+        }
+
         if ( numImages != numLabels ) {
             throw new Exception("Number of images and labels do not match.");
         }
@@ -53,8 +57,9 @@ public class ImageSet {
             }
             imageSet.imageLabels.add(label);
             double[] image = new double[imageSet.imageWidth * imageSet.imageHeight];
+            byte[] imageBytes = imageFile.readNBytes(image.length);
             for ( int j = 0; j < image.length; j++ ) {
-                image[j] = (double)imageFile.read() / 255.0;
+                image[j] = Byte.toUnsignedInt(imageBytes[j]) / 255.0;
             }
             imageSet.images.add(image);
         }
@@ -64,7 +69,7 @@ public class ImageSet {
 
     private static int readMSBInt( InputStream stream ) throws IOException {
         byte[] integerMSB = stream.readNBytes(4);
-        return (integerMSB[0] << 24) | (integerMSB[1] << 16) | (integerMSB[2] << 8) | integerMSB[3];
+        return (Byte.toUnsignedInt(integerMSB[0]) << 24) | (Byte.toUnsignedInt(integerMSB[1]) << 16) | (Byte.toUnsignedInt(integerMSB[2]) << 8) | Byte.toUnsignedInt(integerMSB[3]);
     }
 
     /**

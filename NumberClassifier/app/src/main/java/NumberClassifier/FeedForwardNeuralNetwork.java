@@ -155,6 +155,20 @@ public class FeedForwardNeuralNetwork {
         }
     }
 
+    public int getMaxActivation( double[] input ) throws Exception {
+        setInput(input);
+        feedForward();
+        int maxIndex = 0;
+        double maxValue = activations[activations.length - 1][0];
+        for ( int i = 1; i < activations[activations.length - 1].length; i++ ) {
+            if ( activations[activations.length - 1][i] > maxValue ) {
+                maxIndex = i;
+                maxValue = activations[activations.length - 1][i];
+            }
+        }
+        return maxIndex;
+    }
+
     private void calculateSum( int layer, int neuron ) {
         double sum = 0;
         for ( int i = 0; i < layers[layer - 1]; i++ ) {

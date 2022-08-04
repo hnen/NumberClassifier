@@ -2,13 +2,14 @@ package NumberClassifier;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
 public class TrainConfigTest {
     
     @Test
-    void testLoadJSON() {
+    void testLoadJSON() throws Exception {
         String testConfigJSON = """ 
             {
                 "trainingData": "test0",
@@ -18,10 +19,10 @@ public class TrainConfigTest {
             
                 "layers": [ 1, 2, 3, 4, 5 ],
                 
-                "activation": "test5",
+                "activation": "sigmoid",
                 "learningRate": 0.123,
                 "initWeights": [-1.0, 1.0],
-                "initBiases": [-1.0, 2.0],
+                "initBiases": 0.1,
             
                 "epochs": 1000,
                 "miniBatchSize": 10
@@ -35,10 +36,11 @@ public class TrainConfigTest {
         assertEquals("test2", config.testData);
         assertEquals("test3", config.testLabels);
         assertArrayEquals(new int[] { 1, 2, 3, 4, 5 }, config.layers);
-        assertEquals("test5", config.activation);
+        assertEquals("sigmoid", config.activation);
+        assertTrue( config.activationFunction instanceof SigmoidActivationFunction );
         assertEquals(0.123, config.learningRate);
         assertArrayEquals(new double[] { -1.0, 1.0 }, config.initWeights);
-        assertArrayEquals(new double[] { -1.0, 2.0 }, config.initBiases);
+        assertEquals(0.1, config.initBiases);
         assertEquals(1000, config.epochs);
         assertEquals(10, config.miniBatchSize);
     }

@@ -13,9 +13,10 @@ public class TrainConfig {
     public String testLabels;
     public int[] layers;
     public String activation;
+    public IActivationFunction activationFunction;
     public double learningRate;
     public double[] initWeights;
-    public double[] initBiases;
+    public double initBiases;
     public int epochs;
     public int miniBatchSize;
 
@@ -24,10 +25,23 @@ public class TrainConfig {
      * @param jsonData String containing the JSON data.
      * @return TrainConfig object
      */
-    public static TrainConfig loadJSON( String jsonData ) {
+    public static TrainConfig loadJSON( String jsonData ) throws Exception {
         GsonBuilder builder = new GsonBuilder(); 
         Gson gson = builder.create();
-        return gson.fromJson(jsonData, TrainConfig.class);
+
+        TrainConfig conf = gson.fromJson(jsonData, TrainConfig.class);
+        switch( conf.activation ) {
+            case "sigmoid":
+                conf.activationFunction = new SigmoidActivationFunction();
+                break;
+            case "relu":
+                conf.activationFunction = new ReLUActivationFunction();
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown activation function: " + conf.activation);
+        }
+
+        return conf;
     }
 
 }
