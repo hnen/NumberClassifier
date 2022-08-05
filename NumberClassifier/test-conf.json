@@ -4,6 +4,8 @@
     "testData": "data/t10k-images.idx3-ubyte",
     "testLabels": "data/t10k-labels.idx1-ubyte",
 
+    "outFile": "nn.json",
+
     "layers": [ 784, 32, 32, 10 ],
     
     "activation": "relu",
@@ -12,5 +14,5 @@
     "initBiases": 0.01,
 
     "epochs": 50000,
-    "miniBatchSize": 5
+    "miniBatchSize": 15
 }

@@ -2,7 +2,9 @@ package NumberClassifier;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.util.Scanner;
+import java.io.FileOutputStream;
 
 /**
  * Entry point for the application.
@@ -34,7 +36,12 @@ public class App {
             double accuracy = trainer.testAccuracy(testExamples);
 
             System.out.println("Accuracy: " + accuracy * 100.0 + "%" );
-            
+
+            File outFile = new File(conf.outFile);
+            OutputStream stream = new FileOutputStream(outFile);
+            trainer.getNeuralNetwork().serialize(stream);
+            System.out.println( "Wrote to " + conf.outFile );
+
         } catch (Exception e) {
             e.printStackTrace();
         }        

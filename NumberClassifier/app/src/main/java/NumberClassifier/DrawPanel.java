@@ -9,16 +9,25 @@ import javax.swing.JPanel;
  */
 public class DrawPanel extends JPanel implements MouseListener, MouseMotionListener {
     
-    private double[][] image;
+    private double[] image;
     private int imageWidth, imageHeight;
+    Runnable onChanged;
 
     public DrawPanel( int width, int height ) {
         this.imageWidth = width;
         this.imageHeight = height;
-        this.image = new double[height][width];
+        this.image = new double[height*width];
 
         addMouseListener(this);
         addMouseMotionListener(this);
+    }
+
+    public double[] getImage() {
+        return image;
+    }
+
+    public void setOnChanged( Runnable onChanged ) {
+        this.onChanged = onChanged;
     }
 
     public void mouseClicked(MouseEvent event) {
@@ -29,14 +38,6 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     }
 
     public void mouseReleased(MouseEvent event) {    
-    }
-
-    private int getImagePixelWidth() {        
-        return (int)(this.getSize().width / imageWidth);
-    }
-
-    public int getImagePixelHeight() {
-        return (int)(getHeight() / imageHeight);
     }
 
     int imageToPanelX(int imageX) {      
@@ -73,11 +74,15 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         int x_index = panelToImageX(x);
         int y_index = panelToImageY(y);
 
-        image[y_index][x_index] = 1;
+        image[y_index * imageWidth + x_index] = 1;
 
         System.out.println(x_index + " " + y_index);
 
         repaint();  
+
+        if (onChanged != null) {
+            onChanged.run();
+        }
     }
 
     public void mouseEntered(MouseEvent event) {
@@ -108,7 +113,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
                 int rectWidth = imageToPanelX(j + 1) - x;
                 int rectHeight = imageToPanelY(i + 1) - y;
 
-                float pixel = 1.0f - (float)image[i][j];
+                float pixel = 1.0f - (float)image[i * imageWidth + j];
                 g.setColor(new Color(pixel, pixel, pixel));
                 g.fillRect(x, y, rectWidth, rectHeight);
             }

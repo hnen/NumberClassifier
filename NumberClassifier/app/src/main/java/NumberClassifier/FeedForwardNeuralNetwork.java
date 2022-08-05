@@ -1,5 +1,12 @@
 package NumberClassifier;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Scanner;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 /**
  * Basic feed forward neural network.
  * <p>
@@ -31,6 +38,14 @@ public class FeedForwardNeuralNetwork {
             activations[i] = new double[layers[i]];
             weightedInputs[i] = new double[layers[i]];
         }
+    }
+
+    public static FeedForwardNeuralNetwork load( InputStream stream ) throws Exception {
+        Gson gson = new GsonBuilder()
+            .registerTypeAdapter(IActivationFunction.class, new ActivationFunctionAdapter())
+            .create();
+        String json = new Scanner(stream).useDelimiter("\\Z").next();
+        return gson.fromJson(json, FeedForwardNeuralNetwork.class);
     }
 
     /**
@@ -166,6 +181,7 @@ public class FeedForwardNeuralNetwork {
                 maxValue = activations[activations.length - 1][i];
             }
         }
+        //System.out.println( maxValue );
         return maxIndex;
     }
 
@@ -296,6 +312,21 @@ public class FeedForwardNeuralNetwork {
             ret[i] = (currentOutput[i] - targetOutput[i]) * activationFunction.derivative(currentSum[i]);
         }
         return ret;
+    }
+
+    /**
+     * Serialize the network to a JSON file.
+     * @param out Output stream to write the network as JSON text.
+     * @throws Exception
+     */
+    public void serialize(OutputStream out) throws Exception {
+        Gson gson = new GsonBuilder()
+            .setPrettyPrinting()
+            .registerTypeAdapter(IActivationFunction.class, new ActivationFunctionAdapter())
+            .create();
+
+        String json = gson.toJson(this);
+        out.write(json.getBytes());
     }
 
     @Override 

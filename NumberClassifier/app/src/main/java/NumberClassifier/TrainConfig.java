@@ -11,6 +11,7 @@ public class TrainConfig {
     public String trainingLabels;
     public String testData;
     public String testLabels;
+    public String outFile;
     public int[] layers;
     public String activation;
     public IActivationFunction activationFunction;

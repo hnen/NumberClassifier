@@ -17,14 +17,17 @@ public class NeuralNetworkTrainer {
         nn.randomizeWeights(trainConfig.initWeights[0], trainConfig.initWeights[1]);
         nn.setBiases(trainConfig.initBiases);
     }
+    
+    public FeedForwardNeuralNetwork getNeuralNetwork() {
+        return nn;
+    }
 
     /**
      * Train the neural network.
      * @param trainingExamples Training examples to use.
      * @throws Exception
      */
-    public void train(TrainingExample[] trainingExamples) throws Exception {
-       
+    public void train(TrainingExample[] trainingExamples) throws Exception {       
         for ( int i = 0; i < trainConfig.epochs; i++ ) {
             TrainingExample[] batch = pickMiniBatch(trainingExamples, trainConfig.miniBatchSize);
 
