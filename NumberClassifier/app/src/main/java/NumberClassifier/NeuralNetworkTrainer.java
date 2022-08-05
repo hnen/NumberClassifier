@@ -50,7 +50,7 @@ public class NeuralNetworkTrainer {
 
             int exampleResult = 0;
             double max = testExamples[i].output[0];
-            for ( int j = 1; j < 10; j++ ) {
+            for ( int j = 1; j < testExamples[i].output.length; j++ ) {
                 if ( testExamples[i].output[j] > max ) {
                     max = testExamples[i].output[j];
                     exampleResult = j;
