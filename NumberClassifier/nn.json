@@ -1,6 +1,6 @@
 {
   "activationFunction": {
-    "type": "NumberClassifier.ReLUActivationFunction",
+    "type": "NumberClassifier.neuralnetwork.ReLUActivationFunction",
     "data": {}
   },
   "layers": [

@@ -1,12 +1,14 @@
-package NumberClassifier;
+package NumberClassifier.neuralnetwork;
 
 /**
- * Sigmoid activation function.
+ * Rectified Linear Unit activation function.
  * <p>
- * Can be passed as activation function for FeedForwardNeuralNetwork. Sigmoid activation function has classically been a standard choice for neural networks.
+ * ReLU function has gained popularity recent years as an activation function due to its simplicity
+ * and its ability to perform well. When using to train a neural network, its biases should be initialized
+ * to be slightly larger than 0.
  * </p>
  */
-public class SigmoidActivationFunction implements IActivationFunction {
+public class ReLUActivationFunction implements IActivationFunction {
     
     /**
      * Calculate value of the activation function.
@@ -14,7 +16,7 @@ public class SigmoidActivationFunction implements IActivationFunction {
      * @return Value of the activation function at {@code x}.
      */
     public double value( double x ) {
-        return 1.0 / ( 1.0 + Math.exp(-x) );
+        return x > 0 ? x : 0.0;
     }
     
     /**
@@ -23,7 +25,7 @@ public class SigmoidActivationFunction implements IActivationFunction {
      * @return Derivative of the activation funcation at {@code x}.
      */
     public double derivative( double x ) {
-        return value(x) * (1 - value(x));
+        return x > 0 ? 1.0 : 0.0;
     }
 
 }

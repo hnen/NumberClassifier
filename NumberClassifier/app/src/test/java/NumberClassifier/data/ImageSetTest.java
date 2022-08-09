@@ -1,4 +1,4 @@
-package NumberClassifier;
+package NumberClassifier.data;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -6,6 +6,9 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.junit.jupiter.api.Test;
+
+import NumberClassifier.data.ImageSet;
+import NumberClassifier.data.TrainingExample;
 
 public class ImageSetTest {
     

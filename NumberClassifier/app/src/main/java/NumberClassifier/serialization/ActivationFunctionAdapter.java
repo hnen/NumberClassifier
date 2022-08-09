@@ -1,9 +1,13 @@
-package NumberClassifier;
+package NumberClassifier.serialization;
 
 import java.lang.reflect.Type;
 import com.google.gson.*;
 
-class ActivationFunctionAdapter implements JsonSerializer<IActivationFunction>, JsonDeserializer<IActivationFunction> {
+import NumberClassifier.neuralnetwork.IActivationFunction;
+import NumberClassifier.neuralnetwork.ReLUActivationFunction;
+import NumberClassifier.neuralnetwork.SigmoidActivationFunction;
+
+public class ActivationFunctionAdapter implements JsonSerializer<IActivationFunction>, JsonDeserializer<IActivationFunction> {
 
     public JsonElement serialize(IActivationFunction f, Type interfaceType, JsonSerializationContext context) {
         JsonObject wrapper = new JsonObject();

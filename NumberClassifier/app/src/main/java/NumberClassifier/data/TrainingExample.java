@@ -1,4 +1,4 @@
-package NumberClassifier;
+package NumberClassifier.data;
 
 /**
  * Represents an input-output pair for training neural networks.

@@ -1,4 +1,4 @@
-package NumberClassifier;
+package NumberClassifier.gui;
 
 import java.awt.*;
 import java.awt.event.*;

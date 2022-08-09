@@ -1,9 +1,14 @@
-package NumberClassifier;
+package NumberClassifier.train;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
+
+import NumberClassifier.data.TrainingExample;
+import NumberClassifier.neuralnetwork.SigmoidActivationFunction;
+import NumberClassifier.train.NeuralNetworkTrainer;
+import NumberClassifier.train.TrainConfig;
 
 public class NeuralNetworkTrainerTest {
     

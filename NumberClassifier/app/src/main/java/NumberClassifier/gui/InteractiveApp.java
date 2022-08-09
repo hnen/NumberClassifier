@@ -1,4 +1,4 @@
-package NumberClassifier;
+package NumberClassifier.gui;
 
 import java.awt.*;
 import java.io.File;
@@ -6,6 +6,9 @@ import java.io.FileInputStream;
 import java.util.Scanner;
 
 import javax.swing.*;
+
+import NumberClassifier.neuralnetwork.FeedForwardNeuralNetwork;
+import NumberClassifier.train.TrainConfig;
 
 /**
  * Interactive App. User can draw the number here and the app will show which number the 
@@ -17,6 +20,9 @@ public class InteractiveApp extends JFrame  {
 
     public InteractiveApp() throws Exception {
         super("NumberClassifier");
+
+        // Print current working directory
+        System.out.println("Current working directory : " + System.getProperty("user.dir"));
 
         drawPanel = new DrawPanel( 28, 28 );
         add(drawPanel, BorderLayout.CENTER);
@@ -41,6 +47,7 @@ public class InteractiveApp extends JFrame  {
             int guess = nn.getMaxActivation(drawPanel.getImage());
             label.setText(Integer.toString(guess));
         } catch(Exception e) {
+            System.out.println(e);
             label.setText("?");
         }
     }

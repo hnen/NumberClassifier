@@ -1,4 +1,4 @@
-package NumberClassifier;
+package NumberClassifier.neuralnetwork;
 
 import java.util.Random;
 

@@ -1,6 +1,13 @@
-package NumberClassifier;
+package NumberClassifier.neuralnetwork;
 
 import org.junit.jupiter.api.Test;
+
+import NumberClassifier.data.TrainingExample;
+import NumberClassifier.neuralnetwork.FeedForwardNeuralNetwork;
+import NumberClassifier.neuralnetwork.FeedForwardNeuralNetworkParameters;
+import NumberClassifier.neuralnetwork.IActivationFunction;
+import NumberClassifier.neuralnetwork.ReLUActivationFunction;
+import NumberClassifier.neuralnetwork.SigmoidActivationFunction;
 
 import static org.junit.jupiter.api.Assertions.*;
 

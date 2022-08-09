@@ -1,4 +1,4 @@
-package NumberClassifier;
+package NumberClassifier.neuralnetwork;
 
 /**
  * Interface for neural network activation function.

@@ -1,4 +1,4 @@
-package NumberClassifier;
+package NumberClassifier.neuralnetwork;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -6,6 +6,9 @@ import java.util.Scanner;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import NumberClassifier.data.TrainingExample;
+import NumberClassifier.serialization.ActivationFunctionAdapter;
 
 /**
  * Basic feed forward neural network.

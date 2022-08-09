@@ -1,7 +1,11 @@
-package NumberClassifier;
+package NumberClassifier.train;
+
+import NumberClassifier.data.TrainingExample;
+import NumberClassifier.neuralnetwork.FeedForwardNeuralNetwork;
 
 /**
- * Implements training strategy for FeedForwardNeuralNetwork. This includes dividing the training data into mini-batches and measuring the network accuracy.
+ * Implements training strategy for FeedForwardNeuralNetwork. 
+ * This includes dividing the training data into mini-batches and measuring the network accuracy.
  */
 public class NeuralNetworkTrainer {
 
@@ -41,12 +45,12 @@ public class NeuralNetworkTrainer {
     }
 
     /**
-     * Mesaure accuracy of the neural network. Assumes that the network has already been trained.
+     * Measure accuracy of the neural network. Assumes that the network has already been trained.
      * @param testExamples Test examples to use.
      * @return Accuracy of the network, a value between 0-1.
      * @throws Exception
      */
-    double testAccuracy(TrainingExample[] testExamples) throws Exception {
+    public double testAccuracy(TrainingExample[] testExamples) throws Exception {
         int correct = 0;
         for ( int i = 0; i < testExamples.length; i++ ) {
             int result = nn.getMaxActivation(testExamples[i].input);

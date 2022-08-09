@@ -1,4 +1,4 @@
-package NumberClassifier;
+package NumberClassifier.data;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -124,7 +124,7 @@ public class ImageSet {
      * @param image image index
      * @return Image data as array of doubles.
      */
-    double[] getImage(int image) {
+    public double[] getImage(int image) {
         return images.get(image);
     }
 
