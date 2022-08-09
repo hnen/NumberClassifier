@@ -7,6 +7,8 @@ import java.util.Scanner;
 
 import NumberClassifier.data.ImageSet;
 import NumberClassifier.data.TrainingExample;
+import NumberClassifier.gui.DrawFrame;
+import NumberClassifier.gui.MainFrame;
 import NumberClassifier.train.NeuralNetworkTrainer;
 import NumberClassifier.train.TrainConfig;
 
@@ -20,7 +22,12 @@ import java.io.FileOutputStream;
  */
 public class App {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {        
+        //DrawFrame frame = new DrawFrame();    
+        MainFrame frame = new MainFrame();
+    }
+
+    void train() {
         try {
             
             File file = new File("test-conf.json");
@@ -50,9 +57,7 @@ public class App {
 
         } catch (Exception e) {
             e.printStackTrace();
-        }        
-
-
+        }    
     }
     
 }

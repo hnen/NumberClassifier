@@ -3,6 +3,7 @@ package NumberClassifier.gui;
 import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Scanner;
 
 import javax.swing.*;
@@ -14,11 +15,11 @@ import NumberClassifier.train.TrainConfig;
  * Interactive App. User can draw the number here and the app will show which number the 
  * neural network thinks it is.
  */
-public class InteractiveApp extends JFrame  {
+public class DrawFrame extends JFrame  {
     private DrawPanel drawPanel;
     private JLabel label;
 
-    public InteractiveApp() throws Exception {
+    public DrawFrame(InputStream neuralNetwork) throws Exception {
         super("NumberClassifier");
 
         // Print current working directory
@@ -35,11 +36,9 @@ public class InteractiveApp extends JFrame  {
 
         pack();
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
-        setVisible(true);
 
-        loadNeuralNetwork();
+        nn = FeedForwardNeuralNetwork.load(neuralNetwork);
     }
 
     void updateGuess() {
@@ -52,16 +51,6 @@ public class InteractiveApp extends JFrame  {
         }
     }
 
-    void loadNeuralNetwork() throws Exception {            
-        File file = new File("test-conf.json");
-        TrainConfig conf = TrainConfig.loadJSON(new Scanner(file).useDelimiter("\\Z").next());
-
-        nn = FeedForwardNeuralNetwork.load(new FileInputStream(new File(conf.outFile)));
-    }
-
-    public static void main(String[] args) throws Exception {
-        InteractiveApp app = new InteractiveApp();
-    }
 
     FeedForwardNeuralNetwork nn;
 
