@@ -26,7 +26,7 @@ import java.awt.Insets;
 import java.awt.GridLayout;
 
 
-public class TrainFrame extends JPanel {
+public class TrainFrame extends JFrame {
 
     TrainConfig conf;
 
@@ -43,37 +43,61 @@ public class TrainFrame extends JPanel {
         setLayout(new GridBagLayout());
         
 
-        //public String outFile;
         //public int[] layers;
         //public String activation;
         //public IActivationFunction activationFunction;
-        //public double learningRate;
         //public double[] initWeights;
         //public double initBiases;
+        //public double learningRate;
         //public int epochs;
         //public int miniBatchSize;
 
-        addGroup( "Dataset" );
+        JPanel group = null;
+        group = addGroup( "Dataset" );
 
         //public String trainingData;
         //public String trainingLabels;
         //public String testData;
         //public String testLabels;
-        addField( "Training Image File", conf, "trainingData", "Path to the MNIST image data file to use in training", 0 );
-        addField( "Training Label File", conf, "trainingLabels", "Path to the MNIST label data file to use in training", 1 );
-        addField( "Test Image File", conf, "testData", "Path to the MNIST image data file to use in testing", 2 );
-        addField( "Test Label File", conf, "testLabels", "Path to the MNIST label data file to use in testing", 3 );
+        addField( group, "Training Image File", conf, "trainingData", "Path to the MNIST image data file to use in training", 0 );
+        addField( group, "Training Label File", conf, "trainingLabels", "Path to the MNIST label data file to use in training", 1 );
+        addField( group, "Test Image File", conf, "testData", "Path to the MNIST image data file to use in testing", 2 );
+        addField( group, "Test Label File", conf, "testLabels", "Path to the MNIST label data file to use in testing", 3 );
 
+        //public String outFile;
+        group = addGroup( "Output" );
+        addField( group, "Save to File", conf, "outFile", "Path to the MNIST image data file to use in training", 0 );
+
+        group = addGroup( "Neural Network" );
+        //public int[] layers;
+        //public String activation;
+        //public double[] initWeights;
+        //public double initBiases;
+
+        group = addGroup( "Training Strategy" );
+        //public double learningRate;
+        //public int epochs;
+        //public int miniBatchSize;
 
     }
 
-    void addGroup( String labelText ) {
-        setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createTitledBorder("Dataset"),
+    JPanel addGroup( String labelText ) {
+        JPanel group = new JPanel();
+        group.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createTitledBorder(labelText),
             BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+        group.setLayout(new GridBagLayout());
+        
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.weightx = 1.0;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.insets = new Insets(5, 10, 5, 10);
+        add(group, c);
+        return group;
     }
 
-    void addField(String name, TrainConfig instance, String fieldName, String tooltip, int y) throws Exception {
+    void addField(JPanel group, String name, TrainConfig instance, String fieldName, String tooltip, int y) throws Exception {
         Field field = TrainConfig.class.getField(fieldName);
 
         GridBagConstraints c = new GridBagConstraints();        
@@ -81,11 +105,11 @@ public class TrainFrame extends JPanel {
 
         JLabel trainingDataLabel = new JLabel(name);
         trainingDataLabel.setToolTipText(tooltip);
-        add(trainingDataLabel, c);
+        group.add(trainingDataLabel, c);
 
         JTextField trainingDataField = new JTextField((String)field.get(instance));
         c = createGbc(1, y);
-        add(trainingDataField, c);
+        group.add(trainingDataField, c);
 
         // add listener when textfield text is changed, and set the value to field
         trainingDataField.getDocument().addDocumentListener(new DocumentListener() {
@@ -113,7 +137,7 @@ public class TrainFrame extends JPanel {
         JButton openFileButton = new JButton("...");
         openFileButton.setSize(new Dimension(10, 10));
         c = createGbc(2, y);
-        add(openFileButton, c);
+        group.add(openFileButton, c);
 
         openFileButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(MouseEvent e) {

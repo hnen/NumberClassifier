@@ -56,8 +56,7 @@ public class MainFrame extends JFrame {
             try {
                 openLoadDialog( f -> {
                     try {
-                        TrainFrame trainFrame = new TrainFrame(f);
-                        tabbedPane.addTab(f.getName(), trainFrame);
+                        openTraining(f);
                     } catch (Exception e) {
                         System.out.println(e);
                     }
@@ -74,7 +73,10 @@ public class MainFrame extends JFrame {
         setVisible(true);
     }
 
-
+    public void openTraining(File f) throws Exception {
+        TrainFrame trainFrame = new TrainFrame(f);
+        tabbedPane.addTab(f.getName(), trainFrame.getContentPane());
+    }
 
     void openLoadDialog( Consumer<File> openAction ) throws Exception {
         // file chooser should show only .json files
