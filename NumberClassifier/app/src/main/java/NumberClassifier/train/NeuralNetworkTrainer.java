@@ -33,15 +33,18 @@ public class NeuralNetworkTrainer {
      */
     public void train(TrainingExample[] trainingExamples) throws Exception {       
         for ( int i = 0; i < trainConfig.epochs; i++ ) {
+            trainingEpoch = i;
             TrainingExample[] batch = pickMiniBatch(trainingExamples, trainConfig.miniBatchSize);
-
             nn.trainEpoch(batch, trainConfig.learningRate);
-
-            if ( i % 100 == 0 ) {
-                //double C1 = nn.calculateCost(trainingExamples);
-                System.out.println( "Epoch " + i  );
-            }
         }        
+    }
+
+    /**
+     * Get the current training epoch. Useful for retrieving the progress of training from another thread.
+     * @return The current training epoch.
+     */
+    public int getTrainingEpoch() {
+        return trainingEpoch;
     }
 
     /**
@@ -97,4 +100,5 @@ public class NeuralNetworkTrainer {
 
     private FeedForwardNeuralNetwork nn;
     private TrainConfig trainConfig;
+    private int trainingEpoch;
 }

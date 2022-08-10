@@ -1,10 +1,13 @@
 package NumberClassifier.gui;
 
-import java.util.Scanner;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.lang.reflect.Field;
-
-import NumberClassifier.train.TrainConfig;
+import java.util.Scanner;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -13,72 +16,111 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import java.awt.event.MouseEvent;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;  
-import java.awt.GridBagLayout;  
-import java.awt.Insets;
-
-import java.awt.GridLayout;
+import NumberClassifier.train.TrainConfig;
+import NumberClassifier.train.TrainingJob;
 
 
 public class TrainFrame extends JFrame {
 
     TrainConfig conf;
-
+    JLabel trainingStatusLabel;
+    TrainingJob trainingJob;
+    JButton trainButton;
 
     public TrainFrame(File config) throws Exception {
-        //super("NumberClassifier");
-        //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        super("NumberClassifier");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         conf = TrainConfig.loadJSON(new Scanner(config).useDelimiter("\\Z").next());
 
-        // set two-column layout
-        //setLayout(new GridLayout(0, 3));
-        // set layout where elements are added horizontally and line breaks can happen
         setLayout(new GridBagLayout());
         
-
-        //public int[] layers;
-        //public String activation;
-        //public IActivationFunction activationFunction;
-        //public double[] initWeights;
-        //public double initBiases;
-        //public double learningRate;
-        //public int epochs;
-        //public int miniBatchSize;
-
         JPanel group = null;
+
         group = addGroup( "Dataset" );
+        addFileField( group, "Training Image File", conf, "trainingData", "Path to the MNIST image data file to use in training", 0 );
+        addFileField( group, "Training Label File", conf, "trainingLabels", "Path to the MNIST label data file to use in training", 1 );
+        addFileField( group, "Test Image File", conf, "testData", "Path to the MNIST image data file to use in testing", 2 );
+        addFileField( group, "Test Label File", conf, "testLabels", "Path to the MNIST label data file to use in testing", 3 );
 
-        //public String trainingData;
-        //public String trainingLabels;
-        //public String testData;
-        //public String testLabels;
-        addField( group, "Training Image File", conf, "trainingData", "Path to the MNIST image data file to use in training", 0 );
-        addField( group, "Training Label File", conf, "trainingLabels", "Path to the MNIST label data file to use in training", 1 );
-        addField( group, "Test Image File", conf, "testData", "Path to the MNIST image data file to use in testing", 2 );
-        addField( group, "Test Label File", conf, "testLabels", "Path to the MNIST label data file to use in testing", 3 );
-
-        //public String outFile;
         group = addGroup( "Output" );
-        addField( group, "Save to File", conf, "outFile", "Path to the MNIST image data file to use in training", 0 );
+        addFileField( group, "Save to File", conf, "outFile", "File to write the trained network to.", 0 );
 
         group = addGroup( "Neural Network" );
         //public int[] layers;
         //public String activation;
         //public double[] initWeights;
-        //public double initBiases;
+        addDoubleField( group, "Initial bias", conf, "initBiases", "Value to initialize the neuron biases to.", 1 );
 
         group = addGroup( "Training Strategy" );
-        //public double learningRate;
-        //public int epochs;
-        //public int miniBatchSize;
+        addDoubleField( group, "Learning rate", conf, "learningRate", "Determines how big steps parameters are updated on each epoch.", 0 );
+        addIntField( group, "Number of epochs", conf, "epochs", "How many iterations are run during the training.", 1 );
+        addIntField( group, "Mini batch size", conf, "miniBatchSize", "On each epoch a sub sample is selected from training data. This value detemrines the size of the sample.", 2 );
 
+        group = addGroup( "Training" );
+
+        trainButton = new JButton("Train");
+        GridBagConstraints c = createGbc(0, 0);
+        group.add(trainButton, c);
+
+        trainButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if( trainingJob == null ) {
+                    startTraining();
+                }
+                else {
+                    trainingJob.interrupt();
+                    trainingStatusLabel.setText("Stopped");
+                    trainingStopped();                    
+                }
+            }
+        });
+
+        JButton openButton = new JButton("Open");
+        c = createGbc(0, 1);
+        group.add(openButton, c);
+
+        openButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+            }
+        });
+
+        trainingStatusLabel = new JLabel("");
+        c = createGbc(1, 0);
+        group.add(trainingStatusLabel, c);
+
+    }
+
+    void trainingStopped() {
+        trainButton.setText("Train");
+        trainingJob = null;
+    }
+
+    void startTraining() {
+        trainingStatusLabel.setText("Training... (0%)");
+
+        trainButton.setText("Cancel");
+
+        trainingJob = new TrainingJob(conf);
+        trainingJob.start();
+        // update the status label repeatedly until the training is complete
+        new Thread() {
+            public void run() {
+                while (trainingJob != null && trainingJob.isAlive()) {
+                    trainingStatusLabel.setText(String.format("Training... (%.2f%%)", trainingJob.getProgress() * 100.0));
+                    try {
+                        Thread.sleep(33);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                trainingStatusLabel.setText(String.format("Training complete. Accuracy %.2f%%", trainingJob.getAccuracy() * 100.0));
+                trainingStopped();
+            }
+        }.start();
     }
 
     JPanel addGroup( String labelText ) {
@@ -97,22 +139,26 @@ public class TrainFrame extends JFrame {
         return group;
     }
 
-    void addField(JPanel group, String name, TrainConfig instance, String fieldName, String tooltip, int y) throws Exception {
-        Field field = TrainConfig.class.getField(fieldName);
-
+    void addLabel(JPanel group, String label, String tooltip, int y) {
         GridBagConstraints c = new GridBagConstraints();        
         c = createGbc(0, y);
 
-        JLabel trainingDataLabel = new JLabel(name);
-        trainingDataLabel.setToolTipText(tooltip);
-        group.add(trainingDataLabel, c);
+        JLabel fieldLabel = new JLabel(label);
+        fieldLabel.setToolTipText(tooltip);
+        group.add(fieldLabel, c);
+    }
 
-        JTextField trainingDataField = new JTextField((String)field.get(instance));
-        c = createGbc(1, y);
-        group.add(trainingDataField, c);
+
+    void addIntField(JPanel group, String name, TrainConfig instance, String fieldName, String tooltip, int y) throws Exception {
+        addLabel(group, name, tooltip, y);
+
+        Field field = TrainConfig.class.getField(fieldName);
+        JTextField fieldTextField = new JTextField(field.get(instance).toString());
+        GridBagConstraints c = createGbc(1, y);
+        group.add(fieldTextField, c);
 
         // add listener when textfield text is changed, and set the value to field
-        trainingDataField.getDocument().addDocumentListener(new DocumentListener() {
+        fieldTextField.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
                 update();
             }
@@ -125,7 +171,76 @@ public class TrainFrame extends JFrame {
 
             private void update() {
                 try {
-                    field.set(instance, trainingDataField.getText());
+                    field.set(instance, Integer.valueOf(fieldTextField.getText()));
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            }
+
+        });
+
+    }
+
+    void addDoubleField(JPanel group, String name, TrainConfig instance, String fieldName, String tooltip, int y) throws Exception {
+        addLabel(group, name, tooltip, y);
+
+        Field field = TrainConfig.class.getField(fieldName);
+
+        JTextField fieldTextField = new JTextField(field.get(instance).toString());
+        GridBagConstraints c = createGbc(1, y);
+        group.add(fieldTextField, c);
+
+        // add listener when textfield text is changed, and set the value to field
+        fieldTextField.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                update();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                update();
+            }
+            public void insertUpdate(DocumentEvent e) {
+                update();
+            }
+
+            private void update() {
+                try {
+                    field.set(instance, Double.valueOf(fieldTextField.getText()));
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            }
+
+        });
+
+    }
+
+
+    void addFileField(JPanel group, String name, TrainConfig instance, String fieldName, String tooltip, int y) throws Exception {
+        addLabel(group, name, tooltip, y);
+
+        Field field = TrainConfig.class.getField(fieldName);
+
+        addLabel(group, name, tooltip, y);
+
+        JTextField fieldTextField = new JTextField((String)field.get(instance));
+        GridBagConstraints c = createGbc(1, y);
+        group.add(fieldTextField, c);
+
+        // add listener when textfield text is changed, and set the value to field
+        fieldTextField.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                update();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                update();
+            }
+            public void insertUpdate(DocumentEvent e) {
+                update();
+            }
+
+            private void update() {
+                try {
+                    field.set(instance, fieldTextField.getText());
                 } catch (Exception e) {
                     System.out.println(e);
                 }
@@ -145,15 +260,13 @@ public class TrainFrame extends JFrame {
                 chooser.showOpenDialog(null);
                 File file = chooser.getSelectedFile();
                 if (file != null) {
-                    trainingDataField.setText(file.getAbsolutePath());
+                    fieldTextField.setText(file.getAbsolutePath());
                 }
             }
         });
 
     }
 
-    private static final Insets WEST_INSETS = new Insets(5, 0, 5, 5);
-    private static final Insets EAST_INSETS = new Insets(5, 5, 5, 0);
 
     private GridBagConstraints createGbc(int x, int y) {
         GridBagConstraints gbc = new GridBagConstraints();
@@ -165,7 +278,6 @@ public class TrainFrame extends JFrame {
         gbc.anchor = (x <= 1) ? GridBagConstraints.NORTHWEST : GridBagConstraints.NORTHEAST;
         gbc.fill = (x == 1) ? GridBagConstraints.HORIZONTAL : GridBagConstraints.NONE;
   
-        //gbc.insets = (x <= 2) ? WEST_INSETS : EAST_INSETS;
         gbc.weightx = (x == 0) ? 0.2 : ((x == 1) ? 1.0 : 0.1);
         gbc.weighty = 0.0;
         return gbc;
