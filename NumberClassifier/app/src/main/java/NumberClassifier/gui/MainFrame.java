@@ -1,14 +1,9 @@
 package NumberClassifier.gui;
 
-import java.awt.LayoutManager;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.function.Consumer;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -56,6 +51,21 @@ public class MainFrame extends JFrame {
                 System.out.println(e);
             }
         });
+
+        loadTrainingConfig.addActionListener(ev -> {
+            try {
+                openLoadDialog( f -> {
+                    try {
+                        TrainFrame trainFrame = new TrainFrame(f);
+                        tabbedPane.addTab(f.getName(), trainFrame);
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+                } );
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        });        
 
 
         add(tabbedPane);
