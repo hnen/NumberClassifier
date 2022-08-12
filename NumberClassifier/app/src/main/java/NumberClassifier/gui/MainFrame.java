@@ -28,13 +28,16 @@ public class MainFrame extends JFrame {
 
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
-        JMenu loadSubMenu = new JMenu("Load");
-        JMenuItem loadTrainingConfig = new JMenuItem("Training Config");
+        JMenu loadSubMenu = new JMenu("Open");
+        JMenuItem loadTrainingConfig = new JMenuItem("Training");
         JMenuItem loadNeuralNetwork = new JMenuItem("Neural Network");
+        JMenuItem saveItem = new JMenuItem("Save...");
+
         loadSubMenu.add(loadTrainingConfig);
         loadSubMenu.add(loadNeuralNetwork);
         fileMenu.add(loadSubMenu);
         menuBar.add(fileMenu);
+        fileMenu.add(saveItem);
         setJMenuBar(menuBar);
 
         loadNeuralNetwork.addActionListener(ev -> {
@@ -65,7 +68,6 @@ public class MainFrame extends JFrame {
                 System.out.println(e);
             }
         });        
-
 
         add(tabbedPane);
 

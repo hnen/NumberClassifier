@@ -247,7 +247,7 @@ public class FeedForwardNeuralNetwork {
 
 
     /**
-     * Calculate gradient of the cost function related to the neural network parameters. These values are used in backpropagation algorithm.
+     * Calculate gradient of the cost function related to the neural network parameters.
      * @param example Training example to calculate the cost gradient against.
      * @return Parameters containing the gradient.
      * @throws Exception

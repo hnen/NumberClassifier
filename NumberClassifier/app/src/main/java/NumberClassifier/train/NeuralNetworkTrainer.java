@@ -36,7 +36,7 @@ public class NeuralNetworkTrainer {
             trainingEpoch = i;
             TrainingExample[] batch = pickMiniBatch(trainingExamples, trainConfig.miniBatchSize);
             nn.trainEpoch(batch, trainConfig.learningRate);
-        }        
+        }
     }
 
     /**

@@ -51,9 +51,12 @@ public class TrainFrame extends JFrame {
 
         group = addGroup( "Neural Network" );
         //public int[] layers;
+        addLabel( group, "Layers (TODO)", "Number of neural network neurons on each layer", 0 );
         //public String activation;
+        addLabel( group, "Activation function (TODO)", "Activation function determines the shape of the neuron output function", 1 );
         //public double[] initWeights;
-        addDoubleField( group, "Initial bias", conf, "initBiases", "Value to initialize the neuron biases to.", 1 );
+        addLabel( group, "Initial weights (TODO)", "Range of weights to initialize neuron connections to. Weights are randomized uniformly between values.", 2 );
+        addDoubleField( group, "Initial bias", conf, "initBiases", "Value to initialize the neuron biases to.", 3 );
 
         group = addGroup( "Training Strategy" );
         addDoubleField( group, "Learning rate", conf, "learningRate", "Determines how big steps parameters are updated on each epoch.", 0 );
@@ -76,15 +79,6 @@ public class TrainFrame extends JFrame {
                     trainingStatusLabel.setText("Stopped");
                     trainingStopped();                    
                 }
-            }
-        });
-
-        JButton openButton = new JButton("Open");
-        c = createGbc(0, 1);
-        group.add(openButton, c);
-
-        openButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
             }
         });
 
@@ -117,7 +111,9 @@ public class TrainFrame extends JFrame {
                         e.printStackTrace();
                     }
                 }
-                trainingStatusLabel.setText(String.format("Training complete. Accuracy %.2f%%", trainingJob.getAccuracy() * 100.0));
+                if ( trainingJob != null ) {
+                    trainingStatusLabel.setText(String.format("Saved to %s. Accuracy %.2f%%", conf.outFile, trainingJob.getAccuracy() * 100.0));
+                }
                 trainingStopped();
             }
         }.start();
