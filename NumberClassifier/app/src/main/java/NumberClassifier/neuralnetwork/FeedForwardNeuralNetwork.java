@@ -47,8 +47,11 @@ public class FeedForwardNeuralNetwork {
         Gson gson = new GsonBuilder()
             .registerTypeAdapter(IActivationFunction.class, new ActivationFunctionAdapter())
             .create();
-        String json = new Scanner(stream).useDelimiter("\\Z").next();
-        return gson.fromJson(json, FeedForwardNeuralNetwork.class);
+
+        try (Scanner s = new Scanner(stream)) {
+            String json = s.useDelimiter("\\Z").next();
+            return gson.fromJson(json, FeedForwardNeuralNetwork.class);
+        }
     }
 
     /**

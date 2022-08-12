@@ -1,18 +1,7 @@
 package NumberClassifier;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.OutputStream;
-import java.util.Scanner;
-
-import NumberClassifier.data.ImageSet;
-import NumberClassifier.data.TrainingExample;
-import NumberClassifier.gui.DrawFrame;
 import NumberClassifier.gui.MainFrame;
-import NumberClassifier.train.NeuralNetworkTrainer;
-import NumberClassifier.train.TrainConfig;
-
-import java.io.FileOutputStream;
 
 /**
  * Entry point for the application.

@@ -2,8 +2,6 @@ package NumberClassifier.neuralnetwork;
 
 import org.junit.jupiter.api.Test;
 
-import NumberClassifier.neuralnetwork.FeedForwardNeuralNetworkParameters;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FeedForwardNeuralNetworkParametersTest {

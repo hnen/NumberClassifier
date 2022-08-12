@@ -34,7 +34,9 @@ public class TrainFrame extends JFrame {
         super("NumberClassifier");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        conf = TrainConfig.loadJSON(new Scanner(config).useDelimiter("\\Z").next());
+        try (Scanner s = new Scanner(config)) {
+            conf = TrainConfig.loadJSON(s.useDelimiter("\\Z").next());
+        }
 
         setLayout(new GridBagLayout());
         

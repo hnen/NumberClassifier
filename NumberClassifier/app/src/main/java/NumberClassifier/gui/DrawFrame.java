@@ -1,15 +1,11 @@
 package NumberClassifier.gui;
 
 import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.Scanner;
 
 import javax.swing.*;
 
 import NumberClassifier.neuralnetwork.FeedForwardNeuralNetwork;
-import NumberClassifier.train.TrainConfig;
 
 /**
  * Interactive App. User can draw the number here and the app will show which number the 

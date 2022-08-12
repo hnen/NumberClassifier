@@ -7,9 +7,6 @@ import java.io.InputStream;
 
 import org.junit.jupiter.api.Test;
 
-import NumberClassifier.data.ImageSet;
-import NumberClassifier.data.TrainingExample;
-
 public class ImageSetTest {
     
     ImageSet createTestSet() throws Exception {

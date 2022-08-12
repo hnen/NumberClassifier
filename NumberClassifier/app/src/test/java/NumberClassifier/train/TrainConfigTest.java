@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import NumberClassifier.neuralnetwork.SigmoidActivationFunction;
-import NumberClassifier.train.TrainConfig;
 
 public class TrainConfigTest {
     
