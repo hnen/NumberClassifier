@@ -14,6 +14,8 @@ Tue 9.8.2022 - 2 hours
 Wed 10.8.2022 - 2 hours
  - Writing the training gui
 
+Thu 11.8.2022 - 2 hours
+ - Writing documentation
 
 
 
