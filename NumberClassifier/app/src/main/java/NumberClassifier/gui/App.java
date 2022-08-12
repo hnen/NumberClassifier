@@ -1,7 +1,6 @@
-package NumberClassifier;
+package NumberClassifier.gui;
 
 import java.io.File;
-import NumberClassifier.gui.MainFrame;
 
 /**
  * Entry point for the application.
