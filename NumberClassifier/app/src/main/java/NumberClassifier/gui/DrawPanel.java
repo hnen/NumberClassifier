@@ -44,29 +44,35 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     }
 
     /**
-     * Implements MouseListener callback. Doesn't do anything.
+     * Implements MouseListener interface. Doesn't do anything.
      */
-    private void mouseClicked(MouseEvent event) {
+    public void mouseClicked(MouseEvent event) {
     }
 
+    /**
+     * Implements MouseListener interface. Draws to the image.
+     */
     public void mousePressed(MouseEvent event) {
         draw( event.getX(), event.getY() );
     }
 
+    /**
+     * Implements MouseListener interface. Doesn't do anything.
+     */
     public void mouseReleased(MouseEvent event) {    
     }
 
-    int imageToPanelX(int imageX) {      
+    private int imageToPanelX(int imageX) {      
         int x = (int)(imageX * getWidth() / imageWidth);
         return x;        
     }
 
-    int imageToPanelY(int imageY) {
+    private int imageToPanelY(int imageY) {
         int y = (int)(imageY * getHeight() / imageHeight);
         return y;
     }
 
-    int panelToImageX( int x ) {
+    private int panelToImageX( int x ) {
         int imageX = (int)(x * imageWidth / getWidth());
         if (imageX < 0) {
             imageX = 0;
@@ -76,7 +82,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         return imageX;        
     }
 
-    int panelToImageY( int y ) {
+    private int panelToImageY( int y ) {
         int imageY = (int)(y * imageHeight / getHeight());
         if (imageY < 0) {
             imageY = 0;
@@ -86,7 +92,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         return imageY;
     }
 
-    void draw(int x, int y) {
+    private void draw(int x, int y) {
         int x_index = panelToImageX(x);
         int y_index = panelToImageY(y);
 
@@ -101,20 +107,34 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         }
     }
 
+    /**
+     * Implements MouseMotionListener interface. Doesn't do anything.
+     */
     public void mouseEntered(MouseEvent event) {
     }
 
-
+    /**
+     * Implements MouseMotionListener interface. Doesn't do anything.
+     */
     public void mouseExited(MouseEvent event) {
     }
 
+    /**
+     * Implements MouseMotionListener interface. Draws to the image.
+     */
     public void mouseDragged(MouseEvent event) {
         draw( event.getX(), event.getY() );
     }
 
+    /**
+     * Implements MouseMotionListener interface. Doesn't do anything.
+     */
     public void mouseMoved(MouseEvent event) {
     }
 
+    /**
+     * Render the image.
+     */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 

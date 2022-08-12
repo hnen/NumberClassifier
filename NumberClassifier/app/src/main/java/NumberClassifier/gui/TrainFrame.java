@@ -27,11 +27,15 @@ import NumberClassifier.train.TrainingJob;
  */
 public class TrainFrame extends JFrame {
 
-    TrainConfig conf;
-    JLabel trainingStatusLabel;
-    TrainingJob trainingJob;
-    JButton trainButton;
+    private TrainConfig conf;
+    private JLabel trainingStatusLabel;
+    private TrainingJob trainingJob;
+    private JButton trainButton;
 
+    /**
+     * Constructs a new TrainFrame.
+     * @param config Configuration to use.
+     */
     public TrainFrame(File config) throws Exception {
         super("NumberClassifier");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -92,12 +96,12 @@ public class TrainFrame extends JFrame {
 
     }
 
-    void trainingStopped() {
+    private void trainingStopped() {
         trainButton.setText("Train");
         trainingJob = null;
     }
 
-    void startTraining() {
+    private void startTraining() {
         trainingStatusLabel.setText("Training... (0%)");
 
         trainButton.setText("Cancel");
@@ -123,7 +127,7 @@ public class TrainFrame extends JFrame {
         }.start();
     }
 
-    JPanel addGroup( String labelText ) {
+    private JPanel addGroup( String labelText ) {
         JPanel group = new JPanel();
         group.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createTitledBorder(labelText),
@@ -139,7 +143,7 @@ public class TrainFrame extends JFrame {
         return group;
     }
 
-    void addLabel(JPanel group, String label, String tooltip, int y) {
+    private void addLabel(JPanel group, String label, String tooltip, int y) {
         GridBagConstraints c = new GridBagConstraints();        
         c = createGbc(0, y);
 
@@ -149,7 +153,7 @@ public class TrainFrame extends JFrame {
     }
 
 
-    void addIntField(JPanel group, String name, TrainConfig instance, String fieldName, String tooltip, int y) throws Exception {
+    private void addIntField(JPanel group, String name, TrainConfig instance, String fieldName, String tooltip, int y) throws Exception {
         addLabel(group, name, tooltip, y);
 
         Field field = TrainConfig.class.getField(fieldName);
@@ -181,7 +185,7 @@ public class TrainFrame extends JFrame {
 
     }
 
-    void addDoubleField(JPanel group, String name, TrainConfig instance, String fieldName, String tooltip, int y) throws Exception {
+    private void addDoubleField(JPanel group, String name, TrainConfig instance, String fieldName, String tooltip, int y) throws Exception {
         addLabel(group, name, tooltip, y);
 
         Field field = TrainConfig.class.getField(fieldName);
@@ -214,8 +218,7 @@ public class TrainFrame extends JFrame {
 
     }
 
-
-    void addFileField(JPanel group, String name, TrainConfig instance, String fieldName, String tooltip, int y) throws Exception {
+    private void addFileField(JPanel group, String name, TrainConfig instance, String fieldName, String tooltip, int y) throws Exception {
         addLabel(group, name, tooltip, y);
 
         Field field = TrainConfig.class.getField(fieldName);
@@ -266,7 +269,6 @@ public class TrainFrame extends JFrame {
         });
 
     }
-
 
     private GridBagConstraints createGbc(int x, int y) {
         GridBagConstraints gbc = new GridBagConstraints();

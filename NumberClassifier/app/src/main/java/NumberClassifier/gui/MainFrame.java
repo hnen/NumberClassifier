@@ -18,11 +18,13 @@ import javax.swing.JTabbedPane;
  */
 public class MainFrame extends JFrame {
     
-    JTabbedPane tabbedPane;
-    DrawFrame drawFrame;
+    private JTabbedPane tabbedPane;
+    private DrawFrame drawFrame;
 
-    JMenuBar menuBar;
-
+    /**
+     * Constructs a new MainFrame.
+     * @throws Exception if there is an error creating the frame.
+     */
     public MainFrame() throws Exception {
         super("NumberClassifier");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -78,12 +80,16 @@ public class MainFrame extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Open training configuration file.
+     * @param file File to open.
+     */
     public void openTraining(File f) throws Exception {
         TrainFrame trainFrame = new TrainFrame(f);
         tabbedPane.addTab(f.getName(), trainFrame.getContentPane());
     }
 
-    void openLoadDialog( Consumer<File> openAction ) throws Exception {
+    private void openLoadDialog( Consumer<File> openAction ) throws Exception {
         // file chooser should show only .json files
         JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
         fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
@@ -105,8 +111,7 @@ public class MainFrame extends JFrame {
         }
     }
 
-
-    JPanel makeTextPanel(String text) {
+    private JPanel makeTextPanel(String text) {
         JPanel panel = new JPanel(false);
         JLabel label = new JLabel(text);
         panel.add(label);
