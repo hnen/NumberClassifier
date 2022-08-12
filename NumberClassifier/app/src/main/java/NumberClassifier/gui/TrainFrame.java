@@ -22,7 +22,9 @@ import javax.swing.event.DocumentListener;
 import NumberClassifier.train.TrainConfig;
 import NumberClassifier.train.TrainingJob;
 
-
+/**
+ * Frame where user can configure training parameters and train a network.
+ */
 public class TrainFrame extends JFrame {
 
     TrainConfig conf;

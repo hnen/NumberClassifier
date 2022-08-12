@@ -8,8 +8,7 @@ import javax.swing.*;
 import NumberClassifier.neuralnetwork.FeedForwardNeuralNetwork;
 
 /**
- * Interactive App. User can draw the number here and the app will show which number the 
- * neural network thinks it is.
+ * Frame where user can draw the number and the neural network will classify it.
  */
 public class DrawFrame extends JFrame  {
     private DrawPanel drawPanel;

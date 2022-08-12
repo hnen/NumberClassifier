@@ -13,6 +13,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+/**
+ * Main window for the application. Contains a tabbed pane where different functions can be opened to.
+ */
 public class MainFrame extends JFrame {
     
     JTabbedPane tabbedPane;

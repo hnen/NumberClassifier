@@ -7,6 +7,9 @@ import NumberClassifier.neuralnetwork.IActivationFunction;
 import NumberClassifier.neuralnetwork.ReLUActivationFunction;
 import NumberClassifier.neuralnetwork.SigmoidActivationFunction;
 
+/**
+ * Implements serialization for IActivationFunction object.
+ */
 public class ActivationFunctionAdapter implements JsonSerializer<IActivationFunction>, JsonDeserializer<IActivationFunction> {
 
     public JsonElement serialize(IActivationFunction f, Type interfaceType, JsonSerializationContext context) {

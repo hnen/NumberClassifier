@@ -8,6 +8,9 @@ import java.io.OutputStream;
 import NumberClassifier.data.ImageSet;
 import NumberClassifier.data.TrainingExample;
 
+/**
+ * Thread for running neural network training.
+ */
 public class TrainingJob extends Thread {
 
     private TrainConfig conf;

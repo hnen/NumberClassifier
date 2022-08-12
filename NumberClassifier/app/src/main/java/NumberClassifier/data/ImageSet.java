@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-
+/**
+ * Collection of images and their labels.
+ */
 public class ImageSet {
 
     private int numLabelIndices;
