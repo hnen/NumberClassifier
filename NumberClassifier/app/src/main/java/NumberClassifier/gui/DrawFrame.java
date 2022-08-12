@@ -14,6 +14,11 @@ public class DrawFrame extends JFrame  {
     private DrawPanel drawPanel;
     private JLabel label;
 
+    /**
+     * Constructs a new DrawFrame.
+     * @param inputStream Input stream to the JSON file containing the serialized neural network.
+     * @throws Exception if there is an error creating the frame.
+     */
     public DrawFrame(InputStream neuralNetwork) throws Exception {
         super("NumberClassifier");
 
@@ -36,7 +41,7 @@ public class DrawFrame extends JFrame  {
         nn = FeedForwardNeuralNetwork.load(neuralNetwork);
     }
 
-    void updateGuess() {
+    private void updateGuess() {
         try {
             int guess = nn.getMaxActivation(drawPanel.getImage());
             label.setText(Integer.toString(guess));
@@ -46,7 +51,6 @@ public class DrawFrame extends JFrame  {
         }
     }
 
-
-    FeedForwardNeuralNetwork nn;
+    private FeedForwardNeuralNetwork nn;
 
 }

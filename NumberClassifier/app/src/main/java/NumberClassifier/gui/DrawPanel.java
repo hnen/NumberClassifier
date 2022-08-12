@@ -11,8 +11,13 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     
     private double[] image;
     private int imageWidth, imageHeight;
-    Runnable onChanged;
+    private Runnable onChanged;
 
+    /**
+     * Constructs a new DrawPanel.
+     * @param width Width of the image in pixels.
+     * @param height Height of the image in pixels.
+     */
     public DrawPanel( int width, int height ) {
         this.imageWidth = width;
         this.imageHeight = height;
@@ -22,15 +27,26 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         addMouseMotionListener(this);
     }
 
+    /**
+     * Get the drawn image.
+     * @return The image data. The array has height*width elements and is stored in row-major order, top row first.
+     */
     public double[] getImage() {
         return image;
     }
 
+    /**
+     * Set callback to be called when the image is changed.
+     * @param onChanged
+     */
     public void setOnChanged( Runnable onChanged ) {
         this.onChanged = onChanged;
     }
 
-    public void mouseClicked(MouseEvent event) {
+    /**
+     * Implements MouseListener callback. Doesn't do anything.
+     */
+    private void mouseClicked(MouseEvent event) {
     }
 
     public void mousePressed(MouseEvent event) {
