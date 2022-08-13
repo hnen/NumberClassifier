@@ -88,7 +88,16 @@ public class MainFrame extends JFrame {
         TrainFrame trainFrame = new TrainFrame(f);
         tabbedPane.addTab(f.getName(), trainFrame.getContentPane());
     }
-
+    
+    /**
+     * Open neural network for drawing.
+     * @param file File to open.
+     */
+    public void openNetwork(File f) throws Exception {
+        DrawFrame drawFrame = new DrawFrame(new FileInputStream(f));
+        tabbedPane.addTab(f.getName(), drawFrame.getContentPane());
+    }
+    
     private void openLoadDialog( Consumer<File> openAction ) throws Exception {
         // file chooser should show only .json files
         JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));

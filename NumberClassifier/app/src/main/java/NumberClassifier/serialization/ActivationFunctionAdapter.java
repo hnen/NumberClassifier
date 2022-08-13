@@ -26,6 +26,9 @@ public class ActivationFunctionAdapter implements JsonSerializer<IActivationFunc
 
     /**
      * Deserialize an IActivationFunction object from JSON.
+     * @param json The JSON representation of the IActivationFunction object.
+     * @param typeOfT The type of the IActivationFunction object.
+     * @return The IActivationFunction object.
      */
     public IActivationFunction deserialize(JsonElement elem, Type interfaceType, JsonDeserializationContext context) throws JsonParseException {
         JsonObject wrapper = (JsonObject) elem;
