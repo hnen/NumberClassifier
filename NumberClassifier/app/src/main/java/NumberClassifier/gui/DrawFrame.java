@@ -16,7 +16,7 @@ public class DrawFrame extends JFrame  {
 
     /**
      * Constructs a new DrawFrame.
-     * @param inputStream Input stream to the JSON file containing the serialized neural network.
+     * @param neuralNetwork Input stream to the JSON file containing the serialized neural network.
      * @throws Exception if there is an error creating the frame.
      */
     public DrawFrame(InputStream neuralNetwork) throws Exception {

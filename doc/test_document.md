@@ -48,7 +48,7 @@ File parameters:
  - `testLabels`: File containing the number labels for testing accuracy in MNIST format.
  - `outFile`: File to output the trained network to in JSON format.
 
-To test the training, input the parameters to `test-conf.json` and run `App.main` entry point of the codebase. [NOTE: This is subject to change.]
+To test the training, input the parameters to `training-config.json` and run `App.main` entry point of the codebase. [NOTE: This is subject to change.]
 
 After training the network, the trainer measures the accuracy metric for the network by evaluating its results for every test example. Accuracy metric is number of correctly guessed test examples divided by total number of test examples. The accuracy value is quite good metric that defines whether the algorithm works 'correctly'. However more complicated question is, how good the accuracy metric should  expected to be. According to MNIST, neural networks have been capable of achieving 95.3% - 99.65% accuracy rate, so if the training works correctly, 95% accuracy should be achievable with relatively low effort.
 
