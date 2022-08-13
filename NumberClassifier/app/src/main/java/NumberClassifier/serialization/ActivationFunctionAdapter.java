@@ -14,8 +14,9 @@ public class ActivationFunctionAdapter implements JsonSerializer<IActivationFunc
 
     /**
      * Serializes IActivationFunction object to JSON.
-     * @param src The IActivationFunction object to serialize.
-     * @param typeOfSrc The type of the IActivationFunction object.
+     * @param f The IActivationFunction object to serialize.
+     * @param interfaceType The type of the IActivationFunction object.
+     * @param context The GSON context.
      * @return The JSON representation of the IActivationFunction object.
      */
     public JsonElement serialize(IActivationFunction f, Type interfaceType, JsonSerializationContext context) {
@@ -26,8 +27,9 @@ public class ActivationFunctionAdapter implements JsonSerializer<IActivationFunc
 
     /**
      * Deserialize an IActivationFunction object from JSON.
-     * @param json The JSON representation of the IActivationFunction object.
-     * @param typeOfT The type of the IActivationFunction object.
+     * @param elem The JSON representation of the IActivationFunction object.
+     * @param interfaceType The type of the IActivationFunction object.
+     * @param context The GSON context.
      * @return The IActivationFunction object.
      */
     public IActivationFunction deserialize(JsonElement elem, Type interfaceType, JsonDeserializationContext context) throws JsonParseException {
