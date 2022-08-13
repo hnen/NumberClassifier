@@ -20,7 +20,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import NumberClassifier.train.TrainConfig;
-import NumberClassifier.train.TrainingJob;
 
 /**
  * Frame where user can configure training parameters and train a network.
@@ -59,11 +58,11 @@ public class TrainFrame extends JFrame {
 
         group = addGroup( "Neural Network" );
         //public int[] layers;
-        addLabel( group, "Layers (TODO)", "Number of neural network neurons on each layer", 0 );
+        addLabel( group, "Layers (TODO - Edit json manually)", "Number of neurons on each layer", 0 );
         //public String activation;
-        addLabel( group, "Activation function (TODO)", "Activation function determines the shape of the neuron output function", 1 );
+        addLabel( group, "Activation function (TODO - Edit json manually)", "Activation function determines the shape of the neuron output function", 1 );
         //public double[] initWeights;
-        addLabel( group, "Initial weights (TODO)", "Range of weights to initialize neuron connections to. Weights are randomized uniformly between values.", 2 );
+        addLabel( group, "Initial weights (TODO - Edit json manually)", "Range of weights to initialize neuron connections to. Weights are randomized uniformly between values.", 2 );
         addDoubleField( group, "Initial bias", conf, "initBiases", "Value to initialize the neuron biases to.", 3 );
 
         group = addGroup( "Training Strategy" );
