@@ -4,7 +4,7 @@
     "testData": "data/t10k-images.idx3-ubyte",
     "testLabels": "data/t10k-labels.idx1-ubyte",
 
-    "outFile": "nn.json",
+    "outFile": "neural-network.json",
 
     "layers": [ 784, 32, 32, 10 ],
     

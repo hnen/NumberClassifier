@@ -12,8 +12,8 @@ public class App {
 
     public static void main(String[] args) throws Exception {        
         MainFrame frame = new MainFrame();
-        frame.openTraining(new File("test-conf.json"));
-        frame.openNetwork(new File("nn.json"));
+        frame.openTraining(new File("training-config.json"));
+        frame.openNetwork(new File("neural-network.json"));
     }
     
 }
