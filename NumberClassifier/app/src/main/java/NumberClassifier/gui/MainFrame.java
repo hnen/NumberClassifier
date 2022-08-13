@@ -82,7 +82,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Open training configuration file.
-     * @param file File to open.
+     * @param f File to open.
      */
     public void openTraining(File f) throws Exception {
         TrainFrame trainFrame = new TrainFrame(f);
