@@ -31,7 +31,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'NumberClassifier.App'
+    mainClass = 'NumberClassifier.gui.App'
 }
 
 tasks.named('test') {
