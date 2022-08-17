@@ -44,92 +44,9 @@ public class TrainFrame extends JFrame {
         }
 
         setLayout(new GridBagLayout());
-        
-        JPanel group = null;
+        addFields();
 
-        group = addGroup( "Dataset" );
-        addField( 
-            group, 
-            "Training Image File", 
-            new FileField(conf, "trainingData"), 
-            "Path to the MNIST image data file to use in training", 
-            0
-        );
-        addField( 
-            group,
-            "Training Label File",
-            new FileField(conf, "trainingLabels"),
-            "Path to the MNIST label data file to use in training",
-            1 
-        );
-        addField( 
-            group, 
-            "Test Image File", 
-            new FileField(conf, "testData"), 
-            "Path to the MNIST image data file to use in testing", 
-            2
-        );
-        addField( 
-            group, 
-            "Test Label File", 
-            new FileField(conf, "testLabels"), 
-            "Path to the MNIST label data file to use in testing", 
-            3
-        );
-
-        group = addGroup( "Output" );
-        addField( 
-            group, 
-            "Save to File", 
-            new FileField(conf, "outFile"), 
-            "File to write the trained network to.", 
-            0 
-        );
-
-        group = addGroup( "Neural Network" );
-        addField( 
-            group, 
-            "Layers", 
-            new IntArrayField(conf, "layers"),
-            "Number of neurons on each layer", 
-            0
-        );
-        //public String activation;
-        addLabel( group, "Activation function (TODO - Edit json manually)", "Activation function determines the shape of the neuron output function", 1 );
-        //public double[] initWeights;
-        addLabel( group, "Initial weights (TODO - Edit json manually)", "Range of weights to initialize neuron connections to. Weights are randomized uniformly between values.", 2 );
-        addField(
-             group, 
-             "Initial bias", 
-             new DoubleField(conf, "initBiases"), 
-             "Value to initialize the neuron biases to.", 
-             3 
-        );
-
-        group = addGroup( "Training Strategy" );
-        addField( 
-            group, 
-            "Learning rate", 
-            new DoubleField(conf, "learningRate"), 
-            "Determines how big steps parameters are updated on each epoch.", 
-            0 
-        );
-        addField( 
-            group, 
-            "Number of epochs", 
-            new IntField(conf, "epochs"), 
-            "How many iterations are run during the training.", 
-            1 
-        );
-        addField( 
-            group, 
-            "Mini batch size", 
-            new IntField(conf, "miniBatchSize"), 
-            "On each epoch a sub sample is selected from training data. This value detemrines the size of the sample.", 
-            2
-        );
-
-        group = addGroup( "Training" );
+        JPanel group = addGroup( "Training" );
 
         trainButton = new JButton("Train");
         GridBagConstraints c = createGbc(0, 0);
@@ -208,6 +125,98 @@ public class TrainFrame extends JFrame {
         JLabel fieldLabel = new JLabel(label);
         fieldLabel.setToolTipText(tooltip);
         group.add(fieldLabel, c);
+    }
+
+    void addFields() throws Exception {
+       
+        JPanel group = null;
+
+        group = addGroup( "Dataset" );
+        addField( 
+            group, 
+            "Training Image File", 
+            new FileField(conf, "trainingData"), 
+            "Path to the MNIST image data file to use in training", 
+            0
+        );
+        addField( 
+            group,
+            "Training Label File",
+            new FileField(conf, "trainingLabels"),
+            "Path to the MNIST label data file to use in training",
+            1 
+        );
+        addField( 
+            group, 
+            "Test Image File", 
+            new FileField(conf, "testData"), 
+            "Path to the MNIST image data file to use in testing", 
+            2
+        );
+        addField( 
+            group, 
+            "Test Label File", 
+            new FileField(conf, "testLabels"), 
+            "Path to the MNIST label data file to use in testing", 
+            3
+        );
+
+        group = addGroup( "Output" );
+        addField( 
+            group, 
+            "Save to File", 
+            new FileField(conf, "outFile"), 
+            "File to write the trained network to.", 
+            0 
+        );
+
+        group = addGroup( "Neural Network" );
+        addField( 
+            group, 
+            "Layers", 
+            new IntArrayField(conf, "layers"),
+            "Number of neurons on each layer", 
+            0
+        );
+        //public String activation;
+        addLabel( group, "Activation function (TODO - Edit json manually)", "Activation function determines the shape of the neuron output function", 1 );
+
+        addField( 
+            group, 
+            "Initial weights", 
+            new DoubleArrayField(conf, "initWeights"),
+            "Range of weights to initialize neuron connections to. Weights are randomized uniformly between values.",
+             2 );
+        addField(
+             group, 
+             "Initial bias", 
+             new DoubleField(conf, "initBiases"), 
+             "Value to initialize the neuron biases to.", 
+             3 
+        );
+
+        group = addGroup( "Training Strategy" );
+        addField( 
+            group, 
+            "Learning rate", 
+            new DoubleField(conf, "learningRate"), 
+            "Determines how big steps parameters are updated on each epoch.", 
+            0 
+        );
+        addField( 
+            group, 
+            "Number of epochs", 
+            new IntField(conf, "epochs"), 
+            "How many iterations are run during the training.", 
+            1 
+        );
+        addField( 
+            group, 
+            "Mini batch size", 
+            new IntField(conf, "miniBatchSize"), 
+            "On each epoch a sub sample is selected from training data. This value detemrines the size of the sample.", 
+            2
+        );
     }
 
     abstract class EditField {
@@ -370,6 +379,44 @@ public class TrainFrame extends JFrame {
             return sb.toString();
         }
     }
+
+    
+    class DoubleArrayField extends EditField {
+        Field field;
+        TrainConfig instance;
+        
+        public DoubleArrayField(TrainConfig instance, String fieldName) throws Exception {
+            this.field = TrainConfig.class.getField(fieldName);
+            this.instance = instance;
+        }
+
+
+        @Override
+        public void setValue(String value) throws Exception {
+            String[] values = value.split(",");
+            double[] array = new double[values.length];
+            for( int i = 0; i < values.length; i++ ) {
+                array[i] = Double.parseDouble(values[i]);
+            }
+            field.set(conf, array);
+        }
+
+        @Override
+        public String getValue() throws Exception {
+            double[] array = (double[])field.get(conf);
+            StringBuilder sb = new StringBuilder();
+
+            for ( int i = 0; i < array.length; i++ ) {
+                sb.append(array[i]);
+                if ( i < array.length - 1 ) {
+                    sb.append(",");
+                }
+            }
+
+            return sb.toString();
+        }
+    }
+
 
     private void addField(JPanel group, String name, EditField field, String tooltip, int y) throws Exception {
         addLabel(group, name, tooltip, y);
