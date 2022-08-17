@@ -20,7 +20,6 @@ public class NeuralNetworkTrainerTest {
         testConf.testLabels =  "";
         testConf.layers = new int[] { 2, 3, 2 };
         testConf.activation = "sigmoid";
-        testConf.activationFunction = new SigmoidActivationFunction();
         testConf.learningRate = 10.0;
         testConf.initWeights = new double[] { -1.0, 1.0 };
         testConf.initBiases = 0.0;

@@ -17,7 +17,7 @@ public class NeuralNetworkTrainer {
     public NeuralNetworkTrainer(TrainConfig trainConfig) throws Exception {
         this.trainConfig = trainConfig;
 
-        this.nn = new FeedForwardNeuralNetwork( trainConfig.activationFunction, trainConfig.layers );
+        this.nn = new FeedForwardNeuralNetwork( trainConfig.getActivationFunction(), trainConfig.layers );
         nn.randomizeWeights(trainConfig.initWeights[0], trainConfig.initWeights[1]);
         nn.setBiases(trainConfig.initBiases);
     }

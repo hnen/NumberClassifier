@@ -39,7 +39,7 @@ public class TrainConfigTest {
         assertEquals("test3", config.testLabels);
         assertArrayEquals(new int[] { 1, 2, 3, 4, 5 }, config.layers);
         assertEquals("sigmoid", config.activation);
-        assertTrue( config.activationFunction instanceof SigmoidActivationFunction );
+        assertTrue( config.getActivationFunction() instanceof SigmoidActivationFunction );
         assertEquals(0.123, config.learningRate);
         assertArrayEquals(new double[] { -1.0, 1.0 }, config.initWeights);
         assertEquals(0.1, config.initBiases);

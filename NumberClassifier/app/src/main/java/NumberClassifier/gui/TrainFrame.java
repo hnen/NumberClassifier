@@ -5,12 +5,15 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Scanner;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -178,8 +181,14 @@ public class TrainFrame extends JFrame {
             "Number of neurons on each layer", 
             0
         );
-        //public String activation;
-        addLabel( group, "Activation function (TODO - Edit json manually)", "Activation function determines the shape of the neuron output function", 1 );
+
+        addField( 
+            group, 
+            "Activation function",
+            new ActivationFunctionField(conf, "activation"),
+            "Activation function determines the shape of the neuron output function",
+            1 
+        );
 
         addField( 
             group, 
@@ -418,63 +427,52 @@ public class TrainFrame extends JFrame {
     }
 
 
-    private void addField(JPanel group, String name, EditField field, String tooltip, int y) throws Exception {
-        addLabel(group, name, tooltip, y);
+    
+    
+    class ActivationFunctionField extends EditField {   
+        Field field;
+        TrainConfig instance;
 
-        field.createElement(group, y);
+        public ActivationFunctionField(TrainConfig instance, String fieldName) throws Exception {
+            this.field = TrainConfig.class.getField(fieldName);
+            this.instance = instance;
+        }
+        
+        @Override
+        public void setValue(String value) throws Exception {
+            field.set(instance, value);
+        }
+        
+        @Override
+        public String getValue() throws Exception {
+            return (String)field.get(instance);
+        }
 
+        @Override
+        void createElement(JPanel group, int y) throws Exception {
+            // add a dropdown field with two choices: "sigmoid" and "relu"
+            JComboBox<String> comboBox = new JComboBox<String>(new String[] {"sigmoid", "relu"});
+            comboBox.setSelectedItem(field.get(instance));
+            GridBagConstraints c = createGbc(1, y);
+            group.add(comboBox, c);
+
+            comboBox.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        field.set(instance, comboBox.getSelectedItem());
+                    } catch (Exception ex) {
+                        System.out.println(ex);
+                    }
+                }
+            });
+
+        }
     }
 
-    private void addFileField(JPanel group, String name, TrainConfig instance, String fieldName, String tooltip, int y) throws Exception {
+
+    private void addField(JPanel group, String name, EditField field, String tooltip, int y) throws Exception {
         addLabel(group, name, tooltip, y);
-
-        Field field = TrainConfig.class.getField(fieldName);
-
-        addLabel(group, name, tooltip, y);
-
-        JTextField fieldTextField = new JTextField((String)field.get(instance));
-        GridBagConstraints c = createGbc(1, y);
-        group.add(fieldTextField, c);
-
-        // add listener when textfield text is changed, and set the value to field
-        fieldTextField.getDocument().addDocumentListener(new DocumentListener() {
-            public void changedUpdate(DocumentEvent e) {
-                update();
-            }
-            public void removeUpdate(DocumentEvent e) {
-                update();
-            }
-            public void insertUpdate(DocumentEvent e) {
-                update();
-            }
-
-            private void update() {
-                try {
-                    field.set(instance, fieldTextField.getText());
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
-            }
-
-        });
-
-
-        JButton openFileButton = new JButton("...");
-        openFileButton.setSize(new Dimension(10, 10));
-        c = createGbc(2, y);
-        group.add(openFileButton, c);
-
-        openFileButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                JFileChooser chooser = new JFileChooser();
-                chooser.showOpenDialog(null);
-                File file = chooser.getSelectedFile();
-                if (file != null) {
-                    fieldTextField.setText(file.getAbsolutePath());
-                }
-            }
-        });
-
+        field.createElement(group, y);
     }
 
     private GridBagConstraints createGbc(int x, int y) {

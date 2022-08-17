@@ -6,11 +6,9 @@ import java.util.function.Consumer;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 /**
@@ -99,7 +97,6 @@ public class MainFrame extends JFrame {
     }
 
     private void openLoadDialog( Consumer<File> openAction ) throws Exception {
-        // file chooser should show only .json files
         JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
         fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
             @Override
@@ -112,19 +109,11 @@ public class MainFrame extends JFrame {
             }
         });
         
-        // when user selects a file
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             openAction.accept(file);
             
         }
-    }
-
-    private JPanel makeTextPanel(String text) {
-        JPanel panel = new JPanel(false);
-        JLabel label = new JLabel(text);
-        panel.add(label);
-        return panel;
     }
 
 }

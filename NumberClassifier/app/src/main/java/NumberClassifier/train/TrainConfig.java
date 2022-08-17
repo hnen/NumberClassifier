@@ -18,12 +18,22 @@ public class TrainConfig {
     public String outFile;
     public int[] layers;
     public String activation;
-    public IActivationFunction activationFunction;
     public double learningRate;
     public double[] initWeights;
     public double initBiases;
     public int epochs;
     public int miniBatchSize;
+
+    public IActivationFunction getActivationFunction() {
+        switch( activation ) {
+            case "sigmoid":
+                return new SigmoidActivationFunction();
+            case "relu":
+                return new ReLUActivationFunction();
+            default:
+                throw new IllegalArgumentException("Unknown activation function: " + activation);
+        }
+    }
 
     /**
      * Load the training configuration from JSON data.
@@ -33,19 +43,7 @@ public class TrainConfig {
     public static TrainConfig loadJSON( String jsonData ) throws Exception {
         GsonBuilder builder = new GsonBuilder(); 
         Gson gson = builder.create();
-
         TrainConfig conf = gson.fromJson(jsonData, TrainConfig.class);
-        switch( conf.activation ) {
-            case "sigmoid":
-                conf.activationFunction = new SigmoidActivationFunction();
-                break;
-            case "relu":
-                conf.activationFunction = new ReLUActivationFunction();
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown activation function: " + conf.activation);
-        }
-
         return conf;
     }
 
