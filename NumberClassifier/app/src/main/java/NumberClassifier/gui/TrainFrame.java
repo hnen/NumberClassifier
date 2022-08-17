@@ -48,27 +48,86 @@ public class TrainFrame extends JFrame {
         JPanel group = null;
 
         group = addGroup( "Dataset" );
-        addFileField( group, "Training Image File", conf, "trainingData", "Path to the MNIST image data file to use in training", 0 );
-        addFileField( group, "Training Label File", conf, "trainingLabels", "Path to the MNIST label data file to use in training", 1 );
-        addFileField( group, "Test Image File", conf, "testData", "Path to the MNIST image data file to use in testing", 2 );
-        addFileField( group, "Test Label File", conf, "testLabels", "Path to the MNIST label data file to use in testing", 3 );
+        addField( 
+            group, 
+            "Training Image File", 
+            new FileField(conf, "trainingData"), 
+            "Path to the MNIST image data file to use in training", 
+            0
+        );
+        addField( 
+            group,
+            "Training Label File",
+            new FileField(conf, "trainingLabels"),
+            "Path to the MNIST label data file to use in training",
+            1 
+        );
+        addField( 
+            group, 
+            "Test Image File", 
+            new FileField(conf, "testData"), 
+            "Path to the MNIST image data file to use in testing", 
+            2
+        );
+        addField( 
+            group, 
+            "Test Label File", 
+            new FileField(conf, "testLabels"), 
+            "Path to the MNIST label data file to use in testing", 
+            3
+        );
 
         group = addGroup( "Output" );
-        addFileField( group, "Save to File", conf, "outFile", "File to write the trained network to.", 0 );
+        addField( 
+            group, 
+            "Save to File", 
+            new FileField(conf, "outFile"), 
+            "File to write the trained network to.", 
+            0 
+        );
 
         group = addGroup( "Neural Network" );
-        //public int[] layers;
-        addLabel( group, "Layers (TODO - Edit json manually)", "Number of neurons on each layer", 0 );
+        addField( 
+            group, 
+            "Layers", 
+            new IntArrayField(conf, "layers"),
+            "Number of neurons on each layer", 
+            0
+        );
         //public String activation;
         addLabel( group, "Activation function (TODO - Edit json manually)", "Activation function determines the shape of the neuron output function", 1 );
         //public double[] initWeights;
         addLabel( group, "Initial weights (TODO - Edit json manually)", "Range of weights to initialize neuron connections to. Weights are randomized uniformly between values.", 2 );
-        addDoubleField( group, "Initial bias", conf, "initBiases", "Value to initialize the neuron biases to.", 3 );
+        addField(
+             group, 
+             "Initial bias", 
+             new DoubleField(conf, "initBiases"), 
+             "Value to initialize the neuron biases to.", 
+             3 
+        );
 
         group = addGroup( "Training Strategy" );
-        addDoubleField( group, "Learning rate", conf, "learningRate", "Determines how big steps parameters are updated on each epoch.", 0 );
-        addIntField( group, "Number of epochs", conf, "epochs", "How many iterations are run during the training.", 1 );
-        addIntField( group, "Mini batch size", conf, "miniBatchSize", "On each epoch a sub sample is selected from training data. This value detemrines the size of the sample.", 2 );
+        addField( 
+            group, 
+            "Learning rate", 
+            new DoubleField(conf, "learningRate"), 
+            "Determines how big steps parameters are updated on each epoch.", 
+            0 
+        );
+        addField( 
+            group, 
+            "Number of epochs", 
+            new IntField(conf, "epochs"), 
+            "How many iterations are run during the training.", 
+            1 
+        );
+        addField( 
+            group, 
+            "Mini batch size", 
+            new IntField(conf, "miniBatchSize"), 
+            "On each epoch a sub sample is selected from training data. This value detemrines the size of the sample.", 
+            2
+        );
 
         group = addGroup( "Training" );
 
@@ -151,69 +210,171 @@ public class TrainFrame extends JFrame {
         group.add(fieldLabel, c);
     }
 
+    abstract class EditField {
 
-    private void addIntField(JPanel group, String name, TrainConfig instance, String fieldName, String tooltip, int y) throws Exception {
-        addLabel(group, name, tooltip, y);
+        Field field;
+        TrainConfig instance;
 
-        Field field = TrainConfig.class.getField(fieldName);
-        JTextField fieldTextField = new JTextField(field.get(instance).toString());
-        GridBagConstraints c = createGbc(1, y);
-        group.add(fieldTextField, c);
+        abstract void setValue(String value) throws Exception;
+        abstract String getValue() throws Exception;
 
-        // add listener when textfield text is changed, and set the value to field
-        fieldTextField.getDocument().addDocumentListener(new DocumentListener() {
-            public void changedUpdate(DocumentEvent e) {
-                update();
-            }
-            public void removeUpdate(DocumentEvent e) {
-                update();
-            }
-            public void insertUpdate(DocumentEvent e) {
-                update();
-            }
+        void createElement(JPanel group, int y) throws Exception {
+            createTextField(group, y);
+        }
 
-            private void update() {
-                try {
-                    field.set(instance, Integer.valueOf(fieldTextField.getText()));
-                } catch (Exception e) {
-                    System.out.println(e);
+        protected JTextField createTextField(JPanel group, int y) throws Exception {
+            JTextField fieldTextField = new JTextField(getValue());
+            GridBagConstraints c = createGbc(1, y);
+            group.add(fieldTextField, c);
+    
+            // add listener when textfield text is changed, and set the value to field
+            fieldTextField.getDocument().addDocumentListener(new DocumentListener() {
+                public void changedUpdate(DocumentEvent e) {
+                    update();
                 }
-            }
+                public void removeUpdate(DocumentEvent e) {
+                    update();
+                }
+                public void insertUpdate(DocumentEvent e) {
+                    update();
+                }
+    
+                private void update() {
+                    try {
+                        setValue(fieldTextField.getText());
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+                }
+            });          
 
-        });
+            return fieldTextField;
+        }
 
     }
 
-    private void addDoubleField(JPanel group, String name, TrainConfig instance, String fieldName, String tooltip, int y) throws Exception {
-        addLabel(group, name, tooltip, y);
+    class IntField extends EditField {
 
-        Field field = TrainConfig.class.getField(fieldName);
+        public IntField(TrainConfig instance, String fieldName) throws Exception {
+            this.field = TrainConfig.class.getField(fieldName);
+            this.instance = instance;
+        }
 
-        JTextField fieldTextField = new JTextField(field.get(instance).toString());
-        GridBagConstraints c = createGbc(1, y);
-        group.add(fieldTextField, c);
+        @Override
+        public void setValue(String value) throws Exception {
+            field.setInt(instance, Integer.parseInt(value));
+        }
 
-        // add listener when textfield text is changed, and set the value to field
-        fieldTextField.getDocument().addDocumentListener(new DocumentListener() {
-            public void changedUpdate(DocumentEvent e) {
-                update();
+        @Override
+        public String getValue() throws Exception {
+            return Integer.toString(field.getInt(instance));
+        }
+
+    }
+
+    class DoubleField extends EditField {   
+        Field field;
+        TrainConfig instance;
+
+        public DoubleField(TrainConfig instance, String fieldName) throws Exception {
+            this.field = TrainConfig.class.getField(fieldName);
+            this.instance = instance;
+        }
+        
+        @Override
+        public void setValue(String value) throws Exception {
+            field.setDouble(conf, Double.parseDouble(value));
+        }
+        
+        @Override
+        public String getValue() throws Exception {
+            return Double.toString(field.getDouble(conf));
+        }
+    }
+
+    
+    class FileField extends EditField {   
+        Field field;
+        TrainConfig instance;
+
+        public FileField(TrainConfig instance, String fieldName) throws Exception {
+            this.field = TrainConfig.class.getField(fieldName);
+            this.instance = instance;
+        }
+        
+        @Override
+        public void setValue(String value) throws Exception {
+            field.set(instance, value);
+        }
+        
+        @Override
+        public String getValue() throws Exception {
+            return (String)field.get(instance);
+        }
+
+        @Override
+        void createElement(JPanel group, int y) throws Exception {
+            JTextField fieldTextField = createTextField(group, y);
+
+            JButton openFileButton = new JButton("...");
+            openFileButton.setSize(new Dimension(10, 10));
+            GridBagConstraints c = createGbc(2, y);
+            group.add(openFileButton, c);
+
+            openFileButton.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    JFileChooser chooser = new JFileChooser();
+                    chooser.showOpenDialog(null);
+                    File file = chooser.getSelectedFile();
+                    if (file != null) {
+                        fieldTextField.setText(file.getAbsolutePath());
+                    }
+                }
+            });
+
+        }
+    }
+
+    class IntArrayField extends EditField {
+        Field field;
+        TrainConfig instance;
+        
+        public IntArrayField(TrainConfig instance, String fieldName) throws Exception {
+            this.field = TrainConfig.class.getField(fieldName);
+            this.instance = instance;
+        }
+
+
+        @Override
+        public void setValue(String value) throws Exception {
+            String[] values = value.split(",");
+            int[] array = new int[values.length];
+            for( int i = 0; i < values.length; i++ ) {
+                array[i] = Integer.parseInt(values[i]);
             }
-            public void removeUpdate(DocumentEvent e) {
-                update();
-            }
-            public void insertUpdate(DocumentEvent e) {
-                update();
-            }
+            field.set(conf, array);
+        }
 
-            private void update() {
-                try {
-                    field.set(instance, Double.valueOf(fieldTextField.getText()));
-                } catch (Exception e) {
-                    System.out.println(e);
+        @Override
+        public String getValue() throws Exception {
+            int[] array = (int[])field.get(conf);
+            StringBuilder sb = new StringBuilder();
+
+            for ( int i = 0; i < array.length; i++ ) {
+                sb.append(array[i]);
+                if ( i < array.length - 1 ) {
+                    sb.append(",");
                 }
             }
 
-        });
+            return sb.toString();
+        }
+    }
+
+    private void addField(JPanel group, String name, EditField field, String tooltip, int y) throws Exception {
+        addLabel(group, name, tooltip, y);
+
+        field.createElement(group, y);
 
     }
 
