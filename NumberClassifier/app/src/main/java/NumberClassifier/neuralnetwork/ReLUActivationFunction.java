@@ -8,7 +8,7 @@ package NumberClassifier.neuralnetwork;
  * to be slightly larger than 0.
  * </p>
  */
-public class ReLUActivationFunction extends ActivationFunction {
+public class ReLUActivationFunction implements IActivationFunction {
     
     /**
      * Calculate value of the activation function.
