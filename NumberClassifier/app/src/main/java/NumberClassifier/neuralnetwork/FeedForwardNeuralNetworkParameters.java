@@ -40,7 +40,7 @@ public class FeedForwardNeuralNetworkParameters {
 
     /**
      * Get layer configuration of the network.
-     * @param layers Number of neurons on each layer.
+     * @return Number of neurons on each layer.
      */
     public int[] getLayers() {
         return layers;
