@@ -36,7 +36,7 @@ Hyper Parameters:
 - `layers`: Neural network topology. Number of layers and number of neurons on each layer, as an integer array.    
 - `activation`: Activation function. Two activation functions were implemented, Sigmoid functions("sigmoid") and Rectified Linear Unit ("relu")
 - `learningRate`: Multiplier for each gradient descent step. Bigger value trains the network faster, but is numerically less stable.
-- `initWeights`: Initial range for neuron connection weights, as 2-element array. Weights are uniformly randomized in this range.
+- `initWeightMethod`: Heuristics used to initial values for network weights. Three methods are implemented, "uniform", "xavier" and "hu".
 - `initBiases`: Initial value for neuron initial biases.
 - `epochs`: Number of epoch during training.
 - `miniBatchSize`: Size of the batch used on every epoch.
@@ -47,8 +47,6 @@ File parameters:
  - `testData`: File containing the number images for testing accuray in MNIST format.
  - `testLabels`: File containing the number labels for testing accuracy in MNIST format.
  - `outFile`: File to output the trained network to in JSON format.
-
-To test the training, input the parameters to `training-config.json` and run `App.main` entry point of the codebase. [NOTE: This is subject to change.]
 
 After training the network, the trainer measures the accuracy metric for the network by evaluating its results for every test example. Accuracy metric is number of correctly guessed test examples divided by total number of test examples. The accuracy value is quite good metric that defines whether the algorithm works 'correctly'. However more complicated question is, how good the accuracy metric should  expected to be. According to MNIST, neural networks have been capable of achieving 95.3% - 99.65% accuracy rate, so if the training works correctly, 95% accuracy should be achievable with relatively low effort.
 
@@ -74,13 +72,17 @@ With some ad-hoc hand tweaking of values, 96.95% accuracy was achieved with foll
 }
 ```
 
+### Evaluating performance
+
+On every train run, the app writes the input parameter and how it performed to `train-stats.csv`
+
+TODO: visualize results
+
 ## Evaluating hand-written numbers
 
 Main motivation for training the network is to being able to apply it to input that its never seen before. For this, an interactive app was built where user can draw a number and the network guesses the number.
 
 Correctness for this algorithm is slightly more subjective. One definition could be, that it should be able to identify anyone's hand-written numbers with same accuracy rate than against the MNIST test examples.
-
-Replicating this test can be done by running the interactive app from `InteractiveApp.main` entry point.
 
 First subjective test can be done by simply doodling few numbers to the app. If the app is struggling to recognize some numbers, the algorithm needs improvements.
 
