@@ -9,10 +9,11 @@
     "layers": [ 784, 32, 32, 10 ],
     
     "activation": "relu",
-    "learningRate": 0.05,
-    "initWeights": [-0.1, 0.1],
+    "learningRate": 0.5,
+    "initWeightsMethod": "uniform",
+    "initWeightsUniformRange": [-0.1, 0.1],
     "initBiases": 0.01,
 
-    "epochs": 50000,
-    "miniBatchSize": 15
+    "epochs": 5000,
+    "miniBatchSize": 32
 }

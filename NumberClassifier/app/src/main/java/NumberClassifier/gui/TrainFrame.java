@@ -201,9 +201,9 @@ public class TrainFrame extends JFrame {
 
         addField( 
             group, 
-            "Initial weights", 
-            new DoubleArrayField(conf, "initWeights"),
-            "Range of weights to initialize neuron connections to. Weights are randomized uniformly between values.",
+            "Initial weights range (Uniform)", 
+            new DoubleArrayField(conf, "initWeightsUniformRange"),
+            "Used only when init weight method is uniform. Range of weights to initialize neuron connections to. Weights are randomized uniformly between values.",
              2 );
         addField(
              group, 

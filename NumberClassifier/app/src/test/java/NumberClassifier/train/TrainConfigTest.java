@@ -41,7 +41,7 @@ public class TrainConfigTest {
         assertEquals("sigmoid", config.activation);
         assertTrue( config.getActivationFunction() instanceof SigmoidActivationFunction );
         assertEquals(0.123, config.learningRate);
-        assertArrayEquals(new double[] { -1.0, 1.0 }, config.initWeights);
+        assertArrayEquals(new double[] { -1.0, 1.0 }, config.initWeightsUniformRange);
         assertEquals(0.1, config.initBiases);
         assertEquals(1000, config.epochs);
         assertEquals(10, config.miniBatchSize);

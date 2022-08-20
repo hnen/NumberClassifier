@@ -18,7 +18,7 @@ public class NeuralNetworkTrainer {
         this.trainConfig = trainConfig;
 
         this.nn = new FeedForwardNeuralNetwork( trainConfig.getActivationFunction(), trainConfig.layers );
-        //nn.randomizeWeights(trainConfig.initWeights[0], trainConfig.initWeights[1]);
+        //nn.randomizeWeights(trainConfig.initWeightsUniformRange[0], trainConfig.initWeightsUniformRange[1]);
         nn.initWeightsHe();
         nn.setBiases(trainConfig.initBiases);
     }

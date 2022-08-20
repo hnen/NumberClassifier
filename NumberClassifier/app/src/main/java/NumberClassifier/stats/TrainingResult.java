@@ -33,8 +33,8 @@ public class TrainingResult {
 
         activations = conf.activation;
         learningRate = conf.learningRate;
-        initWeightsMin = conf.initWeights[0];
-        initWeightsMax = conf.initWeights[1];
+        initWeightsMin = conf.initWeightsUniformRange[0];
+        initWeightsMax = conf.initWeightsUniformRange[1];
         initBiases = conf.initBiases;
         epochs = conf.epochs;
         miniBatchSize = conf.miniBatchSize;

@@ -21,7 +21,7 @@ public class NeuralNetworkTrainerTest {
         testConf.layers = new int[] { 2, 3, 2 };
         testConf.activation = "sigmoid";
         testConf.learningRate = 10.0;
-        testConf.initWeights = new double[] { -1.0, 1.0 };
+        testConf.initWeightsUniformRange = new double[] { -1.0, 1.0 };
         testConf.initBiases = 0.0;
         testConf.epochs = 5000;
         testConf.miniBatchSize = 2;

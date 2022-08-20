@@ -19,7 +19,8 @@ public class TrainConfig {
     public int[] layers;
     public String activation;
     public double learningRate;
-    public double[] initWeights;
+    public String initWeightsMethod;
+    public double[] initWeightsUniformRange;
     public double initBiases;
     public int epochs;
     public int miniBatchSize;
