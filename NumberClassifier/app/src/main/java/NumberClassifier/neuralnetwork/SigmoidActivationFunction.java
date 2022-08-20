@@ -6,7 +6,7 @@ package NumberClassifier.neuralnetwork;
  * Can be passed as activation function for FeedForwardNeuralNetwork. Sigmoid activation function has classically been a standard choice for neural networks.
  * </p>
  */
-public class SigmoidActivationFunction implements IActivationFunction {
+public class SigmoidActivationFunction extends ActivationFunction {
     
     /**
      * Calculate value of the activation function.

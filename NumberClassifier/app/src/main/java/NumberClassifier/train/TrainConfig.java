@@ -3,7 +3,7 @@ package NumberClassifier.train;
 import com.google.gson.Gson; 
 import com.google.gson.GsonBuilder;
 
-import NumberClassifier.neuralnetwork.IActivationFunction;
+import NumberClassifier.neuralnetwork.ActivationFunction;
 import NumberClassifier.neuralnetwork.ReLUActivationFunction;
 import NumberClassifier.neuralnetwork.SigmoidActivationFunction;  
 
@@ -25,8 +25,7 @@ public class TrainConfig {
     public int epochs;
     public int miniBatchSize;
     
-
-    public IActivationFunction getActivationFunction() {
+    public ActivationFunction getActivationFunction() {
         switch( activation ) {
             case "sigmoid":
                 return new SigmoidActivationFunction();

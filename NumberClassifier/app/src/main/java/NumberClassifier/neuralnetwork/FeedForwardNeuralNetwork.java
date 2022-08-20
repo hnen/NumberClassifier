@@ -26,7 +26,7 @@ public class FeedForwardNeuralNetwork {
      * @param layers Number of neurons on each layer. The size of the array defines the number of layers. First element defines number of input neurons, and last element defines number of output neurons.
      * @throws Exception
      */
-    public FeedForwardNeuralNetwork( IActivationFunction activationFunction, int[] layers ) throws Exception {
+    public FeedForwardNeuralNetwork( ActivationFunction activationFunction, int[] layers ) throws Exception {
         if ( layers.length < 2 ) {
             throw new Exception( "There has to be at least 2 layers" );
         }
@@ -45,7 +45,7 @@ public class FeedForwardNeuralNetwork {
 
     public static FeedForwardNeuralNetwork load( InputStream stream ) throws Exception {
         Gson gson = new GsonBuilder()
-            .registerTypeAdapter(IActivationFunction.class, new ActivationFunctionAdapter())
+            .registerTypeAdapter(ActivationFunction.class, new ActivationFunctionAdapter())
             .create();
 
         try (Scanner s = new Scanner(stream)) {
@@ -337,7 +337,7 @@ public class FeedForwardNeuralNetwork {
     public void serialize(OutputStream out) throws Exception {
         Gson gson = new GsonBuilder()
             .setPrettyPrinting()
-            .registerTypeAdapter(IActivationFunction.class, new ActivationFunctionAdapter())
+            .registerTypeAdapter(ActivationFunction.class, new ActivationFunctionAdapter())
             .create();
 
         String json = gson.toJson(this);
@@ -349,7 +349,7 @@ public class FeedForwardNeuralNetwork {
         return params.toString();
     }
 
-    private IActivationFunction activationFunction;
+    private ActivationFunction activationFunction;
     private int[] layers;
 
     private FeedForwardNeuralNetworkParameters params;
