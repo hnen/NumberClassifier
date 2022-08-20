@@ -3,15 +3,22 @@ package NumberClassifier.stats;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.lang.reflect.Field;
 import java.io.BufferedReader;
 
-public class TrainingResultWriter {
+public class CSVWriter<T> {
 
-    public static void writeToCSV(String fileName, TrainingResult result) throws Exception {
+    Class<T> c;
+
+    public CSVWriter(Class<T> c) {
+        this.c = c;
+    }
+
+    public void writeToCSV(String fileName, T result) throws Exception {
         // CSV fields are quoted. comma is used as separator.
 
         StringBuffer updatedFile = new StringBuffer();
-        String header = TrainingResult.getCSVHeader();
+        String header = getHeader();
         int numFields = header.split(",").length - 1;
         updatedFile.append(header);
         updatedFile.append("\n");
@@ -40,12 +47,43 @@ public class TrainingResultWriter {
             br.close();
         }
 
-        updatedFile.append(result.toCSVRow());
+        updatedFile.append(createRow(result));
 
         FileWriter fw = new FileWriter(curreentFile, false);
         fw.write(updatedFile.toString());
         fw.close();        
     }
 
+    private String getHeader() {
+        StringBuilder header = new StringBuilder();
+        boolean first = true;
+        for( Field f : c.getFields() ) {
+            if ( !first ) {
+                header.append(",");
+            }
+
+            header.append("\"" + f.getName() + "\"");
+
+            first = false;
+        }
+
+        return header.toString();
+    }
+
+    private String createRow(T obj) throws IllegalAccessException {
+        StringBuilder row = new StringBuilder();
+        boolean first = true;
+        for( Field f : c.getFields() ) {
+            if ( !first ) {
+                row.append(",");
+            }
+
+            row.append("\"" + f.get(obj).toString() + "\"");
+
+            first = false;
+        }
+
+        return row.toString();
+    }
 
 }

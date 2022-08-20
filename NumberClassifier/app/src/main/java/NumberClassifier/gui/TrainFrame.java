@@ -23,7 +23,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import NumberClassifier.stats.TrainingResult;
-import NumberClassifier.stats.TrainingResultWriter;
+import NumberClassifier.stats.CSVWriter;
 import NumberClassifier.train.TrainConfig;
 
 /**
@@ -104,7 +104,7 @@ public class TrainFrame extends JFrame {
                     trainingStatusLabel.setText(String.format("Saved to %s. Accuracy %.2f%%", conf.outFile, trainingJob.getAccuracy() * 100.0));
                     TrainingResult result = new TrainingResult(conf, trainingJob.getAccuracy(), trainingJob.getTrainDuration());
                     try {                        
-                        TrainingResultWriter.writeToCSV("train-stats.csv", result);
+                        new CSVWriter<TrainingResult>(TrainingResult.class).writeToCSV("train-stats.csv", result);
                     } catch( Exception e ) {
                         e.printStackTrace();
                     }
