@@ -23,6 +23,7 @@ public class TrainConfig {
     public double initBiases;
     public int epochs;
     public int miniBatchSize;
+    
 
     public IActivationFunction getActivationFunction() {
         switch( activation ) {

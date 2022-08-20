@@ -16,8 +16,9 @@ import NumberClassifier.train.TrainConfig;
 public class TrainingJob extends Thread {
 
     private TrainConfig conf;
-    NeuralNetworkTrainer trainer;
-    double accuracy;
+    private NeuralNetworkTrainer trainer;
+    private double accuracy;
+    private double duration;
 
     public TrainingJob(TrainConfig conf) {
         this.conf = conf;
@@ -38,6 +39,10 @@ public class TrainingJob extends Thread {
         return accuracy;
     }
 
+    public double getTrainDuration() {
+        return duration;
+    }
+
     public void run() {
         try {
             trainer = new NeuralNetworkTrainer(conf);
@@ -47,7 +52,11 @@ public class TrainingJob extends Thread {
                     new FileInputStream(new File(conf.trainingLabels)),
                     10);
             TrainingExample[] trainingExamples = imageSet.createTrainingExamples();
+
+            long start = System.currentTimeMillis();
             trainer.train(trainingExamples);
+            long end = System.currentTimeMillis();
+            duration = (end - start) / 1000.0;
             
             ImageSet testSet = ImageSet.loadFromMNIST(
                     new FileInputStream(new File(conf.testData)),

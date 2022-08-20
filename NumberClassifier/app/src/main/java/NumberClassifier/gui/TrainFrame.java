@@ -22,6 +22,8 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import NumberClassifier.stats.TrainingResult;
+import NumberClassifier.stats.TrainingResultWriter;
 import NumberClassifier.train.TrainConfig;
 
 /**
@@ -97,8 +99,15 @@ public class TrainFrame extends JFrame {
                         e.printStackTrace();
                     }
                 }
+
                 if ( trainingJob != null ) {
                     trainingStatusLabel.setText(String.format("Saved to %s. Accuracy %.2f%%", conf.outFile, trainingJob.getAccuracy() * 100.0));
+                    TrainingResult result = new TrainingResult(conf, trainingJob.getAccuracy(), trainingJob.getTrainDuration());
+                    try {                        
+                        TrainingResultWriter.writeToCSV("train-stats.csv", result);
+                    } catch( Exception e ) {
+                        e.printStackTrace();
+                    }
                 }
                 trainingStopped();
             }
