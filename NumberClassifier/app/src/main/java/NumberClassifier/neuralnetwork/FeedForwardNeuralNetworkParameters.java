@@ -49,7 +49,25 @@ public class FeedForwardNeuralNetworkParameters {
             for ( int j = 0; j < weights[i].length; j++ ) {
                 weights[i][j] = rnd.nextDouble() * (max-min) + min;
             }
-        }        
+        }
+    }
+
+    public void initWeightsXavier() {
+        Random rnd = new Random();
+        for( int i = 0; i < layers.length - 1; i++ ) {
+            for ( int j = 0; j < weights[i].length; j++ ) {
+                weights[i][j] = (rnd.nextDouble() - 0.5) * 2.0 / Math.sqrt((double)layers[i]);
+            }
+        }
+    }
+
+    public void initWeightsHe() {
+        Random rnd = new Random();
+        for( int i = 0; i < layers.length - 1; i++ ) {
+            for ( int j = 0; j < weights[i].length; j++ ) {
+                weights[i][j] = rnd.nextGaussian() * Math.sqrt(2.0 / (double)layers[i]);
+            }
+        }
     }
 
     /**

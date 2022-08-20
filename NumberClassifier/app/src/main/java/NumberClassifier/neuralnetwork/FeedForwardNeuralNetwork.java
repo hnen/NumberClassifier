@@ -63,6 +63,15 @@ public class FeedForwardNeuralNetwork {
         params.randomizeWeights( min, max );
     }
 
+    public void initWeightsXavier() {
+        params.initWeightsXavier();
+    }
+
+    public void initWeightsHe() {
+        params.initWeightsHe();
+    }
+
+
     /**
      * Set each bias in the network to a specified value.
      * @param value The value where bias should be set to.

@@ -20,7 +20,10 @@ public class TrainingResult {
     public double trainDuration;
 
     public TrainingResult(TrainConfig conf, double accuracy, double duration) {
-        version = 1;
+        // 1 - initial implementation
+        // 2 - xavier weights
+        // 3 - he weights
+        version = 4;
         
         String[] strlayers = new String[conf.layers.length];
         for (int i = 0; i < conf.layers.length; i++) {
