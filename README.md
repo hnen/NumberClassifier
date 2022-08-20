@@ -7,6 +7,7 @@ Developed with JDK 16.
 
 ## Week reports
 
+ - [Week report 5](https://github.com/hnen/NumberClassifier/blob/master/doc/week_report_5.md)
  - [Week report 4](https://github.com/hnen/NumberClassifier/blob/master/doc/week_report_4.md)
  - [Week report 3](https://github.com/hnen/NumberClassifier/blob/master/doc/week_report_3.md)
  - [Week report 2](https://github.com/hnen/NumberClassifier/blob/master/doc/week_report_2.md)
