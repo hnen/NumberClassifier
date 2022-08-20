@@ -23,6 +23,10 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import NumberClassifier.stats.TrainingResult;
+import NumberClassifier.neuralnetwork.ActivationFunctionFactory;
+import NumberClassifier.neuralnetwork.IWeightInitMethod;
+import NumberClassifier.neuralnetwork.UniformWeightInitMethod;
+import NumberClassifier.neuralnetwork.WeightInitMethodFactory;
 import NumberClassifier.stats.CSVWriter;
 import NumberClassifier.train.TrainConfig;
 
@@ -92,7 +96,7 @@ public class TrainFrame extends JFrame {
         new Thread() {
             public void run() {
                 while (trainingJob != null && trainingJob.isAlive()) {
-                    trainingStatusLabel.setText(String.format("Training... (%.2f%%)", trainingJob.getProgress() * 100.0));
+                    trainingStatusLabel.setText(String.format("Training... (%.2f%%) Loss: %.5f", trainingJob.getProgress() * 100.0, trainingJob.getLoss()));
                     try {
                         Thread.sleep(33);
                     } catch (InterruptedException e) {
@@ -201,16 +205,21 @@ public class TrainFrame extends JFrame {
 
         addField( 
             group, 
-            "Initial weights range (Uniform)", 
-            new DoubleArrayField(conf, "initWeightsUniformRange"),
-            "Used only when init weight method is uniform. Range of weights to initialize neuron connections to. Weights are randomized uniformly between values.",
-             2 );
+            "Weight initialization method",
+            new WeightInitMethodField(conf, "initWeightsMethod"),
+            "Algorithm to use to initialize the weights of the network",
+            2
+        );
+
+
+
+
         addField(
              group, 
              "Initial bias", 
              new DoubleField(conf, "initBiases"), 
              "Value to initialize the neuron biases to.", 
-             3 
+             4 
         );
 
         group = addGroup( "Training Strategy" );
@@ -239,8 +248,7 @@ public class TrainFrame extends JFrame {
 
     abstract class EditField {
 
-        Field field;
-        TrainConfig instance;
+        JTextField fieldTextField;
 
         abstract void setValue(String value) throws Exception;
         abstract String getValue() throws Exception;
@@ -249,8 +257,14 @@ public class TrainFrame extends JFrame {
             createTextField(group, y);
         }
 
+        void refreshElements() throws Exception {
+            if ( fieldTextField != null ) {
+                fieldTextField.setText(getValue());
+            }
+        }
+
         protected JTextField createTextField(JPanel group, int y) throws Exception {
-            JTextField fieldTextField = new JTextField(getValue());
+            fieldTextField = new JTextField(getValue());
             GridBagConstraints c = createGbc(1, y);
             group.add(fieldTextField, c);
     
@@ -281,6 +295,9 @@ public class TrainFrame extends JFrame {
     }
 
     class IntField extends EditField {
+
+        Field field;
+        TrainConfig instance;
 
         public IntField(TrainConfig instance, String fieldName) throws Exception {
             this.field = TrainConfig.class.getField(fieldName);
@@ -397,46 +414,6 @@ public class TrainFrame extends JFrame {
             return sb.toString();
         }
     }
-
-    
-    class DoubleArrayField extends EditField {
-        Field field;
-        TrainConfig instance;
-        
-        public DoubleArrayField(TrainConfig instance, String fieldName) throws Exception {
-            this.field = TrainConfig.class.getField(fieldName);
-            this.instance = instance;
-        }
-
-
-        @Override
-        public void setValue(String value) throws Exception {
-            String[] values = value.split(",");
-            double[] array = new double[values.length];
-            for( int i = 0; i < values.length; i++ ) {
-                array[i] = Double.parseDouble(values[i]);
-            }
-            field.set(conf, array);
-        }
-
-        @Override
-        public String getValue() throws Exception {
-            double[] array = (double[])field.get(conf);
-            StringBuilder sb = new StringBuilder();
-
-            for ( int i = 0; i < array.length; i++ ) {
-                sb.append(array[i]);
-                if ( i < array.length - 1 ) {
-                    sb.append(",");
-                }
-            }
-
-            return sb.toString();
-        }
-    }
-
-
-    
     
     class ActivationFunctionField extends EditField {   
         Field field;
@@ -460,7 +437,7 @@ public class TrainFrame extends JFrame {
         @Override
         void createElement(JPanel group, int y) throws Exception {
             // add a dropdown field with two choices: "sigmoid" and "relu"
-            JComboBox<String> comboBox = new JComboBox<String>(new String[] {"sigmoid", "relu"});
+            JComboBox<String> comboBox = new JComboBox<String>(ActivationFunctionFactory.getTypes());
             comboBox.setSelectedItem(field.get(instance));
             GridBagConstraints c = createGbc(1, y);
             group.add(comboBox, c);
@@ -469,6 +446,82 @@ public class TrainFrame extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     try {
                         field.set(instance, comboBox.getSelectedItem());
+                    } catch (Exception ex) {
+                        System.out.println(ex);
+                    }
+                }
+            });
+
+
+
+        }
+    }
+
+       
+    
+    class WeightInitMethodField extends EditField {   
+        Field field;
+        TrainConfig instance;
+
+        public WeightInitMethodField(TrainConfig instance, String fieldName) throws Exception {
+            this.field = TrainConfig.class.getField(fieldName);
+            this.instance = instance;
+        }
+        
+        @Override
+        public void setValue(String value) throws Exception {
+            field.set(instance, WeightInitMethodFactory.create(value));
+        }
+        
+        @Override
+        public String getValue() throws Exception {
+            return WeightInitMethodFactory.nameOf((IWeightInitMethod)field.get(instance));
+        }
+
+        @Override
+        void createElement(JPanel group, int y) throws Exception {
+            // add a dropdown field with two choices: "sigmoid" and "relu"
+            JComboBox<String> comboBox = new JComboBox<String>(WeightInitMethodFactory.getTypes());
+            comboBox.setSelectedItem(field.get(instance));
+            GridBagConstraints c = createGbc(1, y);
+            group.add(comboBox, c);
+
+            addLabel(group, "Uniform init range ", "Applies only when weight init is 'uniform'. Range to use for uniform init mmethod", y + 1);
+            EditField rangeField = new EditField() {
+                @Override
+                public void setValue(String value) throws Exception {
+                    String[] values = value.split(",");
+                    double[] array = new double[values.length];
+                    for( int i = 0; i < values.length; i++ ) {
+                        array[i] = Double.parseDouble(values[i]);
+                    }
+
+                    IWeightInitMethod weightInitMethod = (IWeightInitMethod)field.get(instance);
+                    if ( weightInitMethod instanceof UniformWeightInitMethod ) {
+                        UniformWeightInitMethod uniformWeightInitMethod = (UniformWeightInitMethod)weightInitMethod;
+                        uniformWeightInitMethod.setMin(array[0]);
+                        uniformWeightInitMethod.setMax(array[1]);
+                    }
+                }
+
+                @Override
+                public String getValue() throws Exception {
+                    IWeightInitMethod weightInitMethod = (IWeightInitMethod)field.get(instance);
+                    if ( weightInitMethod instanceof UniformWeightInitMethod ) {
+                        UniformWeightInitMethod initMethod = (UniformWeightInitMethod)field.get(instance);
+                        return initMethod.getMin() + "," + initMethod.getMax();
+                    }
+
+                    return "N/A";
+                }
+            };
+            rangeField.createElement(group, y + 1);
+
+            comboBox.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        setValue((String)comboBox.getSelectedItem());
+                        rangeField.refreshElements();
                     } catch (Exception ex) {
                         System.out.println(ex);
                     }

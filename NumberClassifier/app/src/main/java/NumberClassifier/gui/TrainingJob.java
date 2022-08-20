@@ -43,6 +43,14 @@ public class TrainingJob extends Thread {
         return duration;
     }
 
+    public double getLoss() {
+        if ( trainer == null ) {
+            return 0.0;
+        }
+
+        return trainer.getLoss();
+    }
+
     public void run() {
         try {
             trainer = new NeuralNetworkTrainer(conf);

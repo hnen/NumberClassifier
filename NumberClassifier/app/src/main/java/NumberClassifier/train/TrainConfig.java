@@ -3,9 +3,8 @@ package NumberClassifier.train;
 import com.google.gson.Gson; 
 import com.google.gson.GsonBuilder;
 
-import NumberClassifier.neuralnetwork.IActivationFunction;
-import NumberClassifier.neuralnetwork.ReLUActivationFunction;
-import NumberClassifier.neuralnetwork.SigmoidActivationFunction;  
+import NumberClassifier.neuralnetwork.IWeightInitMethod;
+import NumberClassifier.serialization.WeightInitMethodAdapter;
 
 /**
  * Configuration for training and testing a neural network model. 
@@ -19,24 +18,12 @@ public class TrainConfig {
     public int[] layers;
     public String activation;
     public double learningRate;
-    public String initWeightsMethod;
+    public IWeightInitMethod initWeightsMethod;
     public double[] initWeightsUniformRange;
     public double initBiases;
     public int epochs;
     public int miniBatchSize;
     
-
-    public IActivationFunction getActivationFunction() {
-        switch( activation ) {
-            case "sigmoid":
-                return new SigmoidActivationFunction();
-            case "relu":
-                return new ReLUActivationFunction();
-            default:
-                throw new IllegalArgumentException("Unknown activation function: " + activation);
-        }
-    }
-
     /**
      * Load the training configuration from JSON data.
      * @param jsonData String containing the JSON data.
@@ -44,7 +31,9 @@ public class TrainConfig {
      */
     public static TrainConfig loadJSON( String jsonData ) throws Exception {
         GsonBuilder builder = new GsonBuilder(); 
-        Gson gson = builder.create();
+        Gson gson = builder
+            .registerTypeAdapter(IWeightInitMethod.class, new WeightInitMethodAdapter())
+            .create();
         TrainConfig conf = gson.fromJson(jsonData, TrainConfig.class);
         return conf;
     }

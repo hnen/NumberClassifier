@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import NumberClassifier.data.TrainingExample;
 import NumberClassifier.neuralnetwork.SigmoidActivationFunction;
+import NumberClassifier.neuralnetwork.UniformWeightInitMethod;
 
 public class NeuralNetworkTrainerTest {
     
@@ -20,6 +21,7 @@ public class NeuralNetworkTrainerTest {
         testConf.testLabels =  "";
         testConf.layers = new int[] { 2, 3, 2 };
         testConf.activation = "sigmoid";
+        testConf.initWeightsMethod = new UniformWeightInitMethod(-1.0, 1.0);
         testConf.learningRate = 10.0;
         testConf.initWeightsUniformRange = new double[] { -1.0, 1.0 };
         testConf.initBiases = 0.0;

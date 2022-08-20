@@ -25,7 +25,8 @@ public class FeedForwardNeuralNetworkTest {
 
     void testTrainEpoch( IActivationFunction activationFunction, int epochs, double learningRate, double initWeightsMin, double initWeightsMax, double initBiases ) throws Exception {
         FeedForwardNeuralNetwork ffn0 = new FeedForwardNeuralNetwork( activationFunction, new int[] { 2, 3, 1 } );
-        ffn0.randomizeWeights(initWeightsMin, initWeightsMax);
+        UniformWeightInitMethod uniformWeightInitMethod = new UniformWeightInitMethod( initWeightsMin, initWeightsMax );
+        uniformWeightInitMethod.initializeWeights( ffn0.getParameters() );
         ffn0.setBiases(initBiases);
 
         TrainingExample[] examples = new TrainingExample[] {
@@ -49,8 +50,9 @@ public class FeedForwardNeuralNetworkTest {
     @Test void testCalculateCostGradient() throws Exception {
         FeedForwardNeuralNetwork ffn0 = new FeedForwardNeuralNetwork( new ReLUActivationFunction(), new int[] { 2, 3, 1 } );
 
+        UniformWeightInitMethod uniformWeightInitMethod0 = new UniformWeightInitMethod( 0.0, 1.0 );
         for ( int i = 0; i < 1000; i++) {
-            ffn0.randomizeWeights(0.0, 1.0);
+            uniformWeightInitMethod0.initializeWeights( ffn0.getParameters() );    
             ffn0.setBiases(0.1);
             testCalculateCostGradient(ffn0, new double[] { 0.0, 0.0 }, new double[] { 0.0 });
             testCalculateCostGradient(ffn0, new double[] { 1.0, 0.0 }, new double[] { 1.0 });
@@ -58,9 +60,10 @@ public class FeedForwardNeuralNetworkTest {
             testCalculateCostGradient(ffn0, new double[] { 1.0, 1.0 }, new double[] { 0.0 });
         }
 
+        UniformWeightInitMethod uniformWeightInitMethod1 = new UniformWeightInitMethod( -1.0, 1.0 );
         FeedForwardNeuralNetwork ffn1 = new FeedForwardNeuralNetwork( new SigmoidActivationFunction(), new int[] { 2, 3, 1 } );
         for ( int i = 0; i < 1000; i++) {
-            ffn1.randomizeWeights(-1.0, 1.0);
+            uniformWeightInitMethod0.initializeWeights( ffn1.getParameters() );    
             ffn1.setBiases(0.0);
             testCalculateCostGradient(ffn1, new double[] { 0.0, 0.0 }, new double[] { 0.0 });
             testCalculateCostGradient(ffn1, new double[] { 1.0, 0.0 }, new double[] { 1.0 });
@@ -107,8 +110,9 @@ public class FeedForwardNeuralNetworkTest {
     @Test void testCalculateOutputError() throws Exception {
         FeedForwardNeuralNetwork ffn0 = new FeedForwardNeuralNetwork( new ReLUActivationFunction(), new int[] { 2, 3, 1 } );
 
+        UniformWeightInitMethod uniformWeightInitMethod0 = new UniformWeightInitMethod( 0.0, 1.0 );
         for ( int i = 0; i < 100; i++) {
-            ffn0.randomizeWeights(0.0, 1.0);
+            uniformWeightInitMethod0.initializeWeights( ffn0.getParameters() );
             ffn0.setBiases(0.1);
             testCalculateOutputError(ffn0, new double[] { 0.0, 0.0 }, new double[] { 0.0 });
             testCalculateOutputError(ffn0, new double[] { 1.0, 0.0 }, new double[] { 1.0 });
@@ -117,8 +121,9 @@ public class FeedForwardNeuralNetworkTest {
         }
 
         FeedForwardNeuralNetwork ffn1 = new FeedForwardNeuralNetwork( new SigmoidActivationFunction(), new int[] { 2, 3, 1 } );
+        UniformWeightInitMethod uniformWeightInitMethod1 = new UniformWeightInitMethod( -1.0, 1.0 );
         for ( int i = 0; i < 100; i++) {
-            ffn1.randomizeWeights(-1.0, 1.0);
+            uniformWeightInitMethod1.initializeWeights( ffn1.getParameters() );
             ffn1.setBiases(0.0);
             testCalculateOutputError(ffn1, new double[] { 0.0, 0.0 }, new double[] { 0.0 });
             testCalculateOutputError(ffn1, new double[] { 1.0, 0.0 }, new double[] { 1.0 });

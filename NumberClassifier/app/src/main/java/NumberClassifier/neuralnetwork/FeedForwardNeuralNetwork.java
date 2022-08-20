@@ -54,11 +54,16 @@ public class FeedForwardNeuralNetwork {
         }
     }
 
+    public FeedForwardNeuralNetworkParameters getParameters() {
+        return params;
+    }
+
     /**
      * Set each weight in the network to a uniformly distributed random number.
      * @param min Minimum value for the weight.
      * @param max Maximum value for the weight.
      */
+    /*
     public void randomizeWeights( double min, double max ) {
         params.randomizeWeights( min, max );
     }
@@ -70,7 +75,7 @@ public class FeedForwardNeuralNetwork {
     public void initWeightsHe() {
         params.initWeightsHe();
     }
-
+    */
 
     /**
      * Set each bias in the network to a specified value.

@@ -10,7 +10,13 @@
     
     "activation": "relu",
     "learningRate": 0.5,
-    "initWeightsMethod": "uniform",
+    "initWeightsMethod": {
+        "type": "uniform",
+        "data": {
+            "min": -0.1,
+            "max": 0.1
+        }
+    },    
     "initWeightsUniformRange": [-0.1, 0.1],
     "initBiases": 0.01,
 

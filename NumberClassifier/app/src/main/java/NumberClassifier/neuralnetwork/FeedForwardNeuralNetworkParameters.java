@@ -39,10 +39,19 @@ public class FeedForwardNeuralNetworkParameters {
     }
 
     /**
+     * Get layer configuration of the network.
+     * @param layers Number of neurons on each layer.
+     */
+    public int[] getLayers() {
+        return layers;
+    }
+
+    /**
      * Set each weight in the network to a uniformly distributed random number.
      * @param min Minimum value for the weight.
      * @param max Maximum value for the weight.
      */
+    /*
     public void randomizeWeights( double min, double max ) {
         Random rnd = new Random();
         for( int i = 0; i < layers.length - 1; i++ ) {
@@ -69,6 +78,7 @@ public class FeedForwardNeuralNetworkParameters {
             }
         }
     }
+    */
 
     /**
      * Set each bias in the network to a specified value.

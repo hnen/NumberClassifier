@@ -1,7 +1,10 @@
 package NumberClassifier.train;
 
 import NumberClassifier.data.TrainingExample;
+import NumberClassifier.neuralnetwork.ActivationFunctionFactory;
 import NumberClassifier.neuralnetwork.FeedForwardNeuralNetwork;
+import NumberClassifier.neuralnetwork.IWeightInitMethod;
+import NumberClassifier.neuralnetwork.WeightInitMethodFactory;
 
 /**
  * Implements training strategy for FeedForwardNeuralNetwork. 
@@ -17,9 +20,11 @@ public class NeuralNetworkTrainer {
     public NeuralNetworkTrainer(TrainConfig trainConfig) throws Exception {
         this.trainConfig = trainConfig;
 
-        this.nn = new FeedForwardNeuralNetwork( trainConfig.getActivationFunction(), trainConfig.layers );
+        this.nn = new FeedForwardNeuralNetwork( ActivationFunctionFactory.create(trainConfig.activation), trainConfig.layers );
+
+        trainConfig.initWeightsMethod.initializeWeights(nn.getParameters());
         //nn.randomizeWeights(trainConfig.initWeightsUniformRange[0], trainConfig.initWeightsUniformRange[1]);
-        nn.initWeightsHe();
+        //nn.initWeightsHe();
         nn.setBiases(trainConfig.initBiases);
     }
     
@@ -32,11 +37,15 @@ public class NeuralNetworkTrainer {
      * @param trainingExamples Training examples to use.
      * @throws Exception
      */
-    public void train(TrainingExample[] trainingExamples) throws Exception {       
+    public void train(TrainingExample[] trainingExamples) throws Exception {
+        TrainingExample[] benchmarkBatch = pickMiniBatch(trainingExamples, 128);
         for ( int i = 0; i < trainConfig.epochs; i++ ) {
             trainingEpoch = i;
             TrainingExample[] batch = pickMiniBatch(trainingExamples, trainConfig.miniBatchSize);
             nn.trainEpoch(batch, trainConfig.learningRate);
+            if ( i % 100 == 0 ) {
+                loss = nn.calculateCost(benchmarkBatch);
+            }
         }
     }
 
@@ -46,6 +55,10 @@ public class NeuralNetworkTrainer {
      */
     public int getTrainingEpoch() {
         return trainingEpoch;
+    }
+
+    public double getLoss() {
+        return loss;
     }
 
     /**
@@ -102,4 +115,5 @@ public class NeuralNetworkTrainer {
     private FeedForwardNeuralNetwork nn;
     private TrainConfig trainConfig;
     private int trainingEpoch;
+    private double loss;
 }
