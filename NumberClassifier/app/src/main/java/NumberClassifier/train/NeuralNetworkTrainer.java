@@ -80,9 +80,8 @@ public class NeuralNetworkTrainer {
                 trainingEpoch++;
                 TrainingExample[] batch = pickMiniBatch(trainingExamples, trainConfig.miniBatchSize);
                 trainEpoch(nn, batch, trainConfig.learningRate[p]);
-                if ( i % 10 == 0 ) {
+                if ( i % 100 == 0 ) {
                     loss = nn.calculateCost(benchmarkBatch);
-
                     addLossHistoryDatapoint(trainingEpoch, loss, false);
                 }
             }
