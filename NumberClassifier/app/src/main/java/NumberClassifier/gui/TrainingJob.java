@@ -59,9 +59,9 @@ public class TrainingJob extends Thread {
         return trainer.getAccuracyHistory();
     }
 
-    public double[] getLossHistory() {
+    public NeuralNetworkTrainer.LossHistoryDatapoint[] getLossHistory() {
         if ( trainer == null || trainer.getLossHistory() == null ) {
-            return new double[0];
+            return new NeuralNetworkTrainer.LossHistoryDatapoint[0];
         }
 
         return trainer.getLossHistory();

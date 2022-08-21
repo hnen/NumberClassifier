@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import NumberClassifier.train.NeuralNetworkTrainer.LossHistoryDatapoint;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 
@@ -12,7 +13,7 @@ public class LossChart extends JFXPanel {
     final LineChart<Number,Number> lineChart;
     final NumberAxis xAxis = new NumberAxis();
     final NumberAxis yAxis = new NumberAxis();    
-    XYChart.Series<Number, Number> lossSeries = new XYChart.Series<Number, Number>();
+    XYChart.Series<Number, Number> lossSeries;
 
 
     public LossChart() {
@@ -22,14 +23,18 @@ public class LossChart extends JFXPanel {
         xAxis.setLabel("Epoch");
         xAxis.setAnimated(false);
         yAxis.setAnimated(false);
+        yAxis.setForceZeroInRange(false);
         //creating the chart
         lineChart = new LineChart<Number,Number>(xAxis,yAxis);
-                
+        lineChart.setAnimated(false);
+        
+        lineChart.setLegendVisible(false);
+
         lineChart.setTitle("Training statistics");
-        lossSeries.setName("Loss");
+        
         //populating the series with data
-        Scene scene  = new Scene(lineChart,300,250);
-        lineChart.getData().add(lossSeries);
+        Scene scene  = new Scene(lineChart,400,280);
+        lineChart.setCreateSymbols(false);
 
         /*
         // Create a debug JavaFX scene with red box
@@ -45,9 +50,22 @@ public class LossChart extends JFXPanel {
 
     }
 
-    public void addData(int epoch, double loss) {
+    public void addNewSeries() {
         Platform.runLater(() -> {
-            lossSeries.getData().add(new XYChart.Data<Number, Number>(epoch, loss));
+            lossSeries = new XYChart.Series<Number, Number>();
+            lineChart.getData().add(lossSeries);
+        });
+    }
+
+    public void clear() {
+        Platform.runLater(() -> {
+            lineChart.getData().clear();
+        });
+    }
+
+    public void addData(LossHistoryDatapoint datapoint) {
+        Platform.runLater(() -> {
+            lossSeries.getData().add(new XYChart.Data<Number, Number>(datapoint.epoch, Math.log10(datapoint.loss)));
         });
 
     }

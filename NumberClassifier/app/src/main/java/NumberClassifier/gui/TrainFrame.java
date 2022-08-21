@@ -32,7 +32,9 @@ import NumberClassifier.neuralnetwork.IWeightInitMethod;
 import NumberClassifier.neuralnetwork.UniformWeightInitMethod;
 import NumberClassifier.neuralnetwork.WeightInitMethodFactory;
 import NumberClassifier.stats.CSVWriter;
+import NumberClassifier.train.NeuralNetworkTrainer;
 import NumberClassifier.train.TrainConfig;
+import NumberClassifier.train.NeuralNetworkTrainer.LossHistoryDatapoint;
 import javafx.application.Platform;
 
 /**
@@ -91,9 +93,20 @@ public class TrainFrame extends JFrame {
         group.add(trainingStatusLabel, c);
 
         lossChart = new LossChart();
-        c = createGbc(0, 1);
+        c = createGbc(0, 2);
         c.gridwidth = 2;
         group.add(lossChart, c);
+
+        JButton clearChartButon = new JButton();
+        clearChartButon.setText("Clear");
+        c = createGbc(0, 1);
+        group.add(clearChartButon, c);
+        clearChartButon.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                lossChart.clear();
+            }
+        });
 
     }
 
@@ -110,6 +123,8 @@ public class TrainFrame extends JFrame {
     private void startTraining() {
         trainingStatusLabel.setText("Training... (0%)");
 
+        lossChart.addNewSeries();
+
         trainButton.setText("Cancel");
 
         trainingJob = new TrainingJob(conf);
@@ -120,18 +135,12 @@ public class TrainFrame extends JFrame {
                 try {
                     int lastAdded = 1;
                     while (trainingJob != null && trainingJob.isAlive()) {
+                        trainingStatusLabel.setText(String.format("Training... (%.2f%%) ", trainingJob.getProgress() * 100.0));
 
-                        double[] accuracyHistory = trainingJob.getAccuracyHistory();
-                        double[] lossHistory = trainingJob.getLossHistory();
-
-                        String history = "";
-                        for (int i = 0; i < accuracyHistory.length; i++) {
-                            history += String.format("%d: %.2f%% (%.2f)  ", i, accuracyHistory[i] * 100.0f, lossHistory[i]);
-                        }
-
-                        trainingStatusLabel.setText(String.format("Training... (%.2f%%) Loss: %.5f History: %s", trainingJob.getProgress() * 100.0, trainingJob.getLoss(), history));
+                        NeuralNetworkTrainer.LossHistoryDatapoint[] lossHistory = trainingJob.getLossHistory();
                         if ( lossHistory.length > lastAdded ) {
-                            lossChart.addData(lossHistory.length - 2, lossHistory[lossHistory.length - 1]);
+                            LossHistoryDatapoint latest = lossHistory[lossHistory.length - 1];
+                            lossChart.addData(latest);
                             lastAdded = lossHistory.length;
                         }
 

@@ -3,8 +3,6 @@ package NumberClassifier.train;
 import NumberClassifier.data.TrainingExample;
 import NumberClassifier.neuralnetwork.ActivationFunctionFactory;
 import NumberClassifier.neuralnetwork.FeedForwardNeuralNetwork;
-import NumberClassifier.neuralnetwork.IWeightInitMethod;
-import NumberClassifier.neuralnetwork.WeightInitMethodFactory;
 
 /**
  * Implements training strategy for FeedForwardNeuralNetwork. 
@@ -12,8 +10,21 @@ import NumberClassifier.neuralnetwork.WeightInitMethodFactory;
  */
 public class NeuralNetworkTrainer {
 
+    public class LossHistoryDatapoint {
+        public int epoch;
+        public double loss;
+        public boolean phaseChange;
+
+        LossHistoryDatapoint(int epoch, double loss, boolean phaseChange) {
+            this.epoch = epoch;
+            this.loss = loss;
+            this.phaseChange = phaseChange;
+        }
+
+    }
+
     private double[] accuracyHistory;
-    private double[] lossHistory;
+    private LossHistoryDatapoint[] lossHistory;
 
     /**
      * Construct NeuralNetworkTrainer with the given configuration.
@@ -25,12 +36,21 @@ public class NeuralNetworkTrainer {
 
         this.nn = new FeedForwardNeuralNetwork( ActivationFunctionFactory.create(trainConfig.activation), trainConfig.layers );
 
+        lossHistory = new LossHistoryDatapoint[0];
+
         trainConfig.initWeightsMethod.initializeWeights(nn.getParameters());
         nn.setBiases(trainConfig.initBiases);
     }
     
     public FeedForwardNeuralNetwork getNeuralNetwork() {
         return nn;
+    }
+
+    void addLossHistoryDatapoint(int epoch, double loss, boolean phaseChange) {
+        LossHistoryDatapoint[] lossHistories = new LossHistoryDatapoint[lossHistory.length + 1];
+        System.arraycopy(lossHistory, 0, lossHistories, 0, lossHistory.length);
+        lossHistories[lossHistory.length] = new LossHistoryDatapoint(epoch, loss, phaseChange);
+        lossHistory = lossHistories;     
     }
 
     /**
@@ -44,11 +64,8 @@ public class NeuralNetworkTrainer {
 
         {
             double accuracy = testAccuracy(benchmarkBatch);
-            double loss = nn.calculateCost(benchmarkBatch);
             accuracyHistory = new double[1];
             accuracyHistory[0] = accuracy;
-            lossHistory = new double[1];
-            lossHistory[0] = loss;
         }
 
         for ( int p = 0; p < trainConfig.epochs.length; p++ ) {
@@ -56,8 +73,10 @@ public class NeuralNetworkTrainer {
                 trainingEpoch++;
                 TrainingExample[] batch = pickMiniBatch(trainingExamples, trainConfig.miniBatchSize);
                 nn.trainEpoch(batch, trainConfig.learningRate[p]);
-                if ( i % 500 == 0 ) {
+                if ( i % 10 == 0 ) {
                     loss = nn.calculateCost(benchmarkBatch);
+
+                    addLossHistoryDatapoint(trainingEpoch, loss, false);
                 }
             }
 
@@ -69,10 +88,7 @@ public class NeuralNetworkTrainer {
             accuracyHistories[accuracyHistory.length] = accuracy;
             accuracyHistory = accuracyHistories;
 
-            double[] lossHistories = new double[lossHistory.length + 1];
-            System.arraycopy(lossHistory, 0, lossHistories, 0, lossHistory.length);
-            lossHistories[lossHistory.length] = loss;
-            lossHistory = lossHistories;
+            addLossHistoryDatapoint(trainingEpoch, loss, true);
         }
     }
 
@@ -92,7 +108,7 @@ public class NeuralNetworkTrainer {
         return accuracyHistory;
     }
 
-    public double[] getLossHistory() {
+    public LossHistoryDatapoint[] getLossHistory() {
         return lossHistory;
     }
 

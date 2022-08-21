@@ -5,6 +5,7 @@ import java.util.Arrays;
 import NumberClassifier.neuralnetwork.UniformWeightInitMethod;
 import NumberClassifier.neuralnetwork.WeightInitMethodFactory;
 import NumberClassifier.train.TrainConfig;
+import NumberClassifier.train.NeuralNetworkTrainer.LossHistoryDatapoint;
 
 public class TrainingResult {
 
@@ -27,7 +28,7 @@ public class TrainingResult {
     public String accuracyHistory;
     public String lossHistory;
 
-    public TrainingResult(TrainConfig conf, double accuracy, double duration, double[] accuracyHistory, double[] lossHistory) {
+    public TrainingResult(TrainConfig conf, double accuracy, double duration, double[] accuracyHistory, LossHistoryDatapoint[] lossHistory) {
         // 1 - initial implementation
         // 2 - xavier weights
         // 3&4 - he weights
@@ -60,6 +61,6 @@ public class TrainingResult {
         this.accuracy = accuracy;
         trainDuration = duration;
         this.accuracyHistory = String.join("-", Arrays.stream(accuracyHistory).mapToObj(Double::toString).toArray(String[]::new));
-        this.lossHistory = String.join("-", Arrays.stream(lossHistory).mapToObj(Double::toString).toArray(String[]::new));
+        //this.lossHistory = String.join("-", Arrays.stream(lossHistory).mapToObj(Double::toString).toArray(String[]::new));
     }
 }

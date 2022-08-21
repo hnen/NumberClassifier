@@ -75,7 +75,7 @@ public class MainFrame extends JFrame {
 
         add(tabbedPane);
 
-        setSize(800, 900);
+        setSize(1300, 1000);
         setVisible(true);
     }
 
