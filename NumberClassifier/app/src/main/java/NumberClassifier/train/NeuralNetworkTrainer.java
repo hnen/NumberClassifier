@@ -3,6 +3,7 @@ package NumberClassifier.train;
 import NumberClassifier.data.TrainingExample;
 import NumberClassifier.neuralnetwork.ActivationFunctionFactory;
 import NumberClassifier.neuralnetwork.FeedForwardNeuralNetwork;
+import NumberClassifier.neuralnetwork.FeedForwardNeuralNetworkParameters;
 
 /**
  * Implements training strategy for FeedForwardNeuralNetwork. 
@@ -59,8 +60,14 @@ public class NeuralNetworkTrainer {
      * @throws Exception
      */
     public void train(TrainingExample[] trainingExamples, TrainingExample[] testExamples) throws Exception {
-        TrainingExample[] benchmarkBatch = pickMiniBatch(testExamples, testExamples.length / 5);
+        int numBenchmarks = testExamples.length / 10;
+        TrainingExample[] benchmarkBatch = new TrainingExample[numBenchmarks];
+        for (int i = 0; i < numBenchmarks; i++) {
+            benchmarkBatch[i] = testExamples[i];
+        }
         trainingEpoch = 0;
+
+        gradExpAvg = new FeedForwardNeuralNetworkParameters(nn.getParameters().getLayers());
 
         {
             double accuracy = testAccuracy(benchmarkBatch);
@@ -72,7 +79,7 @@ public class NeuralNetworkTrainer {
             for ( int i = 0; i < trainConfig.epochs[p]; i++ ) {
                 trainingEpoch++;
                 TrainingExample[] batch = pickMiniBatch(trainingExamples, trainConfig.miniBatchSize);
-                nn.trainEpoch(batch, trainConfig.learningRate[p]);
+                trainEpoch(nn, batch, trainConfig.learningRate[p]);
                 if ( i % 10 == 0 ) {
                     loss = nn.calculateCost(benchmarkBatch);
 
@@ -91,6 +98,39 @@ public class NeuralNetworkTrainer {
             addLossHistoryDatapoint(trainingEpoch, loss, true);
         }
     }
+
+    FeedForwardNeuralNetworkParameters gradExpAvg;
+
+    public FeedForwardNeuralNetworkParameters trainEpoch( FeedForwardNeuralNetwork nn, TrainingExample[] examples, double learningRate ) throws Exception {
+        FeedForwardNeuralNetworkParameters grad = new FeedForwardNeuralNetworkParameters(nn.getParameters().getLayers());
+
+        for ( TrainingExample example : examples ) {
+            FeedForwardNeuralNetworkParameters grad0 = nn.calculateCostGradient(example);
+            grad.add( grad0 );
+        }
+        grad.multiply( 1.0 / examples.length );
+
+        // RMSProp
+        final double ro = 0.9;
+        final double epsilon = 1e-8;
+        FeedForwardNeuralNetworkParameters gradSq = grad.clone();
+        gradSq.square();
+        gradExpAvg.multiply( ro );
+        gradSq.multiply( 1.0 - ro );
+        gradExpAvg.add( gradSq );
+        
+        FeedForwardNeuralNetworkParameters gradExpAvg0 = gradExpAvg.clone();
+        gradExpAvg0.add(epsilon);
+        gradExpAvg0.squareRoot();
+        
+        grad.divide(gradExpAvg0);
+        grad.multiply( -1.0 * learningRate );
+        
+        nn.getParameters().add( grad );
+
+        return grad;
+    }
+
 
     /**
      * Get the current training epoch. Useful for retrieving the progress of training from another thread.

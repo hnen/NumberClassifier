@@ -116,6 +116,20 @@ public class FeedForwardNeuralNetworkParameters {
         }        
     }
 
+    public void divide( FeedForwardNeuralNetworkParameters another ) {
+        for ( int i = 0; i < weights.length; i++ ) {   
+            for ( int j = 0; j < weights[i].length; j++ ) {
+                weights[i][j] /= another.weights[i][j];
+            }
+        }
+        
+        for ( int i = 0; i < biases.length; i++ ) {   
+            for ( int j = 0; j < biases[i].length; j++ ) {
+                biases[i][j] /= another.biases[i][j];
+            }
+        }        
+    }
+
     public void multiply( double x ) {
         for ( int i = 0; i < weights.length; i++ ) {   
             for ( int j = 0; j < weights[i].length; j++ ) {
@@ -128,6 +142,62 @@ public class FeedForwardNeuralNetworkParameters {
                 biases[i][j] *= x;
             }
         }  
+    }
+
+    public void add( double x ) {
+        for ( int i = 0; i < weights.length; i++ ) {   
+            for ( int j = 0; j < weights[i].length; j++ ) {
+                weights[i][j] += x;
+            }
+        }
+        
+        for ( int i = 0; i < biases.length; i++ ) {   
+            for ( int j = 0; j < biases[i].length; j++ ) {
+                biases[i][j] += x;
+            }
+        }  
+    }
+
+    public void square() {
+        for ( int i = 0; i < weights.length; i++ ) {   
+            for ( int j = 0; j < weights[i].length; j++ ) {
+                weights[i][j] *= weights[i][j];
+            }
+        }
+        
+        for ( int i = 0; i < biases.length; i++ ) {   
+            for ( int j = 0; j < biases[i].length; j++ ) {
+                biases[i][j] *= biases[i][j];
+            }
+        }  
+    }
+
+    public void squareRoot() {
+        for ( int i = 0; i < weights.length; i++ ) {   
+            for ( int j = 0; j < weights[i].length; j++ ) {
+                weights[i][j] = Math.sqrt( weights[i][j] );
+            }
+        }
+        
+        for ( int i = 0; i < biases.length; i++ ) {   
+            for ( int j = 0; j < biases[i].length; j++ ) {
+                biases[i][j] = Math.sqrt( biases[i][j] );
+            }
+        }  
+    }
+
+
+
+    public FeedForwardNeuralNetworkParameters clone() {
+        FeedForwardNeuralNetworkParameters ret = new FeedForwardNeuralNetworkParameters( layers );
+        for ( int i = 0; i < weights.length; i++ ) {   
+            ret.weights[i] = weights[i].clone();
+        }
+        
+        for ( int i = 0; i < biases.length; i++ ) {   
+            ret.biases[i] = biases[i].clone();
+        }
+        return ret;
     }
 
 
