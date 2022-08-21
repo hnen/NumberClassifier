@@ -36,7 +36,7 @@ public class NeuralNetworkTrainerTest {
         };
 
         NeuralNetworkTrainer trainer = new NeuralNetworkTrainer( testConf );
-        trainer.train(trainExamples);
+        trainer.train(trainExamples, trainExamples);
 
         double acc = trainer.testAccuracy(trainExamples);
         assertEquals(1.0, acc);

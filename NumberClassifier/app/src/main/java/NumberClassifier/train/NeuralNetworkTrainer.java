@@ -35,8 +35,8 @@ public class NeuralNetworkTrainer {
      * @param trainingExamples Training examples to use.
      * @throws Exception
      */
-    public void train(TrainingExample[] trainingExamples) throws Exception {
-        TrainingExample[] benchmarkBatch = pickMiniBatch(trainingExamples, 128);
+    public void train(TrainingExample[] trainingExamples, TrainingExample[] testExamples) throws Exception {
+        TrainingExample[] benchmarkBatch = pickMiniBatch(testExamples, testExamples.length / 5);
         for ( int i = 0; i < trainConfig.epochs; i++ ) {
             trainingEpoch = i;
             TrainingExample[] batch = pickMiniBatch(trainingExamples, trainConfig.miniBatchSize);

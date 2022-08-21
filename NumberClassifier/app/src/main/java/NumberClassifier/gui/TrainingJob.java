@@ -60,17 +60,19 @@ public class TrainingJob extends Thread {
                     new FileInputStream(new File(conf.trainingLabels)),
                     10);
             TrainingExample[] trainingExamples = imageSet.createTrainingExamples();
-
-            long start = System.currentTimeMillis();
-            trainer.train(trainingExamples);
-            long end = System.currentTimeMillis();
-            duration = (end - start) / 1000.0;
             
             ImageSet testSet = ImageSet.loadFromMNIST(
                     new FileInputStream(new File(conf.testData)),
                     new FileInputStream(new File(conf.testLabels)),
                     10);
             TrainingExample[] testExamples = testSet.createTrainingExamples();
+
+            long start = System.currentTimeMillis();
+            trainer.train(trainingExamples, testExamples);
+            long end = System.currentTimeMillis();
+            duration = (end - start) / 1000.0;
+            
+
             accuracy = trainer.testAccuracy(testExamples);
             
             System.out.println("Accuracy: " + accuracy * 100.0 + "%" );
