@@ -12,6 +12,8 @@ plugins {
     id 'checkstyle'
 }
 
+version='0.1'
+
 checkstyle {
     toolVersion '10.3';
 }
@@ -70,4 +72,16 @@ jar {
                 'Main-Class': 'NumberClassifier.gui.App'
         )
     }
+
+}
+
+task fatJar(type: Jar) {
+	manifest {
+        attributes 'Implementation-Title': 'Number Classifier',  
+        	'Implementation-Version': version,
+        	'Main-Class': 'NumberClassifier.gui.App'
+    }
+    baseName = project.name + '-all'
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
