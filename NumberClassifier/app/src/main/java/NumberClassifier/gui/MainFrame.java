@@ -52,7 +52,7 @@ public class MainFrame extends JFrame {
                     } catch (Exception e) {
                         System.out.println(e);
                     }
-                } );
+                }, ".neuralnetwork.json", "Neural network file (*.neuralnetwork.json)" );
             } catch (Exception e) {
                 System.out.println(e);
             }
@@ -66,7 +66,7 @@ public class MainFrame extends JFrame {
                     } catch (Exception e) {
                         System.out.println(e);
                     }
-                } );
+                }, ".training.json", "Training configuration file (*.training.json)" );
             } catch (Exception e) {
                 System.out.println(e);
             }
@@ -96,18 +96,23 @@ public class MainFrame extends JFrame {
         tabbedPane.addTab(f.getName(), drawFrame.getContentPane());
     }
 
-    private void openLoadDialog( Consumer<File> openAction ) throws Exception {
+    private void openLoadDialog( Consumer<File> openAction, String fileExtension, String fileDescription ) throws Exception {
         JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
         fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
             @Override
             public boolean accept(File f) {
-                return f.getName().endsWith(".json");
+                if ( f.isDirectory() )
+                    return true;
+                
+                return f.getName().endsWith(fileExtension);
             }
             @Override
             public String getDescription() {
-                return "JSON files";
+                return fileDescription;
             }
         });
+
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
         
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();

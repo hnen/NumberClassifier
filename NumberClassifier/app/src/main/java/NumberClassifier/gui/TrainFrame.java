@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import NumberClassifier.stats.TrainingResult;
 import NumberClassifier.neuralnetwork.ActivationFunctionFactory;
@@ -164,28 +165,28 @@ public class TrainFrame extends JFrame {
         addField( 
             group, 
             "Training Image File", 
-            new FileField(conf, "trainingData"), 
+            new FileField(conf, "trainingData", ".idx3-ubyte", "MNIST image file"), 
             "Path to the MNIST image data file to use in training", 
             0
         );
         addField( 
             group,
             "Training Label File",
-            new FileField(conf, "trainingLabels"),
+            new FileField(conf, "trainingLabels", ".idx1-ubyte", "MNIST label data file"),
             "Path to the MNIST label data file to use in training",
             1 
         );
         addField( 
             group, 
             "Test Image File", 
-            new FileField(conf, "testData"), 
+            new FileField(conf, "testData", ".idx3-ubyte", "MNIST image file"), 
             "Path to the MNIST image data file to use in testing", 
             2
         );
         addField( 
             group, 
             "Test Label File", 
-            new FileField(conf, "testLabels"), 
+            new FileField(conf, "testLabels", ".idx1-ubyte", "MNIST label data file"), 
             "Path to the MNIST label data file to use in testing", 
             3
         );
@@ -194,7 +195,7 @@ public class TrainFrame extends JFrame {
         addField( 
             group, 
             "Save to File", 
-            new FileField(conf, "outFile"), 
+            new FileField(conf, "outFile", ".neuralnetwork.json", "Neural network file"), 
             "File to write the trained network to.", 
             0 
         );
@@ -353,10 +354,14 @@ public class TrainFrame extends JFrame {
     class FileField extends EditField {   
         Field field;
         TrainConfig instance;
+        String fileFilter;
+        String fileDesc;
 
-        public FileField(TrainConfig instance, String fieldName) throws Exception {
+        public FileField(TrainConfig instance, String fieldName, String fileFilter, String fileDesc) throws Exception {
             this.field = TrainConfig.class.getField(fieldName);
             this.instance = instance;
+            this.fileFilter = fileFilter;
+            this.fileDesc = fileDesc;
         }
         
         @Override
@@ -381,6 +386,23 @@ public class TrainFrame extends JFrame {
             openFileButton.addMouseListener(new java.awt.event.MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
                     JFileChooser chooser = new JFileChooser();
+
+                    chooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+                        @Override
+                        public boolean accept(File f) {
+                            if ( f.isDirectory() )
+                                return true;
+
+                            return f.getName().endsWith(fileFilter);
+                        }
+                        @Override
+                        public String getDescription() {
+                            return fileDesc;
+                        }
+                    });
+                    
+                    chooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+
                     chooser.showOpenDialog(null);
                     File file = chooser.getSelectedFile();
                     if (file != null) {
@@ -449,7 +471,6 @@ public class TrainFrame extends JFrame {
 
         @Override
         void createElement(JPanel group, int y) throws Exception {
-            // add a dropdown field with two choices: "sigmoid" and "relu"
             JComboBox<String> comboBox = new JComboBox<String>(ActivationFunctionFactory.getTypes());
             comboBox.setSelectedItem(field.get(instance));
             GridBagConstraints c = createGbc(1, y);
@@ -493,7 +514,6 @@ public class TrainFrame extends JFrame {
 
         @Override
         void createElement(JPanel group, int y) throws Exception {
-            // add a dropdown field with two choices: "sigmoid" and "relu"
             JComboBox<String> comboBox = new JComboBox<String>(WeightInitMethodFactory.getTypes());
             comboBox.setSelectedItem(field.get(instance));
             GridBagConstraints c = createGbc(1, y);
