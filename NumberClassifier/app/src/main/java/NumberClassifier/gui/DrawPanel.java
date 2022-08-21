@@ -12,6 +12,8 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     private double[] image;
     private int imageWidth, imageHeight;
     private Runnable onChanged;
+    private boolean erasing;
+    private int lastX, lastY;
 
     /**
      * Constructs a new DrawPanel.
@@ -53,7 +55,8 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
      * Implements MouseListener interface. Draws to the image.
      */
     public void mousePressed(MouseEvent event) {
-        draw( event.getX(), event.getY() );
+        erasing = event.getButton() == MouseEvent.BUTTON3;
+        draw( event.getX(), event.getY(), erasing );
     }
 
     /**
@@ -92,13 +95,51 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         return imageY;
     }
 
-    private void draw(int x, int y) {
-        int x_index = panelToImageX(x);
-        int y_index = panelToImageY(y);
+    private void addPixel(int imageX, int imageY, double amount) {
+        if ( imageX < 0 || imageX >= imageWidth || imageY < 0 || imageY >= imageHeight ) {
+            return;
+        }
 
-        image[y_index * imageWidth + x_index] = 1;
+        int index = imageY * imageWidth + imageX;;
+        image[index] += amount;
 
-        System.out.println(x_index + " " + y_index);
+        if ( image[index] < 0 ) {
+            image[index] = 0;
+        } else if ( image[index] > 1 ) {
+            image[index] = 1;
+        }
+    }
+
+    private void draw(int x, int y, boolean erase) {
+
+        int imageX = panelToImageX(x);
+        int imageY = panelToImageY(y);
+
+        if ( imageX == lastX && imageY == lastY ) {
+            return;
+        }
+
+        lastX = imageX;
+        lastY = imageY;
+
+        double radius1 = 0.75;
+        double radius2 = 1.5;
+
+        for( int px = imageX - (int)radius2 - 1; px <= imageX + (int)radius2 + 1; px ++ ) {
+            for( int py = imageY - (int)radius2 - 1; py <= imageY + (int)radius2 + 1; py ++ ) {
+                double r = Math.sqrt( (px - imageX) * (px - imageX) + (py - imageY) * (py - imageY) );
+                double amount = 0.0;
+                if ( r <= radius1 ) {
+                    amount = 1.0;
+                } else if ( r < radius2 ) {
+                    amount = (radius2 - r) / (radius2 - radius1);
+                }
+                if ( erase ) {
+                    amount = -amount;
+                }
+                addPixel(px, py, amount);
+            }
+        }
 
         repaint();  
 
@@ -123,7 +164,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
      * Implements MouseMotionListener interface. Draws to the image.
      */
     public void mouseDragged(MouseEvent event) {
-        draw( event.getX(), event.getY() );
+        draw( event.getX(), event.getY(), erasing );
     }
 
     /**
