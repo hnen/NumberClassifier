@@ -19,8 +19,24 @@ You can both train neural networks and evaluate numbers with trained networks in
 
 ### Training
 
-Open a training configuration in 'File > Open > Training`. Choose a training configuration file. An example file is shipped with the release package, and their extension is `*.training.json`.
+Open a training configuration from *File* > *Open* > *Training*. Choose a training configuration file. An example file is shipped with the release package, and their extension is `*.training.json`.
 
+You should see something like this:
 
+(image here)
+
+You can tweak the parameters, and after that start the training with "Train" button. After training is complete, the network is written to the output file, and you can try it out yourself (see next chapter.)
+
+After each training, the app will write results to `train-stats.csv`.
+
+### Drawing
+
+You can open a trained neural network from *File* > *Open* > *Neural network*. Neural network files have file format `*.neuralnetwork.json`. After opening the file, you should see something like this:
+
+(TODO: image here)
+
+You can draw the image with left mouse button. You can erase drawing with right mouse button (still TODO.) The neural network evaluates the drawing in real-time like this:
+
+(TODO: image here)
 
 
