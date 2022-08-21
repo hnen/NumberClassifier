@@ -3,7 +3,9 @@
 
 Implements a neural network datastructure, and loading and training for [MNIST database of handwritten digits](http://yann.lecun.com/exdb/mnist/).
 
-Developed with JDK 16.
+Download latest release [HERE](https://nightly.link/hnen/NumberClassifier/workflows/gradle/master/NumberClassifier-release.zip).
+
+Check out the [manual](https://github.com/hnen/NumberClassifier/blob/master/doc/manual.md) for basic usage.
 
 ## Week reports
 
