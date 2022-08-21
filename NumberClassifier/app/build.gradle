@@ -63,3 +63,11 @@ javadoc {
     source = sourceSets.main.allJava
     classpath = configurations.runtimeClasspath
 }
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'NumberClassifier.gui.App'
+        )
+    }
+}
