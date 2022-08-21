@@ -96,6 +96,11 @@ public class MainFrame extends JFrame {
         tabbedPane.addTab(f.getName(), drawFrame.getContentPane());
     }
 
+    public void openImageSet(File images, File labels) throws Exception {
+        ImageSetFrame imageSetFrame = new ImageSetFrame(new FileInputStream(images), new FileInputStream(labels));
+        tabbedPane.addTab(images.getName(), imageSetFrame.getContentPane());
+    }
+
     private void openLoadDialog( Consumer<File> openAction, String fileExtension, String fileDescription ) throws Exception {
         JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
         fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
