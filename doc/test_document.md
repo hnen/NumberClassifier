@@ -28,6 +28,10 @@ Unit testing makes sure smaller parts of the algorithms work correctly. Brief de
  - Test that trainer is capable of training a trivial classifier network with 100% accuracy.
  - TODO: Test that smaller parts of trainer behaves like it's defined to do, for example: feedforward is called right number of times, mini batches are generated correctly, etc.
 
+### Unit Test Coverage
+
+![](img/testcoverage.png)
+
 ## Training the neural network
 
 Training network takes following input:
