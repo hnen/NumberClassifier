@@ -10,8 +10,21 @@ The program is currently divided into following modules:
    - `FeedForwardNeuralNetworkParameters`: Data structure that defines the neural network. This is output from the training algorithm.
  - `serialization`: Code related to JSON serialization
  - `train`: The neural network training algorithm and neural network accuracy testing.
+ - `stats`: Code related to gathering performance statistiscs of the training runs.
 
-## Implemented time and space complexities
+## Overview of the implementation
+
+The program implements loading an image dataset (MNIST file format is supported), running a neural network training algorithm, and classifying a user drawn image with the trained neural network.
+
+### Training/Test image processing
+
+Images are centered and scaled to fit the image bounds. This reduces errors especially with user drawn images, that vary easily in size and positioning.
+
+### Training the neural network
+
+Training algorithm is standard stochastic gradient descent. Network gradients are calculated with backpropagation algorithm. Training rate schedule is configurable.
+
+## Implementatino details, time and space complexities
 
 ### Data structure space complexity
 
