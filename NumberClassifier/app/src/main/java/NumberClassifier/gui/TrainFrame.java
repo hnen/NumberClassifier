@@ -239,15 +239,15 @@ public class TrainFrame extends JFrame {
         group = addGroup( "Training Strategy" );
         addField( 
             group, 
-            "Learning rate", 
-            new DoubleField(conf, "learningRate"), 
+            "Learning rates per phase", 
+            new DoubleArrayField(conf, "learningRate"), 
             "Determines how big steps parameters are updated on each epoch.", 
             0 
         );
         addField( 
             group, 
-            "Number of epochs", 
-            new IntField(conf, "epochs"), 
+            "Number of epochs per phase", 
+            new IntArrayField(conf, "epochs"), 
             "How many iterations are run during the training.", 
             1 
         );
@@ -437,6 +437,43 @@ public class TrainFrame extends JFrame {
         @Override
         public String getValue() throws Exception {
             int[] array = (int[])field.get(conf);
+            StringBuilder sb = new StringBuilder();
+
+            for ( int i = 0; i < array.length; i++ ) {
+                sb.append(array[i]);
+                if ( i < array.length - 1 ) {
+                    sb.append(",");
+                }
+            }
+
+            return sb.toString();
+        }
+    }
+
+    
+    class DoubleArrayField extends EditField {
+        Field field;
+        TrainConfig instance;
+        
+        public DoubleArrayField(TrainConfig instance, String fieldName) throws Exception {
+            this.field = TrainConfig.class.getField(fieldName);
+            this.instance = instance;
+        }
+
+
+        @Override
+        public void setValue(String value) throws Exception {
+            String[] values = value.split(",");
+            double[] array = new double[values.length];
+            for( int i = 0; i < values.length; i++ ) {
+                array[i] = Double.parseDouble(values[i]);
+            }
+            field.set(conf, array);
+        }
+
+        @Override
+        public String getValue() throws Exception {
+            double[] array = (double[])field.get(conf);
             StringBuilder sb = new StringBuilder();
 
             for ( int i = 0; i < array.length; i++ ) {

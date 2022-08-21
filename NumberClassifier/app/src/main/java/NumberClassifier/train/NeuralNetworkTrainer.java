@@ -37,12 +37,15 @@ public class NeuralNetworkTrainer {
      */
     public void train(TrainingExample[] trainingExamples, TrainingExample[] testExamples) throws Exception {
         TrainingExample[] benchmarkBatch = pickMiniBatch(testExamples, testExamples.length / 5);
-        for ( int i = 0; i < trainConfig.epochs; i++ ) {
-            trainingEpoch = i;
-            TrainingExample[] batch = pickMiniBatch(trainingExamples, trainConfig.miniBatchSize);
-            nn.trainEpoch(batch, trainConfig.learningRate);
-            if ( i % 100 == 0 ) {
-                loss = nn.calculateCost(benchmarkBatch);
+        trainingEpoch = 0;
+        for ( int p = 0; p < trainConfig.epochs.length; p++ ) {
+            for ( int i = 0; i < trainConfig.epochs[p]; i++ ) {
+                trainingEpoch++;
+                TrainingExample[] batch = pickMiniBatch(trainingExamples, trainConfig.miniBatchSize);
+                nn.trainEpoch(batch, trainConfig.learningRate[p]);
+                if ( i % 100 == 0 ) {
+                    loss = nn.calculateCost(benchmarkBatch);
+                }
             }
         }
     }

@@ -17,11 +17,11 @@ public class TrainConfig {
     public String outFile;
     public int[] layers;
     public String activation;
-    public double learningRate;
     public IWeightInitMethod initWeightsMethod;
     public double[] initWeightsUniformRange;
     public double initBiases;
-    public int epochs;
+    public double[] learningRate;
+    public int[] epochs;
     public int miniBatchSize;
     
     /**
@@ -37,5 +37,15 @@ public class TrainConfig {
         TrainConfig conf = gson.fromJson(jsonData, TrainConfig.class);
         return conf;
     }
+
+    public int getTotalEpochs() {
+        int totalEpochs = 0;
+        for ( int epoch : epochs ) {
+            totalEpochs += epoch;
+        }
+        return totalEpochs;
+    }
+    
+
 
 }

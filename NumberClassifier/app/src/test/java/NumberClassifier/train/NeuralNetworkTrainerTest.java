@@ -22,10 +22,10 @@ public class NeuralNetworkTrainerTest {
         testConf.layers = new int[] { 2, 3, 2 };
         testConf.activation = "sigmoid";
         testConf.initWeightsMethod = new UniformWeightInitMethod(-1.0, 1.0);
-        testConf.learningRate = 10.0;
+        testConf.learningRate = new double[]{ 10.0 };
         testConf.initWeightsUniformRange = new double[] { -1.0, 1.0 };
         testConf.initBiases = 0.0;
-        testConf.epochs = 5000;
+        testConf.epochs = new int[]{ 5000 };
         testConf.miniBatchSize = 2;
 
         TrainingExample[] trainExamples = new TrainingExample[] {

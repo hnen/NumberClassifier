@@ -122,8 +122,8 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         lastX = imageX;
         lastY = imageY;
 
-        double radius1 = 0.75;
-        double radius2 = 1.5;
+        double radius1 = 0.25;
+        double radius2 = 2.0;
 
         for( int px = imageX - (int)radius2 - 1; px <= imageX + (int)radius2 + 1; px ++ ) {
             for( int py = imageY - (int)radius2 - 1; py <= imageY + (int)radius2 + 1; py ++ ) {

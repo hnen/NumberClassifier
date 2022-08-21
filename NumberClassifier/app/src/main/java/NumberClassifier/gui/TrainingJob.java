@@ -32,7 +32,7 @@ public class TrainingJob extends Thread {
             return 0.0;
         }
 
-        return (double)trainer.getTrainingEpoch() / conf.epochs;
+        return (double)trainer.getTrainingEpoch() / conf.getTotalEpochs();
     }
 
     public double getAccuracy() {

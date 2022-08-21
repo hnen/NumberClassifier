@@ -21,7 +21,6 @@ public class TrainConfigTest {
                 "layers": [ 1, 2, 3, 4, 5 ],
                 
                 "activation": "sigmoid",
-                "learningRate": 0.123,
                 "initWeightsUniformRange": [-1.0, 1.0],
                 "initBiases": 0.1,
 
@@ -33,7 +32,8 @@ public class TrainConfigTest {
                     }
                 },
             
-                "epochs": 1000,
+                "learningRate": [0.5, 0.1, 0.01],
+                "epochs": [500, 1000, 2000],
                 "miniBatchSize": 10
             }
         """;
@@ -46,10 +46,10 @@ public class TrainConfigTest {
         assertEquals("test3", config.testLabels);
         assertArrayEquals(new int[] { 1, 2, 3, 4, 5 }, config.layers);
         assertEquals("sigmoid", config.activation);
-        assertEquals(0.123, config.learningRate);
         assertArrayEquals(new double[] { -1.0, 1.0 }, config.initWeightsUniformRange);
         assertEquals(0.1, config.initBiases);
-        assertEquals(1000, config.epochs);
+        assertArrayEquals(new double[]{ 0.5, 0.1, 0.01 }, config.learningRate);
+        assertArrayEquals(new int[] {500, 1000, 2000}, config.epochs);
         assertEquals(10, config.miniBatchSize);
         assertEquals(UniformWeightInitMethod.class, config.initWeightsMethod.getClass());
 
