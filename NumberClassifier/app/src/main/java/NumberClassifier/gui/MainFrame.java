@@ -34,6 +34,7 @@ public class MainFrame extends JFrame {
         JMenu loadSubMenu = new JMenu("Open");
         JMenuItem loadTrainingConfig = new JMenuItem("Training");
         JMenuItem loadNeuralNetwork = new JMenuItem("Neural Network");
+        //JMenuItem loadImageSet = new JMenuItem("Image Set");
         JMenuItem saveItem = new JMenuItem("Save...");
 
         loadSubMenu.add(loadTrainingConfig);
@@ -74,7 +75,7 @@ public class MainFrame extends JFrame {
 
         add(tabbedPane);
 
-        setSize(800, 600);
+        setSize(800, 900);
         setVisible(true);
     }
 

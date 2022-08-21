@@ -24,6 +24,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.SwingUtilities;
 
 import NumberClassifier.stats.TrainingResult;
 import NumberClassifier.neuralnetwork.ActivationFunctionFactory;
@@ -32,6 +33,7 @@ import NumberClassifier.neuralnetwork.UniformWeightInitMethod;
 import NumberClassifier.neuralnetwork.WeightInitMethodFactory;
 import NumberClassifier.stats.CSVWriter;
 import NumberClassifier.train.TrainConfig;
+import javafx.application.Platform;
 
 /**
  * Frame where user can configure training parameters and train a network.
@@ -42,6 +44,7 @@ public class TrainFrame extends JFrame {
     private JLabel trainingStatusLabel;
     private TrainingJob trainingJob;
     private JButton trainButton;
+    private LossChart lossChart;
 
     /**
      * Constructs a new TrainFrame.
@@ -87,6 +90,11 @@ public class TrainFrame extends JFrame {
         c = createGbc(1, 0);
         group.add(trainingStatusLabel, c);
 
+        lossChart = new LossChart();
+        c = createGbc(0, 1);
+        c.gridwidth = 2;
+        group.add(lossChart, c);
+
     }
 
     static String pathRelativeToConfigFileToAbsolute(File config, String path) throws IOException {
@@ -109,33 +117,39 @@ public class TrainFrame extends JFrame {
         // update the status label repeatedly until the training is complete
         new Thread() {
             public void run() {
-                while (trainingJob != null && trainingJob.isAlive()) {
+                try {
+                    int lastAdded = 1;
+                    while (trainingJob != null && trainingJob.isAlive()) {
 
-                    double[] accuracyHistory = trainingJob.getAccuracyHistory();
-                    double[] lossHistory = trainingJob.getLossHistory();
+                        double[] accuracyHistory = trainingJob.getAccuracyHistory();
+                        double[] lossHistory = trainingJob.getLossHistory();
 
-                    String history = "";
-                    for (int i = 0; i < accuracyHistory.length; i++) {
-                        history += String.format("%d: %.2f%% (%.2f)  ", i, accuracyHistory[i] * 100.0f, lossHistory[i]);
-                    }
+                        String history = "";
+                        for (int i = 0; i < accuracyHistory.length; i++) {
+                            history += String.format("%d: %.2f%% (%.2f)  ", i, accuracyHistory[i] * 100.0f, lossHistory[i]);
+                        }
 
-                    trainingStatusLabel.setText(String.format("Training... (%.2f%%) Loss: %.5f History: %s", trainingJob.getProgress() * 100.0, trainingJob.getLoss(), history));
-                    try {
+                        trainingStatusLabel.setText(String.format("Training... (%.2f%%) Loss: %.5f History: %s", trainingJob.getProgress() * 100.0, trainingJob.getLoss(), history));
+                        if ( lossHistory.length > lastAdded ) {
+                            lossChart.addData(lossHistory.length - 2, lossHistory[lossHistory.length - 1]);
+                            lastAdded = lossHistory.length;
+                        }
+
                         Thread.sleep(33);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
+
+                    if ( trainingJob != null ) {
+                        trainingStatusLabel.setText(String.format("Saved to %s. Accuracy %.2f%%", conf.outFile, trainingJob.getAccuracy() * 100.0));
+                        TrainingResult result = new TrainingResult(conf, trainingJob.getAccuracy(), trainingJob.getTrainDuration(), trainingJob.getAccuracyHistory(), trainingJob.getLossHistory());
+                        try {                        
+                            new CSVWriter<TrainingResult>(TrainingResult.class).writeToCSV("train-stats.csv", result);
+                        } catch( Exception e ) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch(InterruptedException e) {
                 }
 
-                if ( trainingJob != null ) {
-                    trainingStatusLabel.setText(String.format("Saved to %s. Accuracy %.2f%%", conf.outFile, trainingJob.getAccuracy() * 100.0));
-                    TrainingResult result = new TrainingResult(conf, trainingJob.getAccuracy(), trainingJob.getTrainDuration(), trainingJob.getAccuracyHistory(), trainingJob.getLossHistory());
-                    try {                        
-                        new CSVWriter<TrainingResult>(TrainingResult.class).writeToCSV("train-stats.csv", result);
-                    } catch( Exception e ) {
-                        e.printStackTrace();
-                    }
-                }
                 trainingStopped();
             }
         }.start();
