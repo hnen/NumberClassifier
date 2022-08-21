@@ -110,7 +110,16 @@ public class TrainFrame extends JFrame {
         new Thread() {
             public void run() {
                 while (trainingJob != null && trainingJob.isAlive()) {
-                    trainingStatusLabel.setText(String.format("Training... (%.2f%%) Loss: %.5f", trainingJob.getProgress() * 100.0, trainingJob.getLoss()));
+
+                    double[] accuracyHistory = trainingJob.getAccuracyHistory();
+                    double[] lossHistory = trainingJob.getLossHistory();
+
+                    String history = "";
+                    for (int i = 0; i < accuracyHistory.length; i++) {
+                        history += String.format("%d: %.2f%% (%.2f)  ", i, accuracyHistory[i] * 100.0f, lossHistory[i]);
+                    }
+
+                    trainingStatusLabel.setText(String.format("Training... (%.2f%%) Loss: %.5f History: %s", trainingJob.getProgress() * 100.0, trainingJob.getLoss(), history));
                     try {
                         Thread.sleep(33);
                     } catch (InterruptedException e) {
@@ -120,7 +129,7 @@ public class TrainFrame extends JFrame {
 
                 if ( trainingJob != null ) {
                     trainingStatusLabel.setText(String.format("Saved to %s. Accuracy %.2f%%", conf.outFile, trainingJob.getAccuracy() * 100.0));
-                    TrainingResult result = new TrainingResult(conf, trainingJob.getAccuracy(), trainingJob.getTrainDuration());
+                    TrainingResult result = new TrainingResult(conf, trainingJob.getAccuracy(), trainingJob.getTrainDuration(), trainingJob.getAccuracyHistory(), trainingJob.getLossHistory());
                     try {                        
                         new CSVWriter<TrainingResult>(TrainingResult.class).writeToCSV("train-stats.csv", result);
                     } catch( Exception e ) {

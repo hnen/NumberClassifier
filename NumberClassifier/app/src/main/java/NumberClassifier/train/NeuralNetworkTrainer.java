@@ -12,6 +12,9 @@ import NumberClassifier.neuralnetwork.WeightInitMethodFactory;
  */
 public class NeuralNetworkTrainer {
 
+    private double[] accuracyHistory;
+    private double[] lossHistory;
+
     /**
      * Construct NeuralNetworkTrainer with the given configuration.
      * @param trainConfig The configuration to use.
@@ -38,15 +41,38 @@ public class NeuralNetworkTrainer {
     public void train(TrainingExample[] trainingExamples, TrainingExample[] testExamples) throws Exception {
         TrainingExample[] benchmarkBatch = pickMiniBatch(testExamples, testExamples.length / 5);
         trainingEpoch = 0;
+
+        {
+            double accuracy = testAccuracy(benchmarkBatch);
+            double loss = nn.calculateCost(benchmarkBatch);
+            accuracyHistory = new double[1];
+            accuracyHistory[0] = accuracy;
+            lossHistory = new double[1];
+            lossHistory[0] = loss;
+        }
+
         for ( int p = 0; p < trainConfig.epochs.length; p++ ) {
             for ( int i = 0; i < trainConfig.epochs[p]; i++ ) {
                 trainingEpoch++;
                 TrainingExample[] batch = pickMiniBatch(trainingExamples, trainConfig.miniBatchSize);
                 nn.trainEpoch(batch, trainConfig.learningRate[p]);
-                if ( i % 100 == 0 ) {
+                if ( i % 500 == 0 ) {
                     loss = nn.calculateCost(benchmarkBatch);
                 }
             }
+
+            double accuracy = testAccuracy(benchmarkBatch);
+            double loss = nn.calculateCost(benchmarkBatch);
+
+            double[] accuracyHistories = new double[accuracyHistory.length + 1];
+            System.arraycopy(accuracyHistory, 0, accuracyHistories, 0, accuracyHistory.length);
+            accuracyHistories[accuracyHistory.length] = accuracy;
+            accuracyHistory = accuracyHistories;
+
+            double[] lossHistories = new double[lossHistory.length + 1];
+            System.arraycopy(lossHistory, 0, lossHistories, 0, lossHistory.length);
+            lossHistories[lossHistory.length] = loss;
+            lossHistory = lossHistories;
         }
     }
 
@@ -58,8 +84,16 @@ public class NeuralNetworkTrainer {
         return trainingEpoch;
     }
 
-    public double getLoss() {
+    public double getLatestLossEstimate() {
         return loss;
+    }
+
+    public double[] getAccuracyHistory() {
+        return accuracyHistory;
+    }
+
+    public double[] getLossHistory() {
+        return lossHistory;
     }
 
     /**

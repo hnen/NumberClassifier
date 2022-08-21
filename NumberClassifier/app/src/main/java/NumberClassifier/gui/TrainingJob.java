@@ -48,7 +48,23 @@ public class TrainingJob extends Thread {
             return 0.0;
         }
 
-        return trainer.getLoss();
+        return trainer.getLatestLossEstimate();
+    }
+
+    public double[] getAccuracyHistory() {
+        if ( trainer == null || trainer.getAccuracyHistory() == null ) {
+            return new double[0];
+        }
+
+        return trainer.getAccuracyHistory();
+    }
+
+    public double[] getLossHistory() {
+        if ( trainer == null || trainer.getLossHistory() == null ) {
+            return new double[0];
+        }
+
+        return trainer.getLossHistory();
     }
 
     public void run() {
