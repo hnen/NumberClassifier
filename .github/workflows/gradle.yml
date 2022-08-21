@@ -76,4 +76,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: javadoc
-        path: NumberClassifier\app\build\libs\app.jar
+        path: NumberClassifier/app/build/libs/app.jar
