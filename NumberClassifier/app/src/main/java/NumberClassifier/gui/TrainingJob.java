@@ -58,13 +58,13 @@ public class TrainingJob extends Thread {
             ImageSet imageSet = ImageSet.loadFromMNIST(
                     new FileInputStream(new File(conf.trainingData)),
                     new FileInputStream(new File(conf.trainingLabels)),
-                    10);
+                    10, true);
             TrainingExample[] trainingExamples = imageSet.createTrainingExamples();
             
             ImageSet testSet = ImageSet.loadFromMNIST(
                     new FileInputStream(new File(conf.testData)),
                     new FileInputStream(new File(conf.testLabels)),
-                    10);
+                    10, true);
             TrainingExample[] testExamples = testSet.createTrainingExamples();
 
             long start = System.currentTimeMillis();

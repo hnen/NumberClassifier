@@ -25,7 +25,7 @@ public class ImageSetFrame extends JFrame {
         drawPanel = new DrawPanel( 28, 28 );
         add(drawPanel, BorderLayout.CENTER);
 
-        imageSet = ImageSet.loadFromMNIST(imageSetFile, imageLabelsFile, 10);
+        imageSet = ImageSet.loadFromMNIST(imageSetFile, imageLabelsFile, 10, true);
 
         imageLabel = new JLabel("?");
         imageLabel.setFont(imageLabel.getFont().deriveFont(50.0f));

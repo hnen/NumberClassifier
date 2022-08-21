@@ -23,7 +23,7 @@ public class ImageSet {
      * @param labelFile Input stream containing a corresponding MNIST image label data.
      * @return ImageSet containing images in the file.
      */
-    public static ImageSet loadFromMNIST( InputStream imageFile, InputStream labelFile, int numLabelIndices ) throws Exception {
+    public static ImageSet loadFromMNIST( InputStream imageFile, InputStream labelFile, int numLabelIndices, boolean fit ) throws Exception {
         byte[] magicImage = imageFile.readNBytes(4);
         byte[] magicLabel = labelFile.readNBytes(4);
 
@@ -64,7 +64,10 @@ public class ImageSet {
                 pixels[j] = Byte.toUnsignedInt(imageBytes[j]) / 255.0;
             }
             Image image = new Image(pixels, imageSet.imageWidth, imageSet.imageHeight);
-            image.fitImage();
+            if ( fit )
+            {
+                image.fitImage();
+            }
             imageSet.images.add(image);
         }
         

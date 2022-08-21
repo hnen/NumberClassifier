@@ -40,7 +40,7 @@ public class ImageSetTest {
         InputStream imageStream = new ByteArrayInputStream(imageFile);
         InputStream labelStream = new ByteArrayInputStream(labelFile);
         
-        return ImageSet.loadFromMNIST(imageStream, labelStream, 10);
+        return ImageSet.loadFromMNIST(imageStream, labelStream, 10, false);
     }
 
     @Test void testLoadFromMNIST() throws Exception {
