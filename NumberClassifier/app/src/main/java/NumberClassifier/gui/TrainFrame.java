@@ -8,6 +8,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOError;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Scanner;
 
@@ -50,6 +52,12 @@ public class TrainFrame extends JFrame {
 
         try (Scanner s = new Scanner(config)) {
             conf = TrainConfig.loadJSON(s.useDelimiter("\\Z").next());
+
+            // set trainingData path to be relative to config file's path
+            conf.trainingData = pathRelativeToConfigFileToAbsolute(config, conf.trainingData);
+            conf.trainingLabels = pathRelativeToConfigFileToAbsolute(config, conf.trainingLabels);
+            conf.testData = pathRelativeToConfigFileToAbsolute(config, conf.testData);
+            conf.testLabels = pathRelativeToConfigFileToAbsolute(config, conf.testLabels);
         }
 
         setLayout(new GridBagLayout());
@@ -78,6 +86,11 @@ public class TrainFrame extends JFrame {
         c = createGbc(1, 0);
         group.add(trainingStatusLabel, c);
 
+    }
+
+    static String pathRelativeToConfigFileToAbsolute(File config, String path) throws IOException {
+        String trainingDataDirectory = config.getAbsoluteFile().getParent();
+        return new File(trainingDataDirectory + File.separator + path).getCanonicalPath();
     }
 
     private void trainingStopped() {

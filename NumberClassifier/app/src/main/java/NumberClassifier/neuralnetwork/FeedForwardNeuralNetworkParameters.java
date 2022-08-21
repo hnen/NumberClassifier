@@ -47,40 +47,6 @@ public class FeedForwardNeuralNetworkParameters {
     }
 
     /**
-     * Set each weight in the network to a uniformly distributed random number.
-     * @param min Minimum value for the weight.
-     * @param max Maximum value for the weight.
-     */
-    /*
-    public void randomizeWeights( double min, double max ) {
-        Random rnd = new Random();
-        for( int i = 0; i < layers.length - 1; i++ ) {
-            for ( int j = 0; j < weights[i].length; j++ ) {
-                weights[i][j] = rnd.nextDouble() * (max-min) + min;
-            }
-        }
-    }
-
-    public void initWeightsXavier() {
-        Random rnd = new Random();
-        for( int i = 0; i < layers.length - 1; i++ ) {
-            for ( int j = 0; j < weights[i].length; j++ ) {
-                weights[i][j] = (rnd.nextDouble() - 0.5) * 2.0 / Math.sqrt((double)layers[i]);
-            }
-        }
-    }
-
-    public void initWeightsHe() {
-        Random rnd = new Random();
-        for( int i = 0; i < layers.length - 1; i++ ) {
-            for ( int j = 0; j < weights[i].length; j++ ) {
-                weights[i][j] = rnd.nextGaussian() * Math.sqrt(2.0 / (double)layers[i]);
-            }
-        }
-    }
-    */
-
-    /**
      * Set each bias in the network to a specified value.
      * @param value The value where bias should be set to.
      */
