@@ -37,6 +37,11 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         return image;
     }
 
+    public void setImage( double[] image ) {
+        this.image = image.clone();
+        repaint();
+    }
+
     /**
      * Set callback to be called when the image is changed.
      * @param onChanged

@@ -29,7 +29,9 @@ public class TrainingResult {
         // 2 - xavier weights
         // 3&4 - he weights
         // 5 - parameterized weights
-        version = 5;
+        // 6 - scheduled learning rate and image transformation (centering)
+        // 7 - image transformation (scaling)
+        version = 7;
         
         String[] strlayers = new String[conf.layers.length];
         for (int i = 0; i < conf.layers.length; i++) {

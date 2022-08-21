@@ -6,6 +6,7 @@ import java.io.InputStream;
 import javax.swing.*;
 
 import NumberClassifier.neuralnetwork.FeedForwardNeuralNetwork;
+import NumberClassifier.data.Image;
 
 /**
  * Frame where user can draw the number and the neural network will classify it.
@@ -43,7 +44,9 @@ public class DrawFrame extends JFrame  {
 
     private void updateGuess() {
         try {
-            int guess = nn.getMaxActivation(drawPanel.getImage());
+            Image image = new Image(drawPanel.getImage(), 28, 28);
+            image.fitImage();
+            int guess = nn.getMaxActivation(image.getPixels());
             label.setText(Integer.toString(guess));
         } catch(Exception e) {
             System.out.println(e);

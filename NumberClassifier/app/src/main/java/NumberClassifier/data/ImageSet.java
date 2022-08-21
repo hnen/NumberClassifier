@@ -12,7 +12,7 @@ public class ImageSet {
     private int numLabelIndices;
     private int imageWidth;
     private int imageHeight;    
-    private ArrayList<double[]> images;
+    private ArrayList<Image> images;
     private ArrayList<Integer> imageLabels;
 
     private ImageSet() {}
@@ -49,7 +49,7 @@ public class ImageSet {
         imageSet.numLabelIndices = numLabelIndices;
         imageSet.imageWidth = readMSBInt(imageFile);
         imageSet.imageHeight = readMSBInt(imageFile);
-        imageSet.images = new ArrayList<double[]>();
+        imageSet.images = new ArrayList<Image>();
         imageSet.imageLabels = new ArrayList<Integer>();
         
         for ( int i = 0; i < numImages; i++ ) {
@@ -58,11 +58,13 @@ public class ImageSet {
                 throw new Exception("Label out of range.");
             }
             imageSet.imageLabels.add(label);
-            double[] image = new double[imageSet.imageWidth * imageSet.imageHeight];
-            byte[] imageBytes = imageFile.readNBytes(image.length);
-            for ( int j = 0; j < image.length; j++ ) {
-                image[j] = Byte.toUnsignedInt(imageBytes[j]) / 255.0;
+            double[] pixels = new double[imageSet.imageWidth * imageSet.imageHeight];
+            byte[] imageBytes = imageFile.readNBytes(pixels.length);
+            for ( int j = 0; j < pixels.length; j++ ) {
+                pixels[j] = Byte.toUnsignedInt(imageBytes[j]) / 255.0;
             }
+            Image image = new Image(pixels, imageSet.imageWidth, imageSet.imageHeight);
+            image.fitImage();
             imageSet.images.add(image);
         }
         
@@ -83,7 +85,7 @@ public class ImageSet {
         for ( int i = 0; i < images.size(); i++ ) {
             double[] output = new double[numLabelIndices];
             output[imageLabels.get(i)] = 1.0;
-            examples[i] = new TrainingExample(images.get(i).clone(), output);
+            examples[i] = new TrainingExample(images.get(i).getPixels().clone(), output);
         }
         return examples;
     }
@@ -127,7 +129,7 @@ public class ImageSet {
      * @return Image data as array of doubles.
      */
     public double[] getImage(int image) {
-        return images.get(image);
+        return images.get(image).getPixels();
     }
 
 }
