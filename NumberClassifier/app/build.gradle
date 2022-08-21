@@ -82,6 +82,7 @@ jar {
 }
 
 task fatJar(type: Jar) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 	manifest {
         attributes 'Implementation-Title': 'Number Classifier',  
         	'Implementation-Version': version,
