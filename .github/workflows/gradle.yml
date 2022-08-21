@@ -72,8 +72,15 @@ jobs:
       with:
         name: javadoc
         path: NumberClassifier/app/build/docs/javadoc
+    - name: Make release
+      run: |
+        mkdir release
+        mkdir release/data
+        cp -f NumberClassifier/data/* release/data/
+        cp -f NumberClassifier/*.json release/
+        cp NumberClassifier/app/build/libs/app.jar release/NumberClassifier.jar
     - name: Upload Jar
       uses: actions/upload-artifact@v2
       with:
-        name: javadoc
-        path: NumberClassifier/app/build/libs/app.jar
+        name: NumberClassifier-release
+        path: release
