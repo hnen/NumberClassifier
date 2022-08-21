@@ -290,6 +290,13 @@ public class TrainFrame extends JFrame {
             "On each epoch a sub sample is selected from training data. This value detemrines the size of the sample.", 
             2
         );
+        addField( 
+            group, 
+            "RMSprop momentum", 
+            new DoubleField(conf, "rmspropMomentum"), 
+            "Value from 0 to 1 that determines how much of the previous gradient is kept when updating the weights.", 
+            3 
+        );
     }
 
     abstract class EditField {

@@ -21,6 +21,7 @@ public class TrainConfig {
     public double[] initWeightsUniformRange;
     public double initBiases;
     public double[] learningRate;
+    public double rmspropMomentum;
     public int[] epochs;
     public int miniBatchSize;
     

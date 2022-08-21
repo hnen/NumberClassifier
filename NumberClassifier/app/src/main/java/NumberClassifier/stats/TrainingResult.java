@@ -20,13 +20,12 @@ public class TrainingResult {
     public double initBiases;
 
     public String epochs;
+    public double rmspropMomentum;
     public int miniBatchSize;
 
     public double accuracy;
     public double trainDuration;
 
-    public String accuracyHistory;
-    public String lossHistory;
 
     public TrainingResult(TrainConfig conf, double accuracy, double duration, double[] accuracyHistory, LossHistoryDatapoint[] lossHistory) {
         // 1 - initial implementation
@@ -35,7 +34,8 @@ public class TrainingResult {
         // 5 - parameterized weights
         // 6 - scheduled learning rate and image transformation (centering)
         // 7 - image transformation (scaling)
-        version = 7;
+        // 8 - RMSprop
+        version = 8;
         
         String[] strlayers = new String[conf.layers.length];
         for (int i = 0; i < conf.layers.length; i++) {
@@ -55,12 +55,13 @@ public class TrainingResult {
             initWeightsMin = 0.0;
             initWeightsMax = 0.0;
         }
-        initBiases = conf.initBiases;
-        epochs = String.join("-", Arrays.stream(conf.epochs).mapToObj(Integer::toString).toArray(String[]::new));
-        miniBatchSize = conf.miniBatchSize;
+        this.initBiases = conf.initBiases;
+        this.epochs = String.join("-", Arrays.stream(conf.epochs).mapToObj(Integer::toString).toArray(String[]::new));
+        this.miniBatchSize = conf.miniBatchSize;
+        this.rmspropMomentum = conf.rmspropMomentum;
         this.accuracy = accuracy;
-        trainDuration = duration;
-        this.accuracyHistory = String.join("-", Arrays.stream(accuracyHistory).mapToObj(Double::toString).toArray(String[]::new));
+        this.trainDuration = duration;
+        //this.accuracyHistory = String.join("-", Arrays.stream(accuracyHistory).mapToObj(Double::toString).toArray(String[]::new));
         //this.lossHistory = String.join("-", Arrays.stream(lossHistory).mapToObj(Double::toString).toArray(String[]::new));
     }
 }

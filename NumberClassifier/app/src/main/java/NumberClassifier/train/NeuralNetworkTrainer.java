@@ -111,7 +111,7 @@ public class NeuralNetworkTrainer {
         grad.multiply( 1.0 / examples.length );
 
         // RMSProp
-        final double ro = 0.9;
+        final double ro = this.trainConfig.rmspropMomentum;
         final double epsilon = 1e-8;
         FeedForwardNeuralNetworkParameters gradSq = grad.clone();
         gradSq.square();
