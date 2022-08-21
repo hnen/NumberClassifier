@@ -82,5 +82,5 @@ jobs:
     - name: Upload Jar
       uses: actions/upload-artifact@v2
       with:
-        name: javadoc
+        name: NumberClassifier-release
         path: release
