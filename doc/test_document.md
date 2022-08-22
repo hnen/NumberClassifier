@@ -72,8 +72,7 @@ Randomized algorithms use fixed seed for now, to make it easier to replicate res
 Finding good metaparameters was a task of its own. Good visualization of loss function evolution and replicatable results was essential in optimizing the parameters. There are certain heuristics that can be used. Learning rate was one of the most important metaparameters to tweak manually.
  - Find largest learning rate that makes the loss function to converge.
  - Observe when the learning rate stabilizes or starts to increase. Adjust number of epochs for this pass accordingly.
- - Decrease the learning rate for following epoch until loss stabilizes again.
- - Repeat
+ - Add new pass with smaller learning rate so it stabilizes towards the local minimum. Repeat if needed.
 
 Additionally to this, I aimed to make the network as small as possible and use as small batch size as possible so training and using the network would be fast. With even bigger network I didn't manage to hit higher than 97% accuracy ballpark. It was result I decided to be happy with, considering that reference implementations in  [MNIST database](http://yann.lecun.com/exdb/mnist/) had similar results for methods for trainings not using deskewing or cross-entropy, that I didn't have time to implement.
 
