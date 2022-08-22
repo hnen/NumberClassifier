@@ -41,7 +41,7 @@ You can open a trained neural network from *File* > *Open* > *Neural network*. N
 
 <img src="https://raw.githubusercontent.com/hnen/NumberClassifier/master/doc/img/drawing1.png" width="350">
 
-You can draw the image with left mouse button. You can erase drawing with right mouse button (still TODO.) The neural network evaluates the drawing in real-time like this:
+You can draw the image with left mouse button. You can erase drawing with right mouse button. The neural network evaluates the drawing in real-time like this:
 
 <img src="https://raw.githubusercontent.com/hnen/NumberClassifier/master/doc/img/drawing2.png" width="350">
 
