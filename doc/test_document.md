@@ -5,7 +5,7 @@
 
 Auto-generated unit testing code coverage report can be downloaded [here](https://nightly.link/hnen/NumberClassifier/workflows/gradle/master/codecov-report.zip).
 
-Unit testing makes sure smaller parts of the algorithms work correctly. Brief description of tests:
+I've tried to write unit tests so that they ensure sure smaller parts of the algorithms work correctly. Brief description of tests:
 
 ### `ImageSetTest`
 - Test that MNIST file format(that is used for the training data) is parsed correctly using a simple hand-made example.
@@ -67,19 +67,52 @@ Testing the training can be done inside the app (see manual for basic usage.) A 
 
 After every training run, test set accuracy, training duration and loss function evolution are recorded. Accuracy and duration are written in `train-stats.csv` along with the used hyperparameters for replicating the result. Loss function evolution is shown in the UI, and saving is done by manually screenshotting it for now.
 
+Randomized algorithms use fixed seed for now, to make it easier to replicate results.
+
+Finding good metaparameters was a task of its own. Good visualization of loss function evolution and replicatable results was essential in optimizing the parameters. There are certain heuristics that can be used. Learning rate was one of the most important metaparameters to tweak manually.
+ - Find largest learning rate that makes the loss function to converge.
+ - Observe when the learning rate stabilizes or starts to increase.
+ - Decrease the learning rate for following epoch until loss stabilizes again.
+ - Repeat
+
+Additionally to this, I aimed to make the network as small as possible and use as small batch size as possible so training and using the network would be fast. With even bigger network I didn't manage to hit higher than 97% accuracy ballpark. It was result I decided to be happy with, considering that reference implementations in  [MNIST database](http://yann.lecun.com/exdb/mnist/) had similar results for methods for trainings not using deskewing or cross-entropy, that I didn't have time to implement.
+
 ### Test results
 
-Due to the probabilistic nature of the training algorithm, test runs were done multiple times to show the results are replicable.
+A training run that produced fairly good results had following hyper parameters:
+
+| Hyper paramater          | Value         |
+|--------------------------|---------------|
+| Layers                   | 784-32-32-10  |
+| Activation function      | ReLU          |
+| Epochs                   | 7000, 3000    |
+| Learning Rates per phase | 0.001, 0.0001 |
+| Weight init method       | Uniform       |
+| Weight init range        | \[-0.1, 0.1\] |
+| RMSprop momentum         | 0.9           |
+| Mini batch size          | 32            |
+
+Loss function evolution from the training:
+
+<img src="img/loss-testrun.png" width="450">
+
+Test set accuracy was **96.84%**
+
+Training duration on my computer was **50,4 seconds** 
 
 ## Evaluating hand-written numbers
 
-Main motivation for training the network is to being able to apply it to input that its never seen before. For this, an interactive app was built where user can draw a number and the network guesses the number.
+Even though main focus of this project was in trainign the network, I was interested in testing the evaluation of hand-written numbers, as it is a concrete application for the network.
 
 Correctness for this algorithm is slightly more subjective. One definition could be, that it should be able to identify anyone's hand-written numbers with same accuracy rate than against the MNIST test examples.
 
-First subjective test can be done by simply doodling few numbers to the app. If the app is struggling to recognize some numbers, the algorithm needs improvements.
+Testing the evaluating was done subjectively. I drew 30 numbers and calculated the times the network got them wrong. I used the network trained above. Out of 30 drawings, the app evaluted 3 wrong, resulting in 90% accuracy. Sample size was small, but it looks like the drawing could use some improvement.
 
-TODO: More comprehensive testing of this method.
+Some examples of wrongly evaluated numbers:
+
+<img src="img/wrong1.png" width="250">
+<img src="img/wrong2.png" width="250">
+<img src="img/wrong3.png" width="250">
 
 ## References
 
