@@ -30,7 +30,7 @@ public class LossChart extends JFXPanel {
         
         lineChart.setLegendVisible(false);
 
-        lineChart.setTitle("Training statistics");
+        lineChart.setTitle("Loss Function History (log scale)");
         
         //populating the series with data
         Scene scene  = new Scene(lineChart,400,280);
