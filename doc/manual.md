@@ -35,6 +35,12 @@ In the example above, red run had the best outcome. Orange performed poorly, and
 
 After each training, the app will write results to `train-stats.csv`. You can use the table to recall best performed hyper parameters and try to replicate the results.
 
+#### Note about parameters
+
+You can tweak some hyper parameters while the training is running. While this can be useful to observe effects of hyper parameter in real-time, there are few gotchas that may result in incorrect results or crashes:
+ - Don't reduce number of passes during training (i.e. don't decrease epoch or learning rate array size)
+ - Only the latest active parameters are written in train-stats.csv - changes during training are not kept track of.
+
 ### Drawing
 
 You can open a trained neural network from *File* > *Open* > *Neural network*. Neural network files have file format `*.neuralnetwork.json`. After opening the file, you should see something like this:
