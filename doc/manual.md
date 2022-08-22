@@ -37,7 +37,7 @@ After each training, the app will write results to `train-stats.csv`. You can us
 
 #### Note about parameters
 
-You can tweak some hyper parameters while the training is running. While this can be useful to observe effects of hyper parameter in real-time, there are few gotchas that may result in incorrect results or crashes:
+You can tweak some hyper parameters while the training is running. While this can be useful to observe effects of hyper parameter in real-time(this was an accidental "feature"), there are few gotchas that may result in incorrect results or crashes:
  - Don't reduce number of passes during training (i.e. don't decrease epoch or learning rate array size)
  - Only the latest active parameters are written in train-stats.csv - changes during training are not kept track of.
 
