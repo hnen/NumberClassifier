@@ -71,7 +71,7 @@ Randomized algorithms use fixed seed for now, to make it easier to replicate res
 
 Finding good metaparameters was a task of its own. Good visualization of loss function evolution and replicatable results was essential in optimizing the parameters. There are certain heuristics that can be used. Learning rate was one of the most important metaparameters to tweak manually.
  - Find largest learning rate that makes the loss function to converge.
- - Observe when the learning rate stabilizes or starts to increase.
+ - Observe when the learning rate stabilizes or starts to increase. Adjust number of epochs for this pass accordingly.
  - Decrease the learning rate for following epoch until loss stabilizes again.
  - Repeat
 
