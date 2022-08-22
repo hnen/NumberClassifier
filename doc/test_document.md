@@ -34,16 +34,17 @@ Unit testing makes sure smaller parts of the algorithms work correctly. Brief de
 
 ## Training the neural network
 
-Training network takes following input:
+### Input
 
 Hyper Parameters:
 - `layers`: Neural network topology. Number of layers and number of neurons on each layer, as an integer array.    
 - `activation`: Activation function. Two activation functions were implemented, Sigmoid functions("sigmoid") and Rectified Linear Unit ("relu")
-- `learningRate`: Multiplier for each gradient descent step. Bigger value trains the network faster, but is numerically less stable.
 - `initWeightMethod`: Heuristics used to initial values for network weights. Three methods are implemented, "uniform", "xavier" and "hu".
 - `initBiases`: Initial value for neuron initial biases.
-- `epochs`: Number of epoch during training.
+- `epochs`: Array of number of epoch for each phase of the training. Length of the array defines number of phases.
+- `learningRate`: Multiplier for each gradient descent step. Bigger value trains the network faster, but is numerically less stable. The value is an array, which allows specifying different learning rate for each phase.
 - `miniBatchSize`: Size of the batch used on every epoch.
+- `rmspropMomentum`: Parameter for the RMSprop gradient descent method. Bigger values slows, or 'smoothens,' the change of the gradient along time. Must be in range 0-1.
 
 File parameters:
  - `trainingData`: File containing the number images for training in MNIST format.
@@ -52,35 +53,23 @@ File parameters:
  - `testLabels`: File containing the number labels for testing accuracy in MNIST format.
  - `outFile`: File to output the trained network to in JSON format.
 
-After training the network, the trainer measures the accuracy metric for the network by evaluating its results for every test example. Accuracy metric is number of correctly guessed test examples divided by total number of test examples. The accuracy value is quite good metric that defines whether the algorithm works 'correctly'. However more complicated question is, how good the accuracy metric should  expected to be. According to MNIST, neural networks have been capable of achieving 95.3% - 99.65% accuracy rate, so if the training works correctly, 95% accuracy should be achievable with relatively low effort.
+### Measuring perforamance
 
-With some ad-hoc hand tweaking of values, 96.95% accuracy was achieved with following configuration:
-```
-{
-    "trainingData": "data/train-images.idx3-ubyte",
-    "trainingLabels": "data/train-labels.idx1-ubyte",
-    "testData": "data/t10k-images.idx3-ubyte",
-    "testLabels": "data/t10k-labels.idx1-ubyte",
+There are few factors that can be used to measure training performance.
 
-    "outFile": "nn.json",
+ - Test set accuracy: How big proportion of the images in the test data the trained network managed to guess correctly.
+ - Training duration: How long did it take to train the network from start to finish.
+ - Loss function evolution: Function of loss value as function of epoch. Can be used to estimate how efficiently the network learns, when does the learning plateau and how stable the learning is.
 
-    "layers": [ 784, 32, 32, 10 ],
-    
-    "activation": "relu",
-    "learningRate": 0.05,
-    "initWeights": [-0.1, 0.1],
-    "initBiases": 0.01,
+### Testing method
 
-    "epochs": 50000,
-    "miniBatchSize": 15
-}
-```
+Testing the training can be done inside the app (see manual for basic usage.) A hyperparameters are chosen, and optimal hyperparameters are searched in ad-hoc fashion.
 
-### Evaluating performance
+After every training run, test set accuracy, training duration and loss function evolution are recorded. Accuracy and duration are written in `train-stats.csv` along with the used hyperparameters for replicating the result. Loss function evolution is shown in the UI, and saving is done by manually screenshotting it for now.
 
-On every train run, the app writes the input parameter and how it performed to `train-stats.csv`
+### Test results
 
-TODO: visualize results
+Due to the probabilistic nature of the training algorithm, test runs were done multiple times to show the results are replicable.
 
 ## Evaluating hand-written numbers
 
