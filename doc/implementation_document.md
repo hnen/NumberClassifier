@@ -97,8 +97,9 @@ for l 1 -> N - 1:
 
 ```
 
+The algorithm stores intermediate errors to `e`, which has value for each neuron in the network. Thus, the space complexity of the algorithm is linear compared to number of neurons in the network, i.e. `O(n_1 + n_2 + ... + n_N)`
 
-
+The algorithm iterates each parameter of the network twice, so the time complexity of the algorithm is linear compared to parameters of the network, or specified as a relationship to the number of neurons on each layer, `O(n_1 * n_2 + n_2 * n_3 + ... + n_(N-1) * n_N)`
 
 ## Training algorithm
 
