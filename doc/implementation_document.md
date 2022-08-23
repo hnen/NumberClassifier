@@ -97,7 +97,8 @@ for l 1 -> N - 1:
 
 ```
 
-TODO: Space and time complexity analysis.
+
+
 
 ## Training algorithm
 
@@ -143,7 +144,7 @@ for i in 1 -> numPasses:
         for each example in batch:
             grad = Execute BackPropagation with example as an input
             gradAvg = Add(gradAvg, grad)
-        gradAvg.Divide(miniBatchSize)
+        gradAvg = Divide(gradAvg, miniBatchSize)
                 
         // Update the exponential average (RMSprop)
         gradSq = Square(grad)
