@@ -14,9 +14,9 @@ The program is currently divided into following modules:
 
 ## Overview of the implementation
 
-The program implements loading an image dataset (MNIST file format is supported), running a neural network training algorithm, and classifying a user drawn image with the trained neural network.
+The program implements loading and processing an image dataset (MNIST file format is supported), running a neural network training algorithm, and classifying a user drawn image with the trained neural network.
 
-### Training/Test image processing
+### Image processing
 
 Images are centered and scaled to fit the image bounds. This reduces errors especially with user drawn images, that vary easily in size and positioning.
 
@@ -24,7 +24,7 @@ Images are centered and scaled to fit the image bounds. This reduces errors espe
 
 Training algorithm is standard stochastic gradient descent. Network gradients are calculated with backpropagation algorithm. Training rate schedule is configurable.
 
-## Implementatino details, time and space complexities
+## Implementation details, time and space complexities
 
 ### Data structure space complexity
 
@@ -136,4 +136,17 @@ TODO: Space and time complexity analysis.
 
 ## Flaws and improvements
 
-Currently the application is heavily work in progress.
+Some known issues:
+ - Training is quite sensitive to initial weights, resulting in big variance of network accuracy between weight initializations.
+ - I managed to get best results with uniform weight initialization, even though literature suggests that He formula should give the best results. I don't know why that happens.
+
+Some examples of features that could have been implemented:
+ - Softmax activation with cross-entropy loss function.
+   - Many sources say that for classification network cross-entropy loss function results into faster and more accurate training.
+ - Batch normalization
+   - Batch normalization is said to make the network more stable and less sensitive to weight initialisation radomness, especially on deep networks.
+ - Threading
+   - An easy performance win for training time would've been to parallelize the training code. For instance calculating gradients would be easy to put in their own threads for each training example.
+
+
+
