@@ -147,6 +147,8 @@ Some examples of features that could have been implemented:
    - Batch normalization is said to make the network more stable and less sensitive to weight initialisation radomness, especially on deep networks.
  - Threading
    - An easy performance win for training time would've been to parallelize the training code. For instance calculating gradients would be easy to put in their own threads for each training example.
+ - Deskewing
+   - Many MNIST classifier implementations have gotten good results by deskewing the input set images. It would've been relative simple to implement.
 
 
 
