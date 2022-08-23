@@ -165,10 +165,71 @@ for i in 1 -> numPasses:
 
 The algorithm stores intermediate values into constant number of neural network parameter structures with same size as the input network, thus space complexity is same as the neural network space complexity, `O(n_1 * n_2 + n_2 * n_3 + ... + n_(N-1) * n_N))`.
 
-The algorithm does training iterations for `E` epochs. For each epoch, it constructs the mini batch of size `B`, and for each example in the mini batch it runs the BackPropagation algorithm. Then it does few calculation operations of time complexity `O(n)`
+The algorithm does training iterations for `E` epochs that is total number of epoch in all passes. For each epoch, it constructs the mini batch of size `B`, and for each example in the mini batch it runs the BackPropagation algorithm. Then it does few calculation operations of time complexity `O(n)`
 
 The time complexity for the whole training is then:
 `O(E * B * n) = O(E * B * (n_1 * n_2 + n_2 * n_3 + ... + n_(N-1) * n_N))`
+
+### Image processing
+
+Before running the training, the app does some processing for the image. The processing algorithm finds a bounding box for the image, translates it to the center and upscales it to fit the image bounds. Upscaling uses bilinear filtering.
+
+```
+--- ProcessImage ---
+Input: image
+Output: processedImage
+
+for each pixel in the image:
+    if pixel above threshold:
+        minX = min(x, minX)
+        minY = min(y, minY)
+        maxX = min(x, minX)
+        maxX = min(y, miny)
+       
+width = maxX - minX + 1
+height = mixY - minY + 1
+xDelta = minX - (imageWidth - width) / 2;
+yDelta = maxX - (imageHeight - height) / 2;
+
+xscale = imageWidth / bounds.width;
+yscale = imageHeight / bounds.height;
+scale = min(xscale, yscale);
+
+for each pixel:
+    newX = x + translateX;
+    newY = y + translateY;
+    if newX < 0 || newX >= width || newY < 0 || newY >= height:
+        translatedPixels(x, y) = 0;
+    else:
+        translatedPixels(x, y) = pixels(newX, newY);
+
+for each pixel:
+    sourceX = (x - imageWidth / 2) / scale + imageWidth / 2;
+    sourceY = (y - imageHeight / 2) / scale + imageHeight / 2;
+
+    sourceXInt = floor(sourceX);
+    sourceYInt = floor(sourceY);
+
+    double p00 = translatedPixels(sourceXInt, sourceYInt);
+    double p01 = translatedPixels(sourceXInt, sourceYInt + 1);
+    double p10 = translatedPixels(sourceXInt + 1, sourceYInt);
+    double p11 = translatedPixels(sourceXInt + 1, sourceYInt + 1);
+
+    xt = sourceX - sourceXInt;
+    yt = sourceY - sourceYInt;
+
+    p0 = p00 * (1 - xt) + p10 * xt;
+    p1 = p01 * (1 - xt) + p11 * xt;
+    p = p0 * (1 - yt) + p1 * yt;
+
+    processedImage(x, y) = p;
+
+```
+
+The algorithm stores pixels to intermediate picture `translatedPixels`, so space complexity is `O(imageWidth * imageHeight)`. The algorithm could be modified to work without the translated intermediate picture relatively easy, so space complexity could be optimized to `O(1)` too.
+
+The algorithm iterates image pixels couple of times, so time complexity is also `O(imageWidth * imageHeight)`
+
 
 ## Issues and possible improvements
 
