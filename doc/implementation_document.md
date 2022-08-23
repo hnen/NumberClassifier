@@ -101,48 +101,78 @@ TODO: Space and time complexity analysis.
 
 ## Training algorithm
 
-TODO: Inputs, outputs, description
+Let's define few utility functions for neural network parameters:
+
+```
+--- Add ---
+Input: x, y: neural network parameters
+Output: result: neural network parameters
+for l 1 -> N:
+    for i 1 -> n_l:
+        result_b_li = x_b_li + y_b_li
+for l 1 -> (N-1):
+    for i 1 -> n_l:
+        for j -> n_(l+1):
+            result_l_ij = x_w_l_ij + y_w_l_ij
+
+Similarly we will have following operations that perform mathematical operations on each parameter of the neural network. They may take also scalar as second parameter. For Square and SquareRoot there is no other parameters, but the function is applied on each parameter. The time complexity is identical in each case:
+
+Mul, Divide, Add, Square and SquareRoot
+```
+
+
+Training incrementally modifies the parameters by its gradient. It utilises [RMSprop](https://machinelearningmastery.com/gradient-descent-with-rmsprop-from-scratch) strategy, which smoothens the gradient descend step by recent gradients. If there has been recently big changes in some parameter, the future change is dampened and vice versa. The RMSprop momentum is updated by exponential average on each step.
 
 ```
 --- Train ---
-Repeat E times:
-    // Pick mini batch
-    for j 1 -> miniBatchSize:
-        batchIndices[j] = random value between 1...number of trainingExamples
-        isDuplicate = false;
-        for k 1 -> (j-1):
-            if batchIndices[k] == batchIndices[j]:
-                isDuplicate = true;
-        if isDuplicate:
-            repeat
 
-    for j 1 -> miniBatchSize:
-        batch[j] = trainingExamples[batchIndices[j]]
+nn = Initialise neural network parameters with chosen weight init heuristics
+gradExpAvg = neural network parameters with zeroes as values
 
-    for each example in batch:
-        Execute BackPropagation with example as an input
-        for l 1 -> N:
-            for i 1 -> n_l:
-                b_li = b_li - Db_li * learningRate / miniBatchSize
-        for l 1 -> (N-1):
-            for i 1 -> n_l:
-                for j -> n_(l+1):
-                    w_l_ij = w_l_ij - Dw_l_ij * learningRate / miniBatchSize
+miniBatchIndex = 0
+for i in 1 -> numPasses:
+    numEpochs = epochs[i]
+    learningRate = learningRates[i]
+    Repeat numEpochs times:
+        // Pick mini batch
+        for j 1 -> miniBatchSize:
+            batch[j] = trainingExamples[miniBatchIndex % len(trainingExamples)]
+            miniBatchIndex = miniBatchIndex + 1
 
+        gradAvg = neural network parameters with zeroes as values
+        for each example in batch:
+            grad = Execute BackPropagation with example as an input
+            gradAvg = Add(gradAvg, grad)
+        gradAvg.Divide(miniBatchSize)
+                
+        // Update the exponential average (RMSprop)
+        gradSq = Square(grad)
+        gradSq = Mul( gradSq, 1 - rmsPropMomentum )
+        gradExpAvg = Mul( gradExpAvg, rmsPropMomentum )
+        gradExpAvg = Add( gradExpAvg, gradSq )
+        
+        // Calculate smoothed gradient (RMSprop)
+        gradExpAvg0 = Add(gradExpAvg, epsilon)
+        gradExpAvg0 = SquareRoot(gradExpAvg0)
+        gradAvg = Divide( gradAvg, gradExpAvg0 )
+        gradAvg.multiply( gradAvg, -1.0 * learningRate );
+        
+        // Step training network by the gradient
+        nn = Add( nn, gradAvg )
 }
 ```
 
 TODO: Space and time complexity analysis.
 
-## Flaws and improvements
+## Issues and possible improvements
 
 Some known issues:
- - Training is quite sensitive to initial weights, resulting in big variance of network accuracy between weight initializations.
+ - Training accuracy is quite sensitive to initial weights, resulting in big variance of network accuracy between weight initializations.
  - I managed to get best results with uniform weight initialization, even though literature suggests that He formula should give the best results. I don't know why that happens.
 
 Some examples of features that could have been implemented:
  - Softmax activation with cross-entropy loss function.
-   - Many sources say that for classification network cross-entropy loss function results into faster and more accurate training.
+   - Many sources say that for classification network cross-entropy loss function results into faster and more accurate training. Current implementation uses mean squared error as loss function.
  - Batch normalization
    - Batch normalization is said to make the network more stable and less sensitive to weight initialisation radomness, especially on deep networks.
  - Threading
