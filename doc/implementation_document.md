@@ -22,7 +22,7 @@ Images are centered and scaled to fit the image bounds. This reduces errors espe
 
 ### Training the neural network
 
-Training algorithm is standard stochastic gradient descent. Network gradients are calculated with backpropagation algorithm. Training rate schedule is configurable.
+Training algorithm optimizes parameters with a stochastic gradient descent using RMSprop strategy. Network gradients are calculated with backpropagation algorithm. Training rate schedule is configurable.
 
 ## Implementation details, time and space complexities
 
@@ -122,7 +122,6 @@ Similarly we will have following operations that perform mathematical operations
 Mul, Divide, Add, Square and SquareRoot
 ```
 
-
 Training incrementally modifies the parameters by its gradient. It utilises [RMSprop](https://machinelearningmastery.com/gradient-descent-with-rmsprop-from-scratch) strategy, which smoothens the gradient descend step by recent gradients. If there has been recently big changes in some parameter, the future change is dampened and vice versa. The RMSprop momentum is updated by exponential average on each step.
 
 ```
@@ -135,36 +134,41 @@ miniBatchIndex = 0
 for i in 1 -> numPasses:
     numEpochs = epochs[i]
     learningRate = learningRates[i]
-    Repeat numEpochs times:
+    Repeat numEpochs times:                                                      // O(E)
         // Pick mini batch
-        for j 1 -> miniBatchSize:
-            batch[j] = trainingExamples[miniBatchIndex % len(trainingExamples)]
+        for j 1 -> miniBatchSize:                                                //   O(B)
+            batch[j] = trainingExamples[miniBatchIndex % len(trainingExamples)]  //     O(1)
             miniBatchIndex = miniBatchIndex + 1
 
-        gradAvg = neural network parameters with zeroes as values
-        for each example in batch:
-            grad = Execute BackPropagation with example as an input
-            gradAvg = Add(gradAvg, grad)
-        gradAvg = Divide(gradAvg, miniBatchSize)
+        gradAvg = neural network parameters with zeroes as values                //   O(n)
+        for each example in batch:                                               //   O(B)
+            grad = Execute BackPropagation with example as an input              //     O(n)
+            gradAvg = Add(gradAvg, grad)                                         //     O(n)
+        gradAvg = Divide(gradAvg, miniBatchSize)                                 //   O(n)
                 
         // Update the exponential average (RMSprop)
-        gradSq = Square(grad)
-        gradSq = Mul( gradSq, 1 - rmsPropMomentum )
-        gradExpAvg = Mul( gradExpAvg, rmsPropMomentum )
-        gradExpAvg = Add( gradExpAvg, gradSq )
+        gradSq = Square(grad)                                                    //   O(n)
+        gradSq = Mul( gradSq, 1 - rmsPropMomentum )                              //   O(n)
+        gradExpAvg = Mul( gradExpAvg, rmsPropMomentum )                          //   O(n)
+        gradExpAvg = Add( gradExpAvg, gradSq )                                   //   O(n)
         
         // Calculate smoothed gradient (RMSprop)
-        gradExpAvg0 = Add(gradExpAvg, epsilon)
-        gradExpAvg0 = SquareRoot(gradExpAvg0)
-        gradAvg = Divide( gradAvg, gradExpAvg0 )
-        gradAvg.multiply( gradAvg, -1.0 * learningRate );
+        gradExpAvg0 = Add(gradExpAvg, epsilon)                                   //   O(n)
+        gradExpAvg0 = SquareRoot(gradExpAvg0)                                    //   O(n)
+        gradAvg = Divide( gradAvg, gradExpAvg0 )                                 //   O(n)
+        gradAvg.multiply( gradAvg, -1.0 * learningRate );                        //   O(n)
         
         // Step training network by the gradient
-        nn = Add( nn, gradAvg )
+        nn = Add( nn, gradAvg )                                                  //   O(n)
 }
 ```
 
-TODO: Space and time complexity analysis.
+The algorithm stores intermediate values into constant number of neural network parameter structures with same size as the input network, thus space complexity is same as the neural network space complexity, `O(n_1 * n_2 + n_2 * n_3 + ... + n_(N-1) * n_N))`.
+
+The algorithm does training iterations for `E` epochs. For each epoch, it constructs the mini batch of size `B`, and for each example in the mini batch it runs the BackPropagation algorithm. Then it does few calculation operations of time complexity `O(n)`
+
+The time complexity for the whole training is then:
+`O(E * B * n) = O(E * B * (n_1 * n_2 + n_2 * n_3 + ... + n_(N-1) * n_N))`
 
 ## Issues and possible improvements
 
