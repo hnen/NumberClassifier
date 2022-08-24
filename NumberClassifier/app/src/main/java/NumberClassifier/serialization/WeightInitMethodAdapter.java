@@ -3,10 +3,7 @@ package NumberClassifier.serialization;
 import java.lang.reflect.Type;
 import com.google.gson.*;
 
-import NumberClassifier.neuralnetwork.IActivationFunction;
 import NumberClassifier.neuralnetwork.IWeightInitMethod;
-import NumberClassifier.neuralnetwork.ReLUActivationFunction;
-import NumberClassifier.neuralnetwork.SigmoidActivationFunction;
 import NumberClassifier.neuralnetwork.WeightInitMethodFactory;
 
 /**

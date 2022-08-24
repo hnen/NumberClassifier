@@ -22,4 +22,14 @@ public class ActivationFunctionFactory {
         return new String[] { "relu", "sigmoid" };
     }
 
+    public static String nameOf(IActivationFunction method) {
+        if (method instanceof ReLUActivationFunction) {
+            return "relu";
+        } else if (method instanceof SigmoidActivationFunction) {
+            return "sigmoid";
+        } else {
+            throw new IllegalArgumentException("Unknown activation function type: " + method.getClass().getSimpleName());
+        }
+    }
+    
 }
