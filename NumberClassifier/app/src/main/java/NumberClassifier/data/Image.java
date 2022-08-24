@@ -52,18 +52,14 @@ public class Image {
         return pixels[y * width + x];
     }
 
-    private void transform(int translateX, int translateY, double scale) {
+    void transform(int translateX, int translateY, double scale) {
         // translate
         double[] translatedPixels = new double[pixels.length];
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 int newX = x + translateX;
                 int newY = y + translateY;
-                if (newX < 0 || newX >= width || newY < 0 || newY >= height) {
-                    translatedPixels[y * width + x] = 0;
-                } else {
-                    translatedPixels[y * width + x] = pixels[newY * width + newX];
-                }
+                translatedPixels[y * width + x] = getPixel(newX, newY);
             }
         }
         

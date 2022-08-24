@@ -1,6 +1,7 @@
 package NumberClassifier.data;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -8,35 +9,34 @@ import java.io.InputStream;
 import org.junit.jupiter.api.Test;
 
 public class ImageSetTest {
+
+    byte imageFile[] = new byte[] {
+        0x00, 0x00, 0x08, 0x03, // MNIST magic number
+        0x00, 0x00, 0x00, 0x02, // number of images
+        0x00, 0x00, 0x00, 0x04,    // number of rows
+        0x00, 0x00, 0x00, 0x04,    // number of columns
+
+        // test image 1
+        11, 12, 13, 14,
+        21, 22, 23, 24,
+        31, 32, 33, 34,
+        41, 42, 43, 44,
+        
+        // test image 2
+        51, 52, 53, 54,
+        61, 62, 63, 64,
+        71, 72, 73, 74,
+        81, 82, 83, 84,
+    };
+
+    byte labelFile[] = new byte[] {
+        0x00, 0x00, 0x08, 0x01, // MNIST magic number
+        0x00, 0x00, 0x00, 0x02, // number of images
+        2,                      // label 1
+        9                       // label 2
+    };    
     
     ImageSet createTestSet() throws Exception {
-
-        byte imageFile[] = new byte[] {
-            0x00, 0x00, 0x08, 0x03, // MNIST magic number
-            0x00, 0x00, 0x00, 0x02, // number of images
-            0x00, 0x00, 0x00, 0x04,    // number of rows
-            0x00, 0x00, 0x00, 0x04,    // number of columns
-
-            // test image 1
-            11, 12, 13, 14,
-            21, 22, 23, 24,
-            31, 32, 33, 34,
-            41, 42, 43, 44,
-            
-            // test image 2
-            51, 52, 53, 54,
-            61, 62, 63, 64,
-            71, 72, 73, 74,
-            81, 82, 83, 84,
-        };
-
-        byte labelFile[] = new byte[] {
-            0x00, 0x00, 0x08, 0x01, // MNIST magic number
-            0x00, 0x00, 0x00, 0x02, // number of images
-            2,                      // label 1
-            9                       // label 2
-        };
-
         InputStream imageStream = new ByteArrayInputStream(imageFile);
         InputStream labelStream = new ByteArrayInputStream(labelFile);
         
@@ -65,6 +65,62 @@ public class ImageSetTest {
                 }
             }
         }
+    }
+
+    @Test
+    void testLoadInvalidMNIST() throws Exception {
+        InputStream labelStream = new ByteArrayInputStream(labelFile);
+        InputStream imageStream = new ByteArrayInputStream(imageFile);
+
+        // invalid image header
+        {
+            byte[] invalidImageFile = imageFile.clone();
+            invalidImageFile[3] = 0x00;
+            InputStream invalidImageStream = new ByteArrayInputStream(invalidImageFile);
+            assertThrows(Exception.class, () -> ImageSet.loadFromMNIST(invalidImageStream, labelStream, 10, false));
+        }
+
+        // invalid label header
+        {
+            byte[] invalidLabelFile = labelFile.clone();
+            invalidLabelFile[3] = 0x00;
+            InputStream invalidLabelStream = new ByteArrayInputStream(invalidLabelFile);
+            assertThrows(Exception.class, () -> ImageSet.loadFromMNIST(imageStream, invalidLabelStream, 10, false));
+        }
+
+        // invalid image count
+        {
+            byte[] invalidImageFile = imageFile.clone();
+            invalidImageFile[0] = -0x7f;
+            InputStream invalidImageStream = new ByteArrayInputStream(invalidImageFile);
+            assertThrows(Exception.class, () -> ImageSet.loadFromMNIST(invalidImageStream, labelStream, 10, false));
+        }
+
+        // invalid label count
+        {
+            byte[] invalidLabelFile = imageFile.clone();
+            invalidLabelFile[0] = -0x7f;
+            InputStream invalidImageStream = new ByteArrayInputStream(invalidLabelFile);
+            assertThrows(Exception.class, () -> ImageSet.loadFromMNIST(invalidImageStream, labelStream, 10, false));
+        }
+
+        
+        // mismatching image-label count
+        {
+            byte[] invalidImageFile = imageFile.clone();
+            invalidImageFile[7] = 0x03;
+            InputStream invalidImageStream = new ByteArrayInputStream(invalidImageFile);
+            assertThrows(Exception.class, () -> ImageSet.loadFromMNIST(invalidImageStream, labelStream, 10, false));
+        }
+
+        // invalid label
+        {
+            byte[] invalidLabelFile = imageFile.clone();
+            invalidLabelFile[8] = 10;
+            InputStream invalidImageStream = new ByteArrayInputStream(invalidLabelFile);
+            assertThrows(Exception.class, () -> ImageSet.loadFromMNIST(invalidImageStream, labelStream, 10, false));
+        }
+                  
     }
 
     @Test void testCreateTrainingExamples() throws Exception {
