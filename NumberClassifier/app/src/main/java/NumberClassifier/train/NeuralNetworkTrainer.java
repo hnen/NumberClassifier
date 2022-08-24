@@ -178,7 +178,11 @@ public class NeuralNetworkTrainer {
         return (double)correct / testExamples.length;
     }
 
+    int batchIndex = 0;
+
     private TrainingExample[] pickMiniBatch( TrainingExample[] trainingExamples, int batchSize ) {
+
+        /* 
         int[] batchIndices = new int[trainConfig.miniBatchSize];
         for ( int j = 0; j < trainConfig.miniBatchSize; j++ ) {                    
             batchIndices[j] = (int) (Math.random() * trainingExamples.length);
@@ -197,6 +201,14 @@ public class NeuralNetworkTrainer {
         TrainingExample[] examples = new TrainingExample[trainConfig.miniBatchSize];
         for ( int j = 0; j < trainConfig.miniBatchSize; j++ ) {
             examples[j] = trainingExamples[batchIndices[j]];
+        }
+        */
+
+        TrainingExample[] examples = new TrainingExample[trainConfig.miniBatchSize];
+        for ( int j = 0; j < trainConfig.miniBatchSize; j++ ) {
+            int i = batchIndex % trainingExamples.length;
+            batchIndex++;
+            examples[j] = trainingExamples[i];
         }
 
         return examples;

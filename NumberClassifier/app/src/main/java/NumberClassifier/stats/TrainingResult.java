@@ -35,7 +35,8 @@ public class TrainingResult {
         // 6 - scheduled learning rate and image transformation (centering)
         // 7 - image transformation (scaling)
         // 8 - RMSprop
-        version = 8;
+        // 9 - static seed, rotating mini batches
+        version = 9;
         
         String[] strlayers = new String[conf.layers.length];
         for (int i = 0; i < conf.layers.length; i++) {

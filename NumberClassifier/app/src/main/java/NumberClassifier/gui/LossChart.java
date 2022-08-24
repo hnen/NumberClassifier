@@ -24,6 +24,7 @@ public class LossChart extends JFXPanel {
         xAxis.setAnimated(false);
         yAxis.setAnimated(false);
         yAxis.setForceZeroInRange(false);
+        xAxis.setForceZeroInRange(false);
         //creating the chart
         lineChart = new LineChart<Number,Number>(xAxis,yAxis);
         lineChart.setAnimated(false);
@@ -61,6 +62,7 @@ public class LossChart extends JFXPanel {
         Platform.runLater(() -> {
             lineChart.getData().clear();
         });
+        addNewSeries();
     }
 
     public void addData(LossHistoryDatapoint datapoint) {
