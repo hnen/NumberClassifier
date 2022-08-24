@@ -6,6 +6,11 @@ import NumberClassifier.data.TrainingExample;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 public class FeedForwardNeuralNetworkTest {
 
 
@@ -175,6 +180,53 @@ public class FeedForwardNeuralNetworkTest {
         } catch (Exception e) {
             assertNotNull(e);
         }
+    }
+
+    @Test
+    void testSerialize() throws Exception {
+        FeedForwardNeuralNetwork ffn = new FeedForwardNeuralNetwork( new SigmoidActivationFunction(), new int[] { 2, 3, 1 } );
+        ffn.setWeights( 
+            0, new double[] { 
+            1.0, 1.0, 0.0, 
+            0.0, 1.0, 1.0 
+        });
+        ffn.setBiases( 1, new double[] { 0.0, 0.0, 0.0 });
+        ffn.setWeights( 1, new double[] { 1.0, -1.5, 1.0 } );
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        ffn.serialize(os);
+        os.close();
+        InputStream is = new ByteArrayInputStream(os.toByteArray());
+        FeedForwardNeuralNetwork ffn2 = FeedForwardNeuralNetwork.load(is);
+        
+        assertEquals(ffn.getNumInputs(), ffn2.getNumInputs());
+        assertEquals(ffn.getNumOutputs(), ffn2.getNumOutputs());
+        assertEquals(ffn.getNumLayers(), ffn2.getNumLayers());
+        
+        assertArrayEquals(ffn.getParameters().biases[0], ffn2.getParameters().biases[0]);
+        assertArrayEquals(ffn.getParameters().biases[1], ffn2.getParameters().biases[1]);
+        assertArrayEquals(ffn.getParameters().weights[0], ffn2.getParameters().weights[0]);
+        assertArrayEquals(ffn.getParameters().weights[1], ffn2.getParameters().weights[1]);
+    }
+
+    @Test
+    void testCost() throws Exception {
+        FeedForwardNeuralNetwork ffn = new FeedForwardNeuralNetwork( new ReLUActivationFunction(), new int[] { 1, 1 } );
+        ffn.setWeights( 0, new double[] { 1.0 } );
+
+        TrainingExample[] ex = new TrainingExample[] {
+            new TrainingExample( new double[] { 0.0 }, new double[] { 0.0 } ),
+            new TrainingExample( new double[] { 1.0 }, new double[] { 1.0 } )
+        };
+
+        assertEquals(0.0, ffn.calculateCost(ex), 0.0);
+
+
+        TrainingExample[] ex1 = new TrainingExample[] {
+            new TrainingExample( new double[] { 0.0 }, new double[] { 0.0 } ),
+            new TrainingExample( new double[] { 1.0 }, new double[] { 0.0 } )
+        };
+        assertTrue( ffn.calculateCost(ex1) > 0.0 );
     }
 
     @Test void testToString() throws Exception {

@@ -28,7 +28,7 @@ public class ActivationFunctionFactory {
         } else if (method instanceof SigmoidActivationFunction) {
             return "sigmoid";
         } else {
-            throw new IllegalArgumentException("Unknown activation function type: " + method.getClass().getSimpleName());
+            throw new IllegalArgumentException("Unknown activation function type.");
         }
     }
     
