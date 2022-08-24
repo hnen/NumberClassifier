@@ -33,7 +33,7 @@ public class Image {
         return pixels;
     }
 
-    private class Rect {
+    class Rect {
         int x, y, width, height;
 
         public Rect(int x, int y, int width, int height) {
@@ -44,7 +44,7 @@ public class Image {
         }
     }
 
-    private double getPixel(int x, int y) {
+    double getPixel(int x, int y) {
         if ( x < 0 || x >= width || y < 0 || y >= height ) {
             return 0.0;
         }
@@ -73,8 +73,8 @@ public class Image {
         double[] newPixels = new double[pixels.length];
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                double sourceX = (x - width*0.5) / scale + width*0.5;
-                double sourceY = (y - height*0.5) / scale + height*0.5;
+                double sourceX = (x - width*0.5) / scale + width*0.5 - 0.5;
+                double sourceY = (y - height*0.5) / scale + height*0.5 - 0.5;
 
                 int sourceXInt = (int) Math.floor(sourceX);
                 int sourceYInt = (int) Math.floor(sourceY);
@@ -98,7 +98,7 @@ public class Image {
         pixels = newPixels;
     }
 
-    private Rect calculateBounds(double threshold) {
+    Rect calculateBounds(double threshold) {
         int minX = width;
         int maxX = 0;
         int minY = height;
